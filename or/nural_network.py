@@ -15,10 +15,18 @@ class Nural_Network_3:
         self.h1 = self.y1
         self.y2 = set.layer(output_node)
         self.func = af.sigmoid
-    def set(self,data,weigh_num,func_num):
-        self.data = data;
-        self.imWeight = set.wset_unif(self.input_node,self.middle_node-1)
-        self.moWeight = set.wset_unif(self.middle_node,self.output_node)
+    def set(self,data,weight_num,func_num):
+        self.data = data
+        if weight_num == "xivier":
+            self.imWeight = set.wset_xivier(self.input_node,self.middle_node-1)
+            self.moWeight = set.wset_xivier(self.middle_node,self.output_node)
+        elif weight_num == "he":
+            self.imWeight = set.wset_he(self.input_node,self.middle_node-1)
+            self.moWeight = set.wset_he(self.middle_node,self.output_node)
+        else :
+            self.imWeight = set.wset_unif(self.input_node,self.middle_node-1)
+            self.moWeight = set.wset_unif(self.middle_node,self.output_node)
+        
         self.func = af.sigmoid
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
