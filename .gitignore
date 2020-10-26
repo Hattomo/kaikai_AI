@@ -134,3 +134,5 @@ dmypy.json
 # User setting files
 .vs/*
 .vscode/*
+
+kaikai_ML_env/*
