@@ -1,2 +1,2 @@
-# kaikaimlium
+# kaikaiAI
 Learning ML
