@@ -36,12 +36,12 @@ class Nural_Network_3:
         self.y2 = np.dot(self.moWeight,self.h1)
     # バックプロパゲーション
     def backpropagation(self,x,y):
-        # 入力層と中間層間の重み更新
-        diff = (y-self.y2[0])*self.moWeight[0][1:]*self.difffunc(self.y1[1:])*x
-        self.imWeight += self.train_ratio*diff
         # 中間層と出力層間の重みの更新
         diff = (y-self.y2[0])*self.h1
         self.moWeight += self.train_ratio*diff
+        # 入力層と中間層間の重み更新
+        diff = (y-self.y2[0])*self.moWeight[0][1:]*self.difffunc(self.y1[1:])*x
+        self.imWeight += self.train_ratio*diff
     # 学習
     def train(self):
         length = len(self.data)
