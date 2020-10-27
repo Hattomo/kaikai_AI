@@ -1,33 +1,46 @@
+import sys
 import activationfunction as af
-import setting as set
+import lossfunction
+import setting
 import numpy as np
 
-class Nural_Network_3:
-    def __init__(self,input_node,middle_node,output_node):
-        self.input_node = input_node
-        self.middle_node = middle_node
-        self.output_node = output_node
-        self.train_ratio = 0.1
-        self.data = np.ones(0)
-        self.imWeight = np.ones(0)
-        self.moWeight = np.ones(0)
-        self.y1 = set.layer(middle_node)
-        self.h1 = self.y1
-        self.y2 = set.layer(output_node)
-        self.func = af.sigmoid
-    def set(self,data,weight_num,func_num):
+class Neural_Network:
+    def __init__(self,layer):
+        self.layer = layer
+        self.alllayer = None
+        self.allweight = None
+        self.actfunc = None
+        self.lossfunc = None
+
+    def model(self,data,w_method="unif",actfunc="sigmoid",lossfunc="RSS"):
         self.data = data
-        if weight_num == "xivier":
-            self.imWeight = set.wset_xivier(self.input_node,self.middle_node-1)
-            self.moWeight = set.wset_xivier(self.middle_node,self.output_node)
-        elif weight_num == "he":
-            self.imWeight = set.wset_he(self.input_node,self.middle_node-1)
-            self.moWeight = set.wset_he(self.middle_node,self.output_node)
-        else :
-            self.imWeight = set.wset_unif(self.input_node,self.middle_node-1)
-            self.moWeight = set.wset_unif(self.middle_node,self.output_node)
-        
-        self.func = af.sigmoid
+        self.alllayer = setting.lnet(self.layer)
+        # 重みの初期化
+        if w_method == "xivier":
+            self.allweight = setting.wnet(self.layer,setting.xivier)
+        elif w_method == "he":
+            self.allweight = setting.wnet(self.layer,setting.he)
+        elif w_method == "unif":
+            self.allweight = setting.wnet(self.layer,setting.unif)
+        else:
+            sys.stdout.write("Error: The weight method is not found")
+            sys.exit(0)
+        # 活性化関数の初期化
+        if actfunc == "sigmoid":
+            self.actfunc = af.sigmoid
+        elif actfunc == "tanh":
+            self.actfunc = af.tanh
+        elif actfunc == "ReLU":
+            self.actfunc = af.ReLU
+        else:
+            sys.stdout.write("Error: The actfunc is not found")
+            sys.exit(0)
+        # 損失関数の初期化
+        if lossfunc == "RSS":
+            self.lossfunc = lossfunction.RSS
+        else:
+            sys.stdout.write("Error: The lossfunc is not found")
+            sys.exit(0)
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
