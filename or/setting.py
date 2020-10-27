@@ -19,19 +19,24 @@ def he(i_node,o_node):
     weight = weight.reshape(o_node,i_node)
     return weight
 
-# 全ての層が入っている
-def lnet(layer):
+# y
+def ynet(layer):
     length = len(layer)
     net = list()
-    for i in range(length):
-        if i==0 or i==length-1:
+    for i in range(length-1):
+        y = np.zeros(layer[i])
+        net.append(y)
+    return net
+
+# x,z
+def znet(layer):
+    net = list()
+    for i in range(len(layer) - 1):
+        if i==0:
             x = np.zeros(layer[i])
             net.append(x)
         else:
-            y = np.zeros(layer[i])
-            h = np.zeros(layer[i])
-            net.append(y)
-            net.append(h)
+            net.append(np.zeros(layer[i]))
     return net
 
 # すべての重み

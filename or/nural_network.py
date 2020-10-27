@@ -14,7 +14,7 @@ class Neural_Network:
 
     def model(self,data,w_method="unif",actfunc="sigmoid",lossfunc="RSS"):
         self.data = data
-        self.alllayer = setting.lnet(self.layer) 
+        self.alllayer = [setting.ynet(self.layer), setting.znet(self.layer)]
         # 重みの初期化
         if w_method == "xivier":
             self.allweight = setting.wnet(self.layer,setting.xivier)
@@ -27,11 +27,11 @@ class Neural_Network:
             sys.exit(0)
         # 活性化関数の初期化
         if actfunc == "sigmoid":
-            self.actfunc = af.sigmoid
+            self.actfunc = [af.sigmoid, af.diffsigmoid]
         elif actfunc == "tanh":
-            self.actfunc = af.tanh
+            self.actfunc = [af.tanh, af.difftanh]
         elif actfunc == "ReLU":
-            self.actfunc = af.ReLU
+            self.actfunc = [af.ReLU, af.diffReLU]
         else:
             sys.stdout.write("Error: The actfunc is not found")
             sys.exit(0)
@@ -44,38 +44,47 @@ class Neural_Network:
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
-        self.alllayer[0][0] = 1
-        self.alllayer[0][1:] = x
+        self.alllayer[1][0][0] = 1
+        self.alllayer[1][0][1:] = x
+        #print(self.alllayer)
+        #print(self.allweight)
         for i in range(len(self.layer)-2):
-            self.alllayer[2*i+1] = np.dot(self.alllayer[2*i],self.allweight[i])
-            self.alllayer[2*i+2] = self.actfunc(self.alllayer[2*i+1])
-        self.alllayer[-1] = np.dot(self.alllayer[-2],self.allweight[-1][0])
+            self.alllayer[0][i] = self.alllayer[1][i] @ np.transpose(self.allweight[i])
+            self.alllayer[1][i+1] = self.actfunc[0](self.alllayer[0][i])
+        self.alllayer[0][-1] = self.alllayer[1][-1] @ self.allweight[-1][0]
     # バックプロパゲーション
     def backpropagation(self,x,y):
-        diff = (y-self.alllayer[-1])
-        for i in range(len(self.layer),0):
-            self.allweight[i-1] += self.train_ratio*diff*self.alllayer[i-1]
-            diff = (y-self.y2[0])*self.alllayer[0][1:]*self.difffunc(self.y1[1:])*x
+        # out layer to middle layer
+        tmp = (y - self.alllayer[0][-1]) * self.actfunc[1](self.alllayer[1][-1])
+        diff = tmp * self.alllayer[1][-1]
+        self.allweight[-1] += self.train_ratio * diff
+        # middle layer to input layer
+        for i in range(len(self.layer) - 2):
+            tmp = self.actfunc[1](self.alllayer[1][-i-1]) * self.allweight[-i-1] @ tmp
+            diff = tmp * self.alllayer[1][-i-1]
+            self.allweight[-1-i] += self.train_ratio * diff
+            
     # 学習
     def train(self):
         length = len(self.data)
-        for i in range(length):
-            if i < 300:
-                self.train_ratio = 0.1
-            else :
-                self.train_ratio = 0.01
-            self.forwordpropagation(self.data[i][:-1])
-            self.backpropagation(self.data[i][:-1],self.data[i][-1])
+        for i in range(100):
+            for j in range(length):
+                if j < 300:
+                    self.train_ratio = 0.01
+                else :
+                    self.train_ratio = 0.01
+                self.forwordpropagation(self.data[i][:-1])
+                self.backpropagation(self.data[i][:-1], self.data[i][-1])
     # テスト
     def test(self,testdata):
         count = 0
         length = len(testdata)
         for i in range(length):
             self.forwordpropagation(testdata[i][:-1])
-            if self.y2 >= 0.5 and testdata[i][-1]==1:
+            if self.alllayer[0][-1] >= 0.5 and testdata[i][-1]==1:
                 # print("ok")
                 count += 1
-            elif self.y2 < 0.5 and testdata[i][-1]==0:
+            elif self.alllayer[0][-1] < 0.5 and testdata[i][-1]==0:
                 # print("ok")
                 count += 1
             else :
