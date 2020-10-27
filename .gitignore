@@ -136,3 +136,7 @@ dmypy.json
 .vscode/*
 
 kaikai_ML_env/*
+
+# image
+.jpg
+.png
