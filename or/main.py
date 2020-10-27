@@ -14,6 +14,7 @@ testData = md.dset(20)
 orNN = nn.Neural_Network(layer)
 # ニューラルネットワークのトレーニングデータ、レイヤー、重み番号、活性化関数番号の設定,cost func
 orNN.model(trainData,"xivier","sigmoid","RSS")
+orNN.forwordpropagation(trainData[0][:-1])
 print(orNN.alllayer)
 # 学習
 # orNN.train()

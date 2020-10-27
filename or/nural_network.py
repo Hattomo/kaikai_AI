@@ -14,7 +14,7 @@ class Neural_Network:
 
     def model(self,data,w_method="unif",actfunc="sigmoid",lossfunc="RSS"):
         self.data = data
-        self.alllayer = setting.lnet(self.layer)
+        self.alllayer = setting.lnet(self.layer) 
         # 重みの初期化
         if w_method == "xivier":
             self.allweight = setting.wnet(self.layer,setting.xivier)
@@ -44,17 +44,18 @@ class Neural_Network:
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
-        self.y1[1:] = np.dot(self.imWeight,x)
-        self.h1 = self.func(self.y1)
-        self.y2 = np.dot(self.moWeight,self.h1)
+        self.alllayer[0][0] = 1
+        self.alllayer[0][1:] = x
+        for i in range(len(self.layer)-2):
+            self.alllayer[2*i+1] = np.dot(self.alllayer[2*i],self.allweight[i])
+            self.alllayer[2*i+2] = self.actfunc(self.alllayer[2*i+1])
+        self.alllayer[-1] = np.dot(self.alllayer[-2],self.allweight[-1][0])
     # バックプロパゲーション
     def backpropagation(self,x,y):
-        # 中間層と出力層間の重みの更新
-        diff = (y-self.y2[0])*self.h1
-        self.moWeight += self.train_ratio*diff
-        # 入力層と中間層間の重み更新
-        diff = (y-self.y2[0])*self.moWeight[0][1:]*self.difffunc(self.y1[1:])*x
-        self.imWeight += self.train_ratio*diff
+        diff = (y-self.alllayer[-1])
+        for i in range(len(self.layer),0):
+            self.allweight[i-1] += self.train_ratio*diff*self.alllayer[i-1]
+            diff = (y-self.y2[0])*self.alllayer[0][1:]*self.difffunc(self.y1[1:])*x
     # 学習
     def train(self):
         length = len(self.data)
