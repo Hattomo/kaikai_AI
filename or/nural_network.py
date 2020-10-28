@@ -46,33 +46,30 @@ class Neural_Network:
     def forwordpropagation(self,x):
         self.alllayer[1][0][0] = 1
         self.alllayer[1][0][1:] = x
-        #print(self.alllayer)
-        #print(self.allweight)
-        for i in range(len(self.layer)-2):
+        for i in range(len(self.layer) - 1):
             self.alllayer[0][i] = self.alllayer[1][i] @ np.transpose(self.allweight[i])
             self.alllayer[1][i+1] = self.actfunc[0](self.alllayer[0][i])
-        self.alllayer[0][-1] = self.alllayer[1][-1] @ self.allweight[-1][0]
     # バックプロパゲーション
     def backpropagation(self,x,y):
         # out layer to middle layer
-        tmp = (y - self.alllayer[0][-1]) * self.actfunc[1](self.alllayer[1][-1])
-        diff = tmp * self.alllayer[1][-1]
-        self.allweight[-1] += self.train_ratio * diff
+        tmp = (y - self.alllayer[0][-2]) * self.actfunc[1](self.alllayer[0][-1])
+        diff = self.alllayer[1][-1].reshape(1,1) * np.transpose(tmp)
+        self.allweight[-1] -= self.train_ratio * diff
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
-            tmp = self.actfunc[1](self.alllayer[1][-i-1]) * self.allweight[-i-1] @ tmp
+            tmp = self.actfunc[1](self.alllayer[1][-i-2]) * (self.allweight[-i-1] @ np.transpose(tmp))
             diff = tmp * self.alllayer[1][-i-1]
-            self.allweight[-1-i] += self.train_ratio * diff
+            self.allweight[-1-i] -= self.train_ratio * diff
             
     # 学習
     def train(self):
         length = len(self.data)
-        for i in range(100):
+        for i in range(50):
             for j in range(length):
-                if j < 300:
-                    self.train_ratio = 0.01
+                if j < 100:
+                    self.train_ratio = 1
                 else :
-                    self.train_ratio = 0.01
+                    self.train_ratio = 0.1
                 self.forwordpropagation(self.data[i][:-1])
                 self.backpropagation(self.data[i][:-1], self.data[i][-1])
     # テスト
@@ -91,6 +88,8 @@ class Neural_Network:
                 pass
                 # print("bad")
         print(count/length)
+
+    
     def wprint(self):
         print(self.imWeight)
         print(self.moWeight)

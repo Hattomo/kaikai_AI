@@ -28,10 +28,10 @@ def ynet(layer):
         net.append(y)
     return net
 
-# x,z
+# x, z
 def znet(layer):
     net = list()
-    for i in range(len(layer) - 1):
+    for i in range(len(layer)):
         if i==0:
             x = np.zeros(layer[i])
             net.append(x)

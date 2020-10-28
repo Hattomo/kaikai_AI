@@ -8,7 +8,7 @@ layer = [3,3,1]
 
 # main
 # set data
-trainData = md.dset(200)
+trainData = md.dset(100)
 testData = md.dset(100)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(layer)
