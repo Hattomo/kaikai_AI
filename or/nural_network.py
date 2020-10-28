@@ -59,19 +59,19 @@ class Neural_Network:
         tmp = np.array([tmp])
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
-            print(tmp)
-            print(self.allweight[-i-1])
-            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (self.allweight[-i - 1]@tmp)
-            print(tmp)
-            diff = self.alllayer[1][-i-2] * tmp
-            print(diff)
-            print(self.allweight[-2-i])
-            self.allweight[-2-i] += self.train_ratio * diff
+            #print(tmp)
+            #print(np.transpose(self.allweight[-i - 1]))
+            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (np.transpose(self.allweight[-i - 1])@tmp).T
+            #print(tmp)
+            diff = self.alllayer[1][-i-2] @ np.transpose(tmp)
+            #print(diff)
+            #print(self.allweight[-2-i])
+            self.allweight[-2 - i] += self.train_ratio * diff
             
     # 学習
     def train(self):
         length = len(self.data)
-        for i in range(500):
+        for i in range(300):
             cost = 0
             for j in range(length):
                 if 0 <= cost and cost < 1:
@@ -79,9 +79,9 @@ class Neural_Network:
                 elif 0 <= cost and cost < 100:
                     self.train_ratio = 0.1
                 else:
-                    self.train_ratio = 1
-                self.forwordpropagation(self.data[i][:-1])
-                self.backpropagation(self.data[i][:-1], self.data[i][-1])
+                    self.train_ratio = 0.05
+                self.forwordpropagation(self.data[j][:-1])
+                self.backpropagation(self.data[j][:-1], self.data[j][-1])
             cost += self.RSS(self.testdata)
             if (cost < 0.1):
                 break

@@ -4,11 +4,11 @@ import activationfunction as af
 import makedata as md
 import nural_network as nn
 
-layer = [3,4,1]
+layer = [3,3,1]
 
 # main
 # set data
-trainData = md.dset(200)
+trainData = md.dset(300)
 testData = md.dset(100)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(layer)
@@ -19,3 +19,4 @@ orNN.train()
 # テスト
 orNN.test(testData)
 print(orNN.alllayer)
+print(orNN.allweight)
