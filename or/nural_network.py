@@ -53,20 +53,21 @@ class Neural_Network:
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
-        tmp = (self.alllayer[1][-1] - y) * self.actfunc[1](self.alllayer[0][-1])
+        tmp = (self.alllayer[1][-1] - y) * self.actfunc[1](self.alllayer[0][-2])
         diff = self.alllayer[1][-2] * np.transpose(tmp)
         self.allweight[-1] -= self.train_ratio * diff
-        tmp = np.array([tmp])
+        # tmp = np.array([tmp])
+        # print(tmp)
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
-            #print(tmp)
+            # print(tmp)
             #print(np.transpose(self.allweight[-i - 1]))
-            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * np.transpose((np.transpose(self.allweight[-i - 1])@tmp))
-            #print(tmp)
+            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (self.allweight[-i - 1] @ tmp)
+            # print(tmp)
             #print(self.alllayer)
-            diff = self.alllayer[1][-i-3] @ np.transpose(tmp)
-            #print(diff)
-            #print(self.allweight[-2-i])
+            diff = self.alllayer[1][-i-3] @ tmp.T
+            # print(diff)
+            # print(self.allweight[-2-i])
             self.allweight[-2 - i] -= self.train_ratio * diff
             
     # 学習
@@ -83,8 +84,9 @@ class Neural_Network:
                     self.train_ratio = 1
                 self.forwordpropagation(self.data[j][:-1])
                 self.backpropagation(self.data[j][:-1], self.data[j][-1])
-            cost += self.RSS(self.testdata)
-            if (cost < 30):
+                # print((self.alllayer[1][-1] - self.data[j][-1])**2)
+            # cost += self.RSS(self.testdata)
+            if (cost < 0.1):
                 break
     # テスト
     def test(self,testdata):
@@ -112,6 +114,6 @@ class Neural_Network:
             length = len(data)
             for i in range(length):
                 self.forwordpropagation(data[i][:-1])
-                cost+= (self.alllayer[1][-1] - data[i][-1])**2
-            print(cost)
+                cost = (self.alllayer[1][-1] - data[i][-1])**2
+                print(cost)
             return cost
