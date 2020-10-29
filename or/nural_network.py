@@ -7,22 +7,25 @@ import numpy as np
 class Neural_Network:
     def __init__(self,layer):
         self.layer = layer
-        self.alllayer = None
-        self.allweight = None
+        self.y = None
+        self.z = None
+        self.weight = None
         self.actfunc = None
+        self.difffunc = None
         self.lossfunc = None
 
     def model(self,data,testdata,w_method="unif",actfunc="sigmoid",lossfunc="RSS"):
         self.data = data
         self.testdata = testdata
-        self.alllayer = [setting.ynet(self.layer), setting.znet(self.layer)]
+        self.y = setting.ynet(self.layer)
+        self.z = setting.znet(self.layer)
         # 重みの初期化
         if w_method == "xivier":
-            self.allweight = setting.wnet(self.layer,setting.xivier)
+            self.weight = setting.wnet(self.layer,setting.xivier)
         elif w_method == "he":
-            self.allweight = setting.wnet(self.layer,setting.he)
+            self.weight = setting.wnet(self.layer,setting.he)
         elif w_method == "unif":
-            self.allweight = setting.wnet(self.layer,setting.unif)
+            self.weight = setting.wnet(self.layer,setting.unif)
         else:
             sys.stdout.write("Error: The weight method is not found")
             sys.exit(0)
@@ -45,30 +48,31 @@ class Neural_Network:
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
-        self.alllayer[1][0][0] = 1
-        self.alllayer[1][0][1:] = x
-        for i in range(len(self.layer) - 1):
-            self.alllayer[0][i] = self.alllayer[1][i] @ np.transpose(self.allweight[i])
-            self.alllayer[1][i+1] = self.actfunc[0](self.alllayer[0][i])
+        self.z[0][0] = 1
+        self.z[0][1:] = x
+        for i in range(len(self.layer) - 2):
+            self.y[i] = self.z[i] @ (self.weight[i]).T
+            self.z1[i+1] = self.diffunc(self.y[i])
+        self.y[-1] = self.weight[-1] @ self.z[-1]
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
         tmp = (self.alllayer[1][-1] - y) * self.actfunc[1](self.alllayer[0][-2])
         diff = self.alllayer[1][-2] * np.transpose(tmp)
-        self.allweight[-1] -= self.train_ratio * diff
+        self.weight[-1] -= self.train_ratio * diff
         # tmp = np.array([tmp])
         # print(tmp)
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
             # print(tmp)
-            #print(np.transpose(self.allweight[-i - 1]))
-            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (self.allweight[-i - 1] @ tmp)
+            #print(np.transpose(self.weight[-i - 1]))
+            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (self.weight[-i - 1] @ tmp)
             # print(tmp)
             #print(self.alllayer)
             diff = self.alllayer[1][-i-3] @ tmp.T
             # print(diff)
-            # print(self.allweight[-2-i])
-            self.allweight[-2 - i] -= self.train_ratio * diff
+            # print(self.weight[-2-i])
+            self.weight[-2 - i] -= self.train_ratio * diff
             
     # 学習
     def train(self):
