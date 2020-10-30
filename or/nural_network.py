@@ -31,7 +31,7 @@ class Neural_Network:
         elif w_method == "unif":
             self.weight = setting.wnet(self.layer,setting.unif)
         else:
-            sys.stdout.write("Error: The weight method is not found")
+            sys.stdout.write("Error: The weight method is not found\n")
             sys.exit(0)
         # 活性化関数の初期化
         if actfunc == "sigmoid":
@@ -44,13 +44,13 @@ class Neural_Network:
             self.actfunc = af.ReLU
             self.difffunc = f.diffReLU
         else:
-            sys.stdout.write("Error: The actfunc is not found")
+            sys.stdout.write("Error: The actfunc is not found\n")
             sys.exit(0)
         # 損失関数の初期化
         if costfunc == "RSS":
             self.costfunc = costfunction.RSS
         else:
-            sys.stdout.write("Error: The lossfunc is not found")
+            sys.stdout.write("Error: The lossfunc is not found\n")
             sys.exit(0)
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
@@ -89,6 +89,7 @@ class Neural_Network:
         for i in range(length):
             self.forwordpropagation(self.data[i][:-1])
             self.backpropagation(self.data[i][:-1], self.data[i][-1])
+
     # テスト
     def test(self,testdata):
         count = 0
@@ -104,6 +105,7 @@ class Neural_Network:
             else :
                 pass
                 # print("bad")
+        self.accuracy = count/length
         print(count/length)
 
     def wprint(self):
