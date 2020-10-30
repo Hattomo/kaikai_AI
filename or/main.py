@@ -3,10 +3,11 @@ import makedata as md
 import nural_network as nn
 
 layer = [3,3,1]
+epoch = 25
 
 # main
 # set data
-trainData = md.dset(100)
+trainData = md.dset(epoch)
 testData = md.dset(1)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(layer)
@@ -22,3 +23,12 @@ orNN.train()
 orNN.test(testData)
 # print(orNN.alllayer)
 # print(orNN.allweight)
+sum = 0
+num = 25
+for i in range(num):
+    orNN.model(trainData,testData,"xivier","sigmoid","RSS")
+    orNN.train()
+    orNN.test(testData)
+    sum += orNN.accuracy
+print(sum/num)
+
