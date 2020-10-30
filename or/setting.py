@@ -7,6 +7,7 @@ import math
 #一様分布
 def unif(i_node,o_node):
     weight = np.random.rand(i_node*o_node)*2-1
+    weight = weight.reshape(o_node,i_node)
     return weight
 #正規分布(xivier)
 def xivier(i_node,o_node):
@@ -22,9 +23,9 @@ def he(i_node,o_node):
 # y
 def ynet(layer):
     length = len(layer)
-    net = list()
-    for i in range(length-1):
-        y = np.zeros(layer[i])
+    net = list("-")
+    for i in range(1,length):
+        y = np.ones(layer[i])
         net.append(y)
     return net
 
@@ -32,18 +33,18 @@ def ynet(layer):
 def znet(layer):
     net = list()
     for i in range(len(layer)):
-        if i==0:
-            x = np.zeros(layer[i])
-            net.append(x)
-        else:
-            net.append(np.zeros(layer[i]))
+        x = np.zeros(layer[i])
+        net.append(x)
     return net
 
 # すべての重み
 def wnet(layer,w_method):
     length = len(layer)
     net = list()
-    for i in range(length-1):
-        w = w_method(layer[i],layer[i+1])
+    for i in range(length-2):
+        w = w_method(layer[i],layer[i+1]-1)
         net.append(w)
+    last_w = w_method(layer[-2],layer[-1])
+    net.append(last_w)
     return net
+

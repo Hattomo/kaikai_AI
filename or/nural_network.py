@@ -1,20 +1,24 @@
 import sys
 import activationfunction as af
-import lossfunction
+import lossfunction as costfunction
 import setting
 import numpy as np
+import vectormath as vmath
 
 class Neural_Network:
     def __init__(self,layer):
         self.layer = layer
+        self.length = len(layer)
         self.y = None
         self.z = None
         self.weight = None
+        self.backweight = None
         self.actfunc = None
         self.difffunc = None
-        self.lossfunc = None
+        self.costfunc = None
+        self.train_ratio = 0.5
 
-    def model(self,data,testdata,w_method="unif",actfunc="sigmoid",lossfunc="RSS"):
+    def model(self,data,testdata,w_method="unif",actfunc="sigmoid",costfunc="RSS"):
         self.data = data
         self.testdata = testdata
         self.y = setting.ynet(self.layer)
@@ -31,17 +35,20 @@ class Neural_Network:
             sys.exit(0)
         # 活性化関数の初期化
         if actfunc == "sigmoid":
-            self.actfunc = [af.sigmoid, af.diffsigmoid]
+            self.actfunc = af.sigmoid
+            self.difffunc = af.diffsigmoid
         elif actfunc == "tanh":
-            self.actfunc = [af.tanh, af.difftanh]
+            self.actfunc = af.tanh
+            self.difffunc= af.difftanh
         elif actfunc == "ReLU":
-            self.actfunc = [af.ReLU, af.diffReLU]
+            self.actfunc = af.ReLU
+            self.difffunc = f.diffReLU
         else:
             sys.stdout.write("Error: The actfunc is not found")
             sys.exit(0)
         # 損失関数の初期化
-        if lossfunc == "RSS":
-            self.lossfunc = lossfunction.RSS
+        if costfunc == "RSS":
+            self.costfunc = costfunction.RSS
         else:
             sys.stdout.write("Error: The lossfunc is not found")
             sys.exit(0)
@@ -50,58 +57,48 @@ class Neural_Network:
     def forwordpropagation(self,x):
         self.z[0][0] = 1
         self.z[0][1:] = x
-        for i in range(len(self.layer) - 2):
-            self.y[i] = self.z[i] @ (self.weight[i]).T
-            self.z1[i+1] = self.diffunc(self.y[i])
-        self.y[-1] = self.weight[-1] @ self.z[-1]
+        for i in range(len(self.layer) - 1):
+            if i==len(self.weight)-1:
+                self.y[i+1] = self.weight[i] @ self.z[i]
+                self.z[i+1] = self.actfunc(self.y[i+1])
+                break
+            self.y[i+1][1:] = self.weight[i] @ self.z[i]
+            self.z[i+1] = self.actfunc(self.y[i+1])
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
-        tmp = (self.alllayer[1][-1] - y) * self.actfunc[1](self.alllayer[0][-2])
-        diff = self.alllayer[1][-2] * np.transpose(tmp)
-        self.weight[-1] -= self.train_ratio * diff
-        # tmp = np.array([tmp])
-        # print(tmp)
+        if (self.z[-1]-y)**2 < 0.5:
+            self.train_ratio = 0.1
+        elif (self.z[-1]-y)**2 < 0.1:
+            self.train_ratio = 0.01
+        # print((self.z[-1]-y)**2)
+        tmp = self.difffunc(self.y[-1]) * (self.z[-1]-y)
+        diff = self.z[-2] * tmp
+        self.weight[-1] += self.train_ratio * diff
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
-            # print(tmp)
-            #print(np.transpose(self.weight[-i - 1]))
-            tmp = self.actfunc[1](self.alllayer[1][-i - 2]) * (self.weight[-i - 1] @ tmp)
-            # print(tmp)
-            #print(self.alllayer)
-            diff = self.alllayer[1][-i-3] @ tmp.T
-            # print(diff)
-            # print(self.weight[-2-i])
-            self.weight[-2 - i] -= self.train_ratio * diff
+            weight = (self.weight[-i-1].T[1:]).T
+            z = (self.z[-i-2].T[1:]).T
+            tmp = self.difffunc(z) * (weight.T @ tmp)
+            diff = vmath.vvmat(self.z[-i-3],tmp)
+            self.weight[-i-2] += self.train_ratio * diff.T
             
     # 学習
     def train(self):
         length = len(self.data)
-        while True:
-            cost = 0
-            for j in range(length):
-                if 0 <= cost and cost < 1:
-                    self.train_ratio = 0.01
-                elif 1 <= cost and cost < 10:
-                    self.train_ratio = 0.1
-                else:
-                    self.train_ratio = 1
-                self.forwordpropagation(self.data[j][:-1])
-                self.backpropagation(self.data[j][:-1], self.data[j][-1])
-                # print((self.alllayer[1][-1] - self.data[j][-1])**2)
-            # cost += self.RSS(self.testdata)
-            if (cost < 0.1):
-                break
+        for i in range(length):
+            self.forwordpropagation(self.data[i][:-1])
+            self.backpropagation(self.data[i][:-1], self.data[i][-1])
     # テスト
     def test(self,testdata):
         count = 0
         length = len(testdata)
         for i in range(length):
             self.forwordpropagation(testdata[i][:-1])
-            if self.alllayer[1][-1] >= 0.5 and testdata[i][-1]==1:
+            if self.z[-1] >= 0.5 and testdata[i][-1]==1:
                 # print("ok")
                 count += 1
-            elif self.alllayer[1][-1] < 0.5 and testdata[i][-1]==0:
+            elif self.z[-1] < 0.5 and testdata[i][-1]==0:
                 # print("ok")
                 count += 1
             else :
