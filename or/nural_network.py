@@ -42,7 +42,7 @@ class Neural_Network:
             self.difffunc= af.difftanh
         elif actfunc == "ReLU":
             self.actfunc = af.ReLU
-            self.difffunc = f.diffReLU
+            self.difffunc = af.diffReLU
         else:
             sys.stdout.write("Error: The actfunc is not found\n")
             sys.exit(1)
@@ -53,6 +53,7 @@ class Neural_Network:
             sys.stdout.write("Error: The lossfunc is not found\n")
             sys.exit(1)
         self.difffunc = af.msigmoid
+
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
         self.z[0][0] = 1
@@ -63,15 +64,15 @@ class Neural_Network:
                 self.z[i+1] = self.actfunc(self.y[i+1])
                 break
             self.y[i+1][1:] = self.weight[i] @ self.z[i]
-            self.z[i+1] = self.actfunc(self.y[i+1])
+            self.z[i + 1] = self.actfunc(self.y[i + 1])
+            
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
-        if (self.z[-1]-y)**2 < 0.5:
+        if (self.z[-1] - y)** 2 < 0.5:
             self.train_ratio = 0.1
-        elif (self.z[-1]-y)**2 < 0.1:
+        elif (self.z[-1] - y)** 2 < 0.1:
             self.train_ratio = 0.01
-        # print((self.z[-1]-y)**2)
         tmp = self.difffunc(self.y[-1]) * (self.z[-1]-y)
         diff = self.z[-2] * tmp
         self.weight[-1] -= self.train_ratio * diff
@@ -98,17 +99,8 @@ class Neural_Network:
         for i in range(length):
             self.forwordpropagation(self.testdata[i][:-1])
             if self.z[-1] >= 0.9 and self.testdata[i][-1] == 1:
-                # print("ok")
                 count += 1
             elif self.z[-1] <= 0.1 and self.testdata[i][-1] == 0:
-                # print("ok")
                 count += 1
-            else :
-                pass
-                # print("bad")
             cost += (self.z[-1] - self.testdata[i][-1])** 2
         print(str(count) + "/" + str(length) + " = " + str(count/length) + " : " + str(cost))
-
-    def wprint(self):
-        print(self.imWeight)
-        print(self.moWeight)
