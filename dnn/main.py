@@ -7,8 +7,8 @@ layer = [3, 3, 1]
 epoch = 30
 logic = "xor"
 # set data
-trainData = md.dset(logic,epoch)
-testData = md.dset(logic,20)
+trainData = md.dset(logic, epoch)
+testData = md.dset(logic, 20)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(layer)
 # 学習
