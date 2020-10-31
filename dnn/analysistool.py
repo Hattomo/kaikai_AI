@@ -3,13 +3,13 @@ import neural_network as nn
 from mpl_toolkits.mplot3d import Axes3D
 
 def draw(y):
-    fig = plt.figure()
     x = list()
     for i in range(len(y)):
         x.append(i)
     plt.plot(x,y)
     plt.show()
-    plt.savefig("dnn/out/cost.png")
+    # plt.savefig("dnn/out/cost.png") # bash?
+    plt.savefig("out/cost.png") # cmd?
 
 def tdchart(nn):
     fig = plt.figure()
@@ -29,4 +29,5 @@ def tdchart(nn):
             z.append(nn.z[-1])
     ax.scatter3D(x, y, z)
     plt.show()
-    plt.savefig("dnn/out/3d.png")   
+    # plt.savefig("dnn/out/3d.png") #bash?
+    plt.savefig("out/3d.png") #cmd?   

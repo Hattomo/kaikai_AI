@@ -42,7 +42,7 @@ class Neural_Network:
             self.actfunc = af.tanh
             self.difffunc= af.difftanh
         elif actfunc == "ReLU":
-            self.actfunc = af.ReLU
+            self.actfunc = af.mReLU
             self.difffunc = af.diffReLU
         else:
             sys.stdout.write("Error: The actfunc is not found\n")

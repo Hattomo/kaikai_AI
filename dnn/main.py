@@ -14,9 +14,9 @@ orNN = nn.Neural_Network(layer)
 # 学習
 count = 200
 # ニューラルネットワークのトレーニングデータ、レイヤー、重み番号、活性化関数番号の設定,cost func
-orNN.model(trainData, testData, "xivier", "sigmoid", "rss")
+orNN.model(trainData, testData, "xivier", "tanh", "rss")
 for i in range(count):
     orNN.train()
     orNN.test()
-atool.draw(orNN.cost)
+# atool.draw(orNN.cost)
 atool.tdchart(orNN)

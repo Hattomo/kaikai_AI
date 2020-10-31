@@ -37,6 +37,9 @@ def ReLU(x):
 def mReLU(x):
     ans = x
     node = len(x)
+    if node == 1:
+        ans[0] = sigmoid(x[0])
+        return ans
     for i in range(1,node):
         ans[i] = ReLU(x[i])
         return ans
