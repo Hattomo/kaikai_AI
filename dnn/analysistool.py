@@ -1,3 +1,4 @@
+import os
 from matplotlib import pyplot as plt
 import neural_network as nn
 from mpl_toolkits.mplot3d import Axes3D
@@ -7,9 +8,8 @@ def draw(y):
     for i in range(len(y)):
         x.append(i)
     plt.plot(x,y)
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'out/cost.png'))
     plt.show()
-    # plt.savefig("dnn/out/cost.png") # bash?
-    plt.savefig("out/cost.png") # cmd?
 
 def tdchart(nn):
     fig = plt.figure()
@@ -28,6 +28,5 @@ def tdchart(nn):
             nn.forwordpropagation([i/dence,j/dence])
             z.append(nn.z[-1])
     ax.scatter3D(x, y, z)
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'out/3d.png'))
     plt.show()
-    # plt.savefig("dnn/out/3d.png") #bash?
-    plt.savefig("out/3d.png") #cmd?   
