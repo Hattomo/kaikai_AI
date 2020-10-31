@@ -17,6 +17,7 @@ class Neural_Network:
         self.difffunc = None
         self.costfunc = None
         self.train_ratio = 0.5
+        self.cost = list()
 
     def model(self,data,testdata,w_method="unif",actfunc="sigmoid",costfunc="rss"):
         self.data = data
@@ -93,14 +94,15 @@ class Neural_Network:
 
     # テスト
     def test(self):
-        cost = 0
         count = 0
+        cost = 0
         length = len(self.testdata)
         for i in range(length):
             self.forwordpropagation(self.testdata[i][:-1])
-            if self.z[-1] >= 0.9 and self.testdata[i][-1] == 1:
+            if self.z[-1] >= 0.8 and self.testdata[i][-1] == 1:
                 count += 1
-            elif self.z[-1] <= 0.1 and self.testdata[i][-1] == 0:
+            elif self.z[-1] <= 0.2 and self.testdata[i][-1] == 0:
                 count += 1
-            cost += (self.z[-1] - self.testdata[i][-1])** 2
-        print(str(count) + "/" + str(length) + " = " + str(count/length) + " : " + str(cost))
+            cost += ((self.z[-1] - self.testdata[i][-1])** 2)
+        self.cost.append(cost/length)
+        print(str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost) + " : " + str(len(self.cost)))
