@@ -1,4 +1,5 @@
 import sys
+import math
 import activationfunction as af
 import costfunction
 import setting
@@ -66,7 +67,7 @@ class Neural_Network:
                 break
             self.y[i+1][1:] = self.weight[i] @ self.z[i]
             self.z[i + 1] = self.actfunc(self.y[i + 1])
-            
+
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
@@ -84,7 +85,7 @@ class Neural_Network:
             tmp = self.difffunc(z) * (weight.T @ tmp)
             diff = vmath.vvmat(self.z[-i-3],tmp)
             self.weight[-i-2] -= self.train_ratio * diff.T
-            
+
     # 学習
     def train(self):
         length = len(self.data)
@@ -104,5 +105,8 @@ class Neural_Network:
             elif self.z[-1] <= 0.2 and self.testdata[i][-1] == 0:
                 count += 1
             cost += ((self.z[-1] - self.testdata[i][-1])** 2)
-        self.cost.append(cost/length)
+        self.cost.append(cost / length)
+        if math.isnan(cost):
+            sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
+            sys.exit(2)
         print(str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost) + " : " + str(len(self.cost)))
