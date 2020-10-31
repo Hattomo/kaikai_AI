@@ -18,7 +18,7 @@ class Neural_Network:
         self.costfunc = None
         self.train_ratio = 0.5
 
-    def model(self,data,testdata,w_method="unif",actfunc="sigmoid",costfunc="RSS"):
+    def model(self,data,testdata,w_method="unif",actfunc="sigmoid",costfunc="rss"):
         self.data = data
         self.testdata = testdata
         self.y = setting.ynet(self.layer)
@@ -32,7 +32,7 @@ class Neural_Network:
             self.weight = setting.wnet(self.layer,setting.unif)
         else:
             sys.stdout.write("Error: The weight method is not found\n")
-            sys.exit(0)
+            sys.exit(1)
         # 活性化関数の初期化
         if actfunc == "sigmoid":
             self.actfunc = af.sigmoid
@@ -45,20 +45,20 @@ class Neural_Network:
             self.difffunc = f.diffReLU
         else:
             sys.stdout.write("Error: The actfunc is not found\n")
-            sys.exit(0)
+            sys.exit(1)
         # 損失関数の初期化
-        if costfunc == "RSS":
-            self.costfunc = costfunction.RSS
+        if costfunc == "rss":
+            self.costfunc = costfunction.rss
         else:
             sys.stdout.write("Error: The lossfunc is not found\n")
-            sys.exit(0)
+            sys.exit(1)
         self.difffunc = af.msigmoid
     # フォワードプロパゲーション
     def forwordpropagation(self,x):
         self.z[0][0] = 1
         self.z[0][1:] = x
         for i in range(len(self.layer) - 1):
-            if i==len(self.weight)-1:
+            if i == len(self.weight) - 1:
                 self.y[i+1] = self.weight[i] @ self.z[i]
                 self.z[i+1] = self.actfunc(self.y[i+1])
                 break
@@ -74,14 +74,14 @@ class Neural_Network:
         # print((self.z[-1]-y)**2)
         tmp = self.difffunc(self.y[-1]) * (self.z[-1]-y)
         diff = self.z[-2] * tmp
-        self.weight[-1] += self.train_ratio * diff
+        self.weight[-1] -= self.train_ratio * diff
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
             weight = (self.weight[-i-1].T[1:]).T
             z = (self.z[-i-2].T[1:]).T
             tmp = self.difffunc(z) * (weight.T @ tmp)
             diff = vmath.vvmat(self.z[-i-3],tmp)
-            self.weight[-i-2] += self.train_ratio * diff.T
+            self.weight[-i-2] -= self.train_ratio * diff.T
             
     # 学習
     def train(self):
@@ -91,32 +91,24 @@ class Neural_Network:
             self.backpropagation(self.data[i][:-1], self.data[i][-1])
 
     # テスト
-    def test(self,testdata):
+    def test(self):
+        cost = 0
         count = 0
-        length = len(testdata)
+        length = len(self.testdata)
         for i in range(length):
-            self.forwordpropagation(testdata[i][:-1])
-            if self.z[-1] >= 0.5 and testdata[i][-1]==1:
+            self.forwordpropagation(self.testdata[i][:-1])
+            if self.z[-1] >= 0.9 and self.testdata[i][-1] == 1:
                 # print("ok")
                 count += 1
-            elif self.z[-1] < 0.5 and testdata[i][-1]==0:
+            elif self.z[-1] <= 0.1 and self.testdata[i][-1] == 0:
                 # print("ok")
                 count += 1
             else :
                 pass
                 # print("bad")
-        self.accuracy = count/length
-        print(count/length)
+            cost += (self.z[-1] - self.testdata[i][-1])** 2
+        print(str(count) + "/" + str(length) + " = " + str(count/length) + " : " + str(cost))
 
     def wprint(self):
         print(self.imWeight)
         print(self.moWeight)
-
-    def RSS(self, data):
-            cost=0
-            length = len(data)
-            for i in range(length):
-                self.forwordpropagation(data[i][:-1])
-                cost = (self.alllayer[1][-1] - data[i][-1])**2
-                print(cost)
-            return cost

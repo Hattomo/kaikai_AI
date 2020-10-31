@@ -5,12 +5,12 @@ import math
 
 # sigmoid関数
 def sigmoid(x):
-    return 1/(1+math.e**-x)
+    return 1 / (1 + math.e ** -x)
 # msigmoid(一次元配列 x)
 def msigmoid(x):
     ans = x
     node = len(x)
-    if node ==1:
+    if node == 1:
         ans[0] = sigmoid(x[0])
         return ans 
     for i in range(1,node):
@@ -19,7 +19,7 @@ def msigmoid(x):
 # tanh関数
 def tanh(x):
     e = math.e
-    return (e**x-e**-x)/(e**x+e**-x)
+    return (e ** x - e ** -x) / (e ** x + e ** -x)
 # mtanh(一次元配列　x)
 def mtanh(x):
     ans = x
@@ -44,7 +44,7 @@ def mReLU(x):
 
 # sigmoid関数の微分
 def diffsigmoid(x):
-    return sigmoid(x)*(1-sigmoid(x))
+    return sigmoid(x) * (1 - sigmoid(x))
 # mdiffsigmoid(一次元配列 x)
 def mdiffsigmoid(x):
     ans = x
@@ -55,7 +55,7 @@ def mdiffsigmoid(x):
 # tanh関数の微分
 def difftanh(x):
     e = math.e
-    return 4/(e**x+e**-x)**2
+    return 4 / (e ** x + e ** -x)** 2
 # mdifftanh(一次元配列 x)
 def mdifftanh(x):
     ans = x
@@ -65,7 +65,7 @@ def mdifftanh(x):
     return ans
 # ReLU関数の微分
 def diffReLU(x):
-    if x<0:
+    if x < 0:
         return 0
     else:
         return 1
