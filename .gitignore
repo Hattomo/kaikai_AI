@@ -138,5 +138,5 @@ dmypy.json
 kaikai_ML_env/*
 
 # image
-.jpg
-.png
+*.jpg
+*.png
