@@ -8,7 +8,7 @@ def draw(y):
     for i in range(len(y)):
         x.append(i)
     plt.plot(x,y)
-    #plt.show()
+    plt.show()
     plt.savefig("dnn/out/cost.png")
 
 def tdchart(nn):
