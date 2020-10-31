@@ -1,6 +1,6 @@
 import activationfunction as af
 import makedata as md
-import nural_network as nn
+import neural_network as nn
 
 layer = [3, 3, 1]
 epoch = 25

@@ -1,6 +1,6 @@
 import sys
 import activationfunction as af
-import lossfunction as costfunction
+import costfunction
 import setting
 import numpy as np
 import vectormath as vmath
