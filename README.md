@@ -25,6 +25,7 @@ if you use `Visual Studio Code`, please set as below.
 ```
 
 ## Learning ML  
-1. 深層学習(NN)  
-1. オートエンコーダ　or　CNN  
+1. 深層学習(NN)
+1. オートエンコーダ　or　CNN
+1. サポートベクタマシン
 1. RL(Q-learning)  
