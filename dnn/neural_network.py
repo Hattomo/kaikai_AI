@@ -19,6 +19,7 @@ class Neural_Network:
         self.actfunc = None
         self.difffunc = None
         self.costfunc = None
+        self.diffcost = None
         self.train_ratio = 0.5
         self.cost = list()
 
@@ -52,6 +53,7 @@ class Neural_Network:
         # 損失関数の初期化
         if costfunc == "rss":
             self.costfunc = costfunction.rss
+            self.diffcost = costfunction.diffrss
         else:
             sys.stdout.write("Error: The lossfunc is not found\n")
             sys.exit(1)
@@ -72,11 +74,11 @@ class Neural_Network:
     # バックプロパゲーション
     def backpropagation(self, x, y):
         # out layer to middle layer
-        if (self.z[-1] - y)**2 < 0.5:
+        if self.costfunc(y, self.z[-1]) < 0.5:
             self.train_ratio = 0.1
-        elif (self.z[-1] - y)**2 < 0.1:
+        elif self.costfunc(y, self.z[-1]) < 0.1:
             self.train_ratio = 0.01
-        tmp = self.difffunc(self.y[-1]) * (self.z[-1] - y)
+        tmp = self.difffunc(self.y[-1]) * self.diffcost(y, self.z[-1])
         diff = self.z[-2] * tmp
         self.weight[-1] -= self.train_ratio * diff
         # middle layer to input layer
