@@ -6,7 +6,7 @@ import files
 
 layer = [3, 3, 1]
 epoch = 30
-logic = "and"
+logic = "xor"
 # set data
 trainData = md.dset(logic, epoch)
 testData = md.dset(logic, 20)
