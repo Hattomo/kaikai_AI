@@ -2,13 +2,14 @@ import activationfunction as af
 import makedata as md
 import neural_network as nn
 import analysistool as atool
+import files
 
 layer = [3, 3, 1]
 epoch = 30
 logic = "xor"
 # set data
-trainData = md.dset(logic,epoch)
-testData = md.dset(logic,20)
+trainData = md.dset(logic, epoch)
+testData = md.dset(logic, 20)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(layer)
 # 学習
@@ -20,3 +21,4 @@ for i in range(count):
     orNN.test()
 atool.draw(orNN.cost)
 atool.tdchart(orNN)
+files.save(orNN)
