@@ -1,4 +1,5 @@
 import sys
+import math
 import activationfunction as af
 import costfunction
 import setting
@@ -106,6 +107,9 @@ class Neural_Network:
                 count += 1
             cost += ((self.z[-1] - self.testdata[i][-1])**2)
         self.cost.append(cost / length)
+        if math.isnan(cost):
+            sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
+            sys.exit(2)
         print(
             str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost) + " : " +
             str(len(self.cost)))
