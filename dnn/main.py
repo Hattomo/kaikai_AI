@@ -2,6 +2,7 @@ import activationfunction as af
 import makedata as md
 import neural_network as nn
 import analysistool as atool
+import files
 
 layer = [3, 3, 1]
 epoch = 30
@@ -20,3 +21,4 @@ for i in range(count):
     orNN.test()
 atool.draw(orNN.cost)
 atool.tdchart(orNN)
+files.save(orNN)

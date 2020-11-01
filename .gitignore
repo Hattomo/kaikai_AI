@@ -140,3 +140,7 @@ kaikai_ML_env/*
 # image
 *.jpg
 *.png
+
+# numpy binary
+*.npy
+*.npz
