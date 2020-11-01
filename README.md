@@ -9,7 +9,7 @@ Install `yapf (Yet Another Python Formatter)`
 ```sh
 $ pip3 install yapf
 ```
-Our format settings is in [here](./.style.yapf)  
+Our format settings is [here](./.style.yapf)  
 if you use `Visual Studio Code`, please set as below.  
 
 ```json
