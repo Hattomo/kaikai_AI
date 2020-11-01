@@ -4,6 +4,7 @@ import costfunction
 import setting
 import numpy as np
 import vectormath as vmath
+import files
 
 class Neural_Network:
 
@@ -33,8 +34,7 @@ class Neural_Network:
         elif w_method == "unif":
             self.weight = setting.wnet(self.layer, setting.unif)
         else:
-            sys.stdout.write("Error: The weight method is not found\n")
-            sys.exit(1)
+            self.weight = files.load(w_method)
         # 活性化関数の初期化
         if actfunc == "sigmoid":
             self.actfunc = af.sigmoid
