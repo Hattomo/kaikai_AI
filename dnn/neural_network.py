@@ -43,31 +43,31 @@ class Neural_Network:
         elif actfunc == "tanh":
             self.actfunc = af.tanh
             self.difffunc = af.difftanh
-        elif actfunc == "ReLU":
+        elif actfunc == "relu":
             self.actfunc = af.mReLU
             self.difffunc = af.diffReLU
-        elif actfunc == "Identity":
+        elif actfunc == "identity":
             self.actfunc = af.Identity
             self.difffunc = af.diffIdentity
-        elif actfunc == "BentIdentity":
+        elif actfunc == "bentIdentity":
             self.actfunc = af.BentIdentity
             self.difffunc = af.diffBentIdentity
         elif actfunc == "hardShrink":
             self.actfunc = af.hardShrink
             self.difffunc = af.diffhardShrink
-        elif actfunc == "logSigmoid":
+        elif actfunc == "log_Sigmoid":
             self.actfunc = af.logSigmoid
             self.difffunc = af.difflogSigmoid
         elif actfunc == "tanhShrink":
             self.actfunc = af.tanhShrink
             self.difffunc = af.difftanhShrink
-        elif actfunc == "ELU":
+        elif actfunc == "elu":
             self.actfunc = af.ELU
             self.difffunc = af.diffELU
-        elif actfunc == "Swish":
+        elif actfunc == "swish":
             self.actfunc = af.Swish
             self.difffunc = af.diffSwish
-        elif actfunc == "Mish":
+        elif actfunc == "mish":
             self.actfunc = af.Mish
             self.difffunc = af.diffMish
         else:
