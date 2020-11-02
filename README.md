@@ -1,10 +1,14 @@
 # AI Learning with kaikai
 
 ## Start Developing
-You have to install `python3` and some other required module
+You have to install `python3` and some other required module.
+
+To run cnn with `THE MNIST DATABASE of handwritten digits`,
+please download the data set from [here](https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz) and locate the file to `dataset/input/`.  
+
 
 ### Format
-Install `yapf (Yet Another Python Formatter)`
+Install `yapf (Yet Another Python Formatter)`.
 
 ```sh
 $ pip3 install yapf
