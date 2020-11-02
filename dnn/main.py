@@ -1,8 +1,8 @@
 import activationfunction as af
-import makedata as md
-import neural_network as nn
 import analysistool as atool
 import files
+import makedata as md
+import neural_network as nn
 
 layer = [3, 3, 1]
 epoch = 30

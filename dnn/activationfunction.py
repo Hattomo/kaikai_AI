@@ -1,6 +1,7 @@
 # 活性化関数一覧
-import numpy as np
 import math
+
+import numpy as np
 
 ## 活性化関数
 # sigmoid関数

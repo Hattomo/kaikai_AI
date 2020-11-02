@@ -1,7 +1,8 @@
 # 重みと中間層の作成
-import numpy as np
-import random
 import math
+import random
+
+import numpy as np
 
 # 重みの作成
 #一様分布
