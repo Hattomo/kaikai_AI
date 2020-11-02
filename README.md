@@ -13,7 +13,7 @@ Our format settings is [here](./.style.yapf)
 if you use `Visual Studio Code`, please set as below.  
 
 ```json
-.vs/settings.json
+.vscode/settings.json
 
 {
   "python.formatting.provider": "yapf",
