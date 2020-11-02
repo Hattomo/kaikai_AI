@@ -3,7 +3,7 @@
 ## Start Developing
 You have to install `python3` and some other required module.
 
-To run cnn with `THE MNIST DATABASE of handwritten digits`,
+To run cnn with [THE MNIST DATABASE of handwritten digits](http://yann.lecun.com/exdb/mnist/),
 please download the data set from [here](https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz) and locate the file to `dataset/input/`.  
 
 
