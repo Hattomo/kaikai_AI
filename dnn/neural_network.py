@@ -44,14 +44,14 @@ class Neural_Network:
             self.actfunc = af.tanh
             self.difffunc = af.difftanh
         elif actfunc == "relu":
-            self.actfunc = af.mReLU
-            self.difffunc = af.diffReLU
+            self.actfunc = af.mrelu
+            self.difffunc = af.diffrelu
         elif actfunc == "identity":
-            self.actfunc = af.Identity
-            self.difffunc = af.diffIdentity
+            self.actfunc = af.identity
+            self.difffunc = af.diffidentity
         elif actfunc == "bentIdentity":
-            self.actfunc = af.BentIdentity
-            self.difffunc = af.diffBentIdentity
+            self.actfunc = af.bentIdentity
+            self.difffunc = af.diffbentIdentity
         elif actfunc == "hardShrink":
             self.actfunc = af.hardShrink
             self.difffunc = af.diffhardShrink
@@ -62,14 +62,14 @@ class Neural_Network:
             self.actfunc = af.tanhShrink
             self.difffunc = af.difftanhShrink
         elif actfunc == "elu":
-            self.actfunc = af.ELU
-            self.difffunc = af.diffELU
+            self.actfunc = af.elu
+            self.difffunc = af.diffelu
         elif actfunc == "swish":
-            self.actfunc = af.Swish
-            self.difffunc = af.diffSwish
+            self.actfunc = af.swish
+            self.difffunc = af.diffswish
         elif actfunc == "mish":
-            self.actfunc = af.Mish
-            self.difffunc = af.diffMish
+            self.actfunc = af.mish
+            self.difffunc = af.diffmish
         else:
             sys.stdout.write("Error: The actfunc is not found\n")
             sys.exit(1)
