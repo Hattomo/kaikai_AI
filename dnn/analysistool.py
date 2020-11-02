@@ -8,7 +8,7 @@ def draw(y):
     for i in range(len(y)):
         x.append(i)
     plt.plot(x, y)
-    plt.show()
+    #plt.show()
     plt.savefig("dnn/out/cost.png")
 
 def tdchart(nn):
@@ -28,5 +28,5 @@ def tdchart(nn):
             nn.forwordpropagation([i / dence, j / dence])
             z.append(nn.z[-1])
     ax.scatter3D(x, y, z)
-    plt.show()
+    #plt.show()
     plt.savefig("dnn/out/3d.png")
