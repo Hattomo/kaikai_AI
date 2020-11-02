@@ -39,6 +39,14 @@ def dset(d_name, num):
             data[4*i + 2] = [1, 0, 0]
             data[4*i + 3] = [1, 1, 1]
         return data
+    elif d_name == "w_not":
+        data = np.zeros((4 * num, 4))
+        for i in range(num):
+            data[4 * i] = [0, 0, 1, 1]
+            data[4*i + 1] = [0, 1, 1, 0]
+            data[4*i + 2] = [1, 0, 0, 1]
+            data[4*i + 3] = [1, 1, 0, 0]
+        return data
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)

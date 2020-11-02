@@ -11,7 +11,7 @@ def draw(y):
         x.append(i)
     plt.plot(x, y)
     plt.savefig(os.path.join(os.path.dirname(__file__), 'out/cost.png'))
-    plt.show()
+    #plt.show()
 
 def tdchart(nn):
     fig = plt.figure()
@@ -31,4 +31,4 @@ def tdchart(nn):
             z.append(nn.z[-1])
     ax.scatter3D(x, y, z)
     plt.savefig(os.path.join(os.path.dirname(__file__), 'out/3d.png'))
-    plt.show()
+    #plt.show()

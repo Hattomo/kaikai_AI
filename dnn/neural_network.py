@@ -105,8 +105,8 @@ class Neural_Network:
         elif self.costfunc(y, self.z[-1]) < 0.1:
             self.train_ratio = 0.01
         tmp = self.difffunc(self.y[-1]) * self.diffcost(y, self.z[-1])
-        diff = self.z[-2] * tmp
-        self.weight[-1] -= self.train_ratio * diff
+        diff = vmath.vvmat(self.z[-2], tmp)
+        self.weight[-1] -= self.train_ratio * diff.T
         # middle layer to input layer
         for i in range(len(self.layer) - 2):
             weight = (self.weight[-i - 1].T[1:]).T
@@ -119,25 +119,29 @@ class Neural_Network:
     def train(self):
         length = len(self.data)
         for i in range(length):
-            self.forwordpropagation(self.data[i][:-1])
-            self.backpropagation(self.data[i][:-1], self.data[i][-1])
+            self.forwordpropagation(self.data[i][:-self.layer[-1]])
+            self.backpropagation(self.data[i][:-self.layer[-1]], self.data[i][-self.layer[-1]:])
 
     # テスト
     def test(self):
         count = 0
         cost = 0
+        z = np.zeros(self.layer[-1])
         length = len(self.testdata)
         for i in range(length):
-            self.forwordpropagation(self.testdata[i][:-1])
-            if self.z[-1] >= 0.8 and self.testdata[i][-1] == 1:
-                count += 1
-            elif self.z[-1] <= 0.2 and self.testdata[i][-1] == 0:
-                count += 1
-            cost += ((self.z[-1] - self.testdata[i][-1])**2)
+            self.forwordpropagation(self.testdata[i][:-self.layer[-1]])
+            for i in range(self.layer[-1]):
+                if self.z[-1][i] >= 0.8:
+                    z[i] = 1.0
+                elif self.z[-1][i] <= 0.2:
+                    z[i] = 0.0
+                if (z == self.testdata[i][:-self.layer[-1]]).all():
+                    count += 1
+            cost += self.costfunc(self.testdata[i][-self.layer[-1]:], self.z[-1])
         self.cost.append(cost / length)
         if math.isnan(cost):
             sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
             sys.exit(2)
         print(
-            str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost) + " : " +
+            str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost / length) + " : " +
             str(len(self.cost)))
