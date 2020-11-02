@@ -1,11 +1,13 @@
-import sys
 import math
+import sys
+
+import numpy as np
+
 import activationfunction as af
 import costfunction
-import setting
-import numpy as np
-import vectormath as vmath
 import files
+import setting
+import vectormath as vmath
 
 class Neural_Network:
 
@@ -44,9 +46,33 @@ class Neural_Network:
         elif actfunc == "tanh":
             self.actfunc = af.tanh
             self.difffunc = af.difftanh
-        elif actfunc == "ReLU":
-            self.actfunc = af.ReLU
-            self.difffunc = af.diffReLU
+        elif actfunc == "relu":
+            self.actfunc = af.mrelu
+            self.difffunc = af.diffrelu
+        elif actfunc == "identity":
+            self.actfunc = af.identity
+            self.difffunc = af.diffidentity
+        elif actfunc == "bentIdentity":
+            self.actfunc = af.bentIdentity
+            self.difffunc = af.diffbentIdentity
+        elif actfunc == "hardShrink":
+            self.actfunc = af.hardShrink
+            self.difffunc = af.diffhardShrink
+        elif actfunc == "log_Sigmoid":
+            self.actfunc = af.logSigmoid
+            self.difffunc = af.difflogSigmoid
+        elif actfunc == "tanhShrink":
+            self.actfunc = af.tanhShrink
+            self.difffunc = af.difftanhShrink
+        elif actfunc == "elu":
+            self.actfunc = af.elu
+            self.difffunc = af.diffelu
+        elif actfunc == "swish":
+            self.actfunc = af.swish
+            self.difffunc = af.diffswish
+        elif actfunc == "mish":
+            self.actfunc = af.mish
+            self.difffunc = af.diffmish
         else:
             sys.stdout.write("Error: The actfunc is not found\n")
             sys.exit(1)
