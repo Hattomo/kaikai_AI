@@ -1,11 +1,13 @@
-import sys
 import math
+import sys
+
+import numpy as np
+
 import activationfunction as af
 import costfunction
-import setting
-import numpy as np
-import vectormath as vmath
 import files
+import setting
+import vectormath as vmath
 
 class Neural_Network:
 

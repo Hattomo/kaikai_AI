@@ -1,6 +1,7 @@
-import numpy as np
-import random
 import sys
+import random
+
+import numpy as np
 
 # データの作成
 # num データの数
