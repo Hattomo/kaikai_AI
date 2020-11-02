@@ -31,22 +31,22 @@ def mtanh(x):
         ans[i] = tanh(x[i])
         return ans
 
-# ReLU関数
-def ReLU(x):
+# relu関数
+def relu(x):
     if x < 0:
         return 0
     else:
         return x
 
-# mReLU(一次元配列　x)
-def mReLU(x):
+# mrelu(一次元配列　x)
+def mrelu(x):
     ans = x
     node = len(x)
     if node == 1:
-        ans[0] = sigmoid(x[0])
+        ans[0] = relu(x[0])
         return ans
     for i in range(1, node):
-        ans[i] = ReLU(x[i])
+        ans[i] = relu(x[i])
         return ans
 
 ## 活性化関数の微分
@@ -75,17 +75,17 @@ def mdifftanh(x):
         ans[i] = difftanh(x[i])
     return ans
 
-# ReLU関数の微分
-def diffReLU(x):
+# relu関数の微分
+def diffrelu(x):
     if x < 0:
         return 0
     else:
         return 1
 
-# mdiffReLU(一次元配列 x)
-def mdiffReLU(x):
+# mdiffrelu(一次元配列 x)
+def mdiffrelu(x):
     ans = x
     node = len(x)
     for i in range(node):
-        ans[i] = diffReLU(x[i])
+        ans[i] = diffrelu(x[i])
     return ans
