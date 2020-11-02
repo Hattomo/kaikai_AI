@@ -1,17 +1,20 @@
+import sys
+
+sys.path.append("./dataset")
 import activationfunction as af
 import analysistool as atool
 import files
-import makedata as md
-import neural_network as nn
+import logic_circuit as lc
+import neural_network_engine as nne
 
 layer = [3, 3, 1]
 epoch = 30
 logic = "xor"
 # set data
-trainData = md.dset(logic, epoch)
-testData = md.dset(logic, 20)
+trainData = lc.dset(logic, epoch)
+testData = lc.dset(logic, 20)
 # ニューラルネットワークの生成
-orNN = nn.Neural_Network(layer)
+orNN = nne.Neural_Network(layer)
 # 学習
 count = 20
 # ニューラルネットワークのトレーニングデータ、レイヤー、重み番号、活性化関数番号の設定,cost func

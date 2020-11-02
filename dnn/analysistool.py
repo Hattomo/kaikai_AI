@@ -3,8 +3,6 @@ import os
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-import neural_network as nn
-
 def draw(y):
     x = list()
     for i in range(len(y)):
