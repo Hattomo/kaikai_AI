@@ -52,26 +52,26 @@ def dset(d_name, num):
         return data
     elif d_name == "mnist_train" or d_name == "mnist_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data()
-        one = np.zeros((num, 784 + 10), dtype=np.float128)
+        data = np.zeros((num, 784 + 10), dtype=np.float128)
         for i in range(num):
             for j in range(28):
                 for k in range(28):
                     if (d_name == "mnist_train"):
-                        one[i][28*j + k] = train_data[i][j][k]
+                        data[i][28*j + k] = train_data[i][j][k]
                     elif (d_name == "mnist_test"):
-                        one[i][28*j + k] = test_data[i][j][k]
+                        data[i][28*j + k] = test_data[i][j][k]
             for l in range(784, 794):
                 if (d_name == "mnist_train"):
                     if (l - 784 == train_label[i]):
-                        one[i][l] = 1.0
+                        data[i][l] = 1.0
                     else:
-                        one[i][l] = 0.0
+                        data[i][l] = 0.0
                 elif (d_name == "mnist_test"):
                     if (l - 784 == train_label[i]):
-                        one[i][l] = 1.0
+                        data[i][l] = 1.0
                     else:
-                        one[i][l] = 0.0
-        return one
+                        data[i][l] = 0.0
+        return data
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
