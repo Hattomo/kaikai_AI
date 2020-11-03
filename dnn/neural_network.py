@@ -130,13 +130,13 @@ class Neural_Network:
         length = len(self.testdata)
         for i in range(length):
             self.forwordpropagation(self.testdata[i][:-self.layer[-1]])
-            for i in range(self.layer[-1]):
-                if self.z[-1][i] >= 0.8:
-                    z[i] = 1.0
-                elif self.z[-1][i] <= 0.2:
-                    z[i] = 0.0
-                if (z == self.testdata[i][:-self.layer[-1]]).all():
-                    count += 1
+            for j in range(self.layer[-1]):
+                if self.z[-1][j] >= 0.8:
+                    z[j] = 1.0
+                elif self.z[-1][j] <= 0.2:
+                    z[j] = 0.0
+            if (z == self.testdata[i][-self.layer[-1]:]).all():
+                count += 1
             cost += self.costfunc(self.testdata[i][-self.layer[-1]:], self.z[-1])
         self.cost.append(cost / length)
         if math.isnan(cost):
