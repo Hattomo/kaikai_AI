@@ -6,6 +6,7 @@ import numpy as np
 ## 活性化関数
 # sigmoid関数
 def non_universal_sigmoid(x):
+    # avoid overflow
     sigmoid_range = 34.538776394910684
     if x <= -sigmoid_range:
         return 1e-15
@@ -13,6 +14,7 @@ def non_universal_sigmoid(x):
         return 1.0 - 1e-15
     return 1.0 / (1.0 + np.exp(-x))
 
+# vectorize non universal sigmoid
 def sigmoid(x):
     sig = np.vectorize(non_universal_sigmoid)
     return sig(x)
