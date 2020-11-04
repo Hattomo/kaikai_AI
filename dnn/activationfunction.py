@@ -47,6 +47,8 @@ def mtanh(x):
 def relu(x):
     if x < 0:
         return 0
+    elif x > 1e+5:
+        return 1e+5
     else:
         return x
 
