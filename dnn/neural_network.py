@@ -6,7 +6,7 @@ import numpy as np
 import activationfunction as af
 import costfunction
 import files
-import setting
+import dsetting
 import vectormath as vmath
 
 class Neural_Network:
@@ -28,15 +28,15 @@ class Neural_Network:
     def model(self, data, testdata, w_method="unif", actfunc="sigmoid", costfunc="rss"):
         self.data = data
         self.testdata = testdata
-        self.y = setting.ynet(self.layer)
-        self.z = setting.znet(self.layer)
+        self.y = dsetting.ynet(self.layer)
+        self.z = dsetting.znet(self.layer)
         # 重みの初期化
         if w_method == "xivier":
-            self.weight = setting.wnet(self.layer, setting.xivier)
+            self.weight = dsetting.wnet(self.layer, dsetting.xivier)
         elif w_method == "he":
-            self.weight = setting.wnet(self.layer, setting.he)
+            self.weight = dsetting.wnet(self.layer, dsetting.he)
         elif w_method == "unif":
-            self.weight = setting.wnet(self.layer, setting.unif)
+            self.weight = dsetting.wnet(self.layer, dsetting.unif)
         else:
             self.weight = files.load(w_method)
         # 活性化関数の初期化
