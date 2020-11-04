@@ -50,4 +50,3 @@ def wnet(layer, w_method):
     last_w = w_method(layer[-2], layer[-1])
     net.append(last_w)
     return net
-

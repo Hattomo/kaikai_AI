@@ -26,7 +26,8 @@ class Pooling_Layer:
             for h in range(channel):
                 for i in range(out_height):
                     for j in range(out_width):
-                        out[h][i][j] = np.average(self.data[h][i:i + self.pooling_size[1]].T[j:j + self.pooling_size[0]].T)
+                        out[h][i][j] = np.average(self.data[h][i:i + self.pooling_size[1]].T[j:j +
+                                                                                             self.pooling_size[0]].T)
         else:
             sys.stdout.write("Error: The pooling_method is not found\n")
             sys.exit(1)

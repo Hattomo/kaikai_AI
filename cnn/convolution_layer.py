@@ -24,7 +24,7 @@ class Convolution_Layer:
         self.actfunc = actfunc
         self.padding_method = padding_method
         self.__select_w(k_method)
-    
+
     def __select_w(self, k_method):
         if k_method == "xivier":
             self.kernel = setting.knet(self.channel, self.kernel_size, setting.xivier)
@@ -33,6 +33,7 @@ class Convolution_Layer:
         else:
             sys.stdout.write("Error: The kernel method is not found\n")
             sys.exit(1)
+
     def padding(self):
         #padding
         if self.padding_method == "valid-padding":
@@ -48,7 +49,7 @@ class Convolution_Layer:
         # make output array
         if (data_size - self.kernel_size) % self.stride == 0:
             out_size = int((data_size - self.kernel_size) / self.stride + 1)
-            out = np.zeros([self.channel,out_size, out_size])
+            out = np.zeros([self.channel, out_size, out_size])
         else:
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)

@@ -13,13 +13,13 @@ import pooling_layer as pl
 
 # (train_data, train_label), (test_data, test_label) = mnist.load_data()
 
-a = np.zeros([10,10])
+a = np.zeros([10, 10])
 for i in range(10):
     for j in range(10):
         a[i][j] = i
 
 conv = cl.Convolution_Layer(a, 3, 3)
 conv_out = conv.convolution()
-pool = pl.Pooling_Layer(conv_out,[2,2])
+pool = pl.Pooling_Layer(conv_out, [2, 2])
 pool_out = pool.pooling()
 print(pool_out)
