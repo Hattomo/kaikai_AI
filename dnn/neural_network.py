@@ -126,7 +126,7 @@ class Neural_Network:
     def test(self):
         count = 0
         cost = 0
-        z = np.zeros(self.layer[-1])
+        z = np.zeros(self.layer[-1], dtype=np.float128)
         length = len(self.testdata)
         for i in range(length):
             self.forwordpropagation(self.testdata[i][:-self.layer[-1]])
