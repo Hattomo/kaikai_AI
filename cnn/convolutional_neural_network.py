@@ -1,47 +1,62 @@
+import sys
+
+import numpy as np
+
 sys.path.append('./dnn')
 import neural_network as nn
+import activationfunction as af
+import setting
 
-class Convolutional_Neural_Network:
+class Convolution_Layer:
 
-    def __init__(self, layer):
-        self.nn = nn.Neural_Network()
-    
-    def model(data,testdata,filter,stride,padding_method)
+    def __init__(self,
+                 data,
+                 channel,
+                 kernel_size,
+                 k_method="xivier",
+                 stride=1,
+                 actfunc="sigmoid",
+                 padding_method="valid-method"):
         self.data = data
-        self.testdata = testdata
-        self.filter = filer
+        self.channel = channel
+        self.kernel_size = kernel_size
         self.stride = stride
+        self.actfunc = actfunc
         self.padding_method = padding_method
-
-    def conv(x,stride,filter,padding_method):
-        x_size = len(x)
-        filter_size = len(filter)
+        self.__select_w(k_method)
+    
+    def __select_w(self, k_method):
+        if k_method == "xivier":
+            self.kernel = setting.knet(self.channel, self.kernel_size, setting.xivier)
+        elif k_method == "he":
+            self.kernel = setting.knet(self.channel, self.kernel_size, setting.he)
+        else:
+            sys.stdout.write("Error: The kernel method is not found\n")
+            sys.exit(1)
+    def padding(self):
         #padding
-        if padding_method == "valid-padding":
+        if self.padding_method == "valid-padding":
             x = x
             padding_size = 0
-            x_size += padding_size
+            data_size += padding_size
         else:
             sys.stdout.write("Error: The padding method is not found\n")
             sys.exit(1)
+
+    def convolution(self):
+        data_size = len(self.data)
         # make output array
-        if (x_size-filter_size) == (x_size-filter_size)/stride * stride:
-            out_size =int( (x_size-filter_size)/stride+1 )
-            out = np.zeros([out_size,out_size])
+        if (data_size - self.kernel_size) % self.stride == 0:
+            out_size = int((data_size - self.kernel_size) / self.stride + 1)
+            out = np.zeros([self.channel,out_size, out_size])
         else:
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
         #convolution
-        for i in range(out_size):
-            for j in range(out_size):
-                # print( x[i:i+filter_size].T[j:j+filter_size].T )
-                y = (x[i:i+filter_size].T[j:j+filter_size].T) @ filter
-                z = sigmoid(y)
-                out[i][j] = np.sum(z)
+        for h in range(self.channel):
+            for i in range(out_size):
+                for j in range(out_size):
+                    y = (self.data[i:i + self.kernel_size].T[j:j + self.kernel_size].T) @ self.kernel[h]
+                    z = af.sigmoid(y)
+                    out[h][i][j] = np.sum(z)
         return out
-    def pooling(x,pooling_method):
-        x_size = len(x)
-        if pooling_method == "max-pooling":
-            pass
-        elif pooling_method == "mean-pooling":
-            pass
