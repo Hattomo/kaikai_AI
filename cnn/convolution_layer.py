@@ -5,7 +5,7 @@ import numpy as np
 sys.path.append('./dnn')
 import neural_network as nn
 import activationfunction as af
-import setting
+import csetting
 
 class Convolution_Layer:
 
@@ -27,9 +27,9 @@ class Convolution_Layer:
 
     def __select_w(self, k_method):
         if k_method == "xivier":
-            self.kernel = setting.knet(self.channel, self.kernel_size, setting.xivier)
+            self.kernel = csetting.knet(self.channel, self.kernel_size, csetting.xivier)
         elif k_method == "he":
-            self.kernel = setting.knet(self.channel, self.kernel_size, setting.he)
+            self.kernel = csetting.knet(self.channel, self.kernel_size, csetting.he)
         else:
             sys.stdout.write("Error: The kernel method is not found\n")
             sys.exit(1)
