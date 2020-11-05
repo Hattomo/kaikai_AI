@@ -9,9 +9,9 @@ import convolution_layer as cl
 import csetting
 import neural_network as nn
 import pooling_layer as pl
-# import mnist
+import mnist
 
-# (train_data, train_label), (test_data, test_label) = mnist.load_data()
+(train_data, train_label), (test_data, test_label) = mnist.load_data()
 
 a = np.zeros([10, 10])
 for i in range(10):

@@ -6,47 +6,44 @@ import numpy as np
 
 # 重みの作成
 #一様分布
-def unif(i_node, o_node):
-    weight = np.random.rand(i_node * o_node).astype('f16') * 2 - 1
-    weight = weight.reshape(o_node, i_node).astype('f16')
-    return weight
+def unif(kernel_w_size, kernel_h_size):
+    kernel = np.random.rand(kernel_w_size * kernel_h_size) * 2 - 1
+    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
+    return kernel
 
 #正規分布(xivier)
-def xivier(i_node, o_node):
-    weight = np.random.normal(loc=0.0, scale=1 / math.sqrt(i_node), size=i_node * o_node).astype('f16')
-    weight = weight.reshape(o_node, i_node).astype('f16')
-    return weight
+def xivier(kernel_w_size, kernel_h_size):
+    kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(kernel_w_size), size=kernel_w_size * kernel_h_size)
+    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
+    return kernel
 
 #正規分布(he)
-def he(i_node, o_node):
-    weight = np.random.normal(loc=0.0, scale=math.sqrt(2 / i_node), size=i_node * o_node).astype('f16')
-    weight = weight.reshape(o_node, i_node).astype('f16')
-    return weight
+def he(kernel_w_size, kernel_h_size):
+    kernel = np.random.normal(loc=0.0, scale=math.sqrt(2 / kernel_w_size), size=kernel_w_size * kernel_h_size)
+    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
+    return kernel
 
-# y
-def ynet(layer):
+# x
+def xnet(layer):
     length = len(layer)
-    net = list("-")
+    net = list()
     for i in range(1, length):
-        y = np.ones(layer[i], dtype=np.float128)
+        y = np.ones(layer[i])
         net.append(y)
     return net
 
-# x, z
-def znet(layer):
+# y
+def ynet(layer):
     net = list()
     for i in range(len(layer)):
-        x = np.zeros(layer[i], dtype=np.float128)
+        x = np.zeros(layer[i])
         net.append(x)
     return net
 
 # すべての重み
-def wnet(layer, w_method):
-    length = len(layer)
+def knet(channel, kernel_size, k_method):
     net = list()
-    for i in range(length - 2):
-        w = w_method(layer[i], layer[i + 1] - 1)
-        net.append(w)
-    last_w = w_method(layer[-2], layer[-1])
-    net.append(last_w)
+    for i in range(channel):
+        k = k_method(kernel_size, kernel_size)
+        net.append(k)
     return net
