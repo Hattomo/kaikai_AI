@@ -48,12 +48,12 @@ def relu(x):
     if x < 0:
         return 0
     elif x > 1e+5:
-        return 1e+5
+        return 1e+9
     else:
         return x
 
 # mrelu(一次元配列　x)
-def mrelu(x):
+def vrelu(x):
     ans = x
     node = len(x)
     if node == 1:
@@ -61,7 +61,15 @@ def mrelu(x):
         return ans
     for i in range(1, node):
         ans[i] = relu(x[i])
-        return ans
+    return ans
+
+def mrelu(x):
+    ans = x
+    node = np.shape(x)
+    for i in range(node[0]):
+        for j in range(node[1]):
+            ans[i][j] = relu(x[i][j])
+    return ans
 
 ## 活性化関数の微分
 # sigmoid関数の微分

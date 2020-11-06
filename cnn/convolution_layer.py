@@ -10,20 +10,23 @@ import setting
 class Convolution_Layer:
 
     def __init__(self,
-                 data,
                  channel,
                  kernel_size,
                  k_method="xivier",
                  stride=1,
                  actfunc="sigmoid",
-                 padding_method="valid-method"):
-        self.data = data
+                 padding_method="valid-padding"):
         self.channel = channel
-        self.kernel_size = kernel_size
+        self.kernel_size = kernel_size[0]
         self.stride = stride
         self.actfunc = actfunc
         self.padding_method = padding_method
         self.__select_w(k_method)
+
+    def __call__(self, data):
+        self.data = data
+        self.padding()
+        self.convolution()
 
     def __select_w(self, k_method):
         if k_method == "xivier":
@@ -37,9 +40,9 @@ class Convolution_Layer:
     def padding(self):
         #padding
         if self.padding_method == "valid-padding":
-            x = x
-            padding_size = 0
-            data_size += padding_size
+            x = self.data
+        elif self.padding_method == "same-padding":
+            pass
         else:
             sys.stdout.write("Error: The padding method is not found\n")
             sys.exit(1)
@@ -49,7 +52,7 @@ class Convolution_Layer:
         # make output array
         if (data_size - self.kernel_size) % self.stride == 0:
             out_size = int((data_size - self.kernel_size) / self.stride + 1)
-            out = np.zeros([self.channel, out_size, out_size])
+            self.out = np.zeros([self.channel, out_size, out_size])
         else:
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
@@ -58,6 +61,5 @@ class Convolution_Layer:
             for i in range(out_size):
                 for j in range(out_size):
                     y = (self.data[i:i + self.kernel_size].T[j:j + self.kernel_size].T) @ self.kernel[h]
-                    z = af.sigmoid(y)
-                    out[h][i][j] = np.sum(z)
-        return out
+                    z = af.mrelu(y)
+                    self.out[h][i][j] = np.sum(z)

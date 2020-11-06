@@ -9,17 +9,33 @@ import convolution_layer as cl
 import csetting
 import neural_network as nn
 import pooling_layer as pl
-# import mnist
+import mnist
+import convolutional_neural_network as cnn
+(train_data, train_label), (test_data, test_label) = mnist.load_data()
 
-# (train_data, train_label), (test_data, test_label) = mnist.load_data()
+class MyCNN(cnn.Convolution_Neural_Network):
 
-a = np.zeros([10, 10])
-for i in range(10):
-    for j in range(10):
-        a[i][j] = i
+    def __init__(self, train_x, train_y):
+        super().__init__(train_x, train_y)
+        #CNNの構造はいろいろ変えたいから手動で書く
+        self.conv = cl.Convolution_Layer(1, [3, 3])
+        self.pool = pl.Pooling_Layer([2, 2])
+        # self.fc = nn.Full_Neural_Network([3, 3, 1])
 
-conv = cl.Convolution_Layer(a, 3, 3)
-conv_out = conv.convolution()
-pool = pl.Pooling_Layer(conv_out, [2, 2])
-pool_out = pool.pooling()
-print(pool_out)
+    def train(self):
+        #CNNの構造はいろいろ変えたいから手動で書く
+        self.conv(self.train_x[0])
+        self.pool(self.conv.out)
+        self.out = self.pool.out
+        super().train()
+# conv = cl.Convolution_Layer(1, [3, 3])
+# pool = pl.Pooling_Layer([2, 2])
+
+# conv(train_data[0])
+# pool(conv.out)
+
+# print(pool.out)
+
+
+mycnn = MyCNN(train_data,train_label)
+mycnn.train()
