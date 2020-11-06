@@ -49,7 +49,7 @@ def dset(d_name, num):
         dataset.append(data)
         label = np.zeros((4 * num, 1), dtype=np.float128)
         for i in range(4 * num):
-            label[i] = !(data[i][0] and data[i][1])
+            label[i] = not (data[i][0] and data[i][1])
         dataset.append(label)
         return dataset
     elif d_name == "xor":
@@ -76,7 +76,7 @@ def dset(d_name, num):
             data[4*i + 3] = [1, 1, 0]
         dataset.append(data)
         label = np.zeros((4 * num, 1), dtype=np.float128)
-        for i in range(num)
+        for i in range(num):
             label[4 * i] = [1]
             label[4*i + 1] = [1]
             label[4*i + 2] = [0]

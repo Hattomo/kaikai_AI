@@ -9,7 +9,7 @@ import logic_circuit as lc
 
 structure = [3, 3, 1]
 epoch = 30
-logic = "or"
+logic = "nand"
 # set data
 (trainData, trainLabel) = lc.dset(logic, epoch)
 (testData, testLabel) = lc.dset(logic, 20)
