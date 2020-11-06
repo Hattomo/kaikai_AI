@@ -1,6 +1,6 @@
 import sys
 
-class Convolution_Neural_Network:
+class Base_CNN:
     def __init__(self, train_x,train_y):
         self.train_x = train_x
         self.train_y = train_y

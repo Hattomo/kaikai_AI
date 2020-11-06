@@ -5,6 +5,13 @@ class Pooling_Layer:
     def __init__(self, pooling_size, pooling_method="max-pooling"):
         self.pooling_method = pooling_method
         self.pooling_size = pooling_size
+        if self.pooling_method == "max-pooling":
+            self.poolfunc = np.max
+        elif self.pooling_method == "average-pooling":
+            self.poolfunc = np.averave
+        else:
+            sys.stdout.write("Error: The pooling_method is not found\n")
+            sys.exit(1)
 
     def __call__(self, data):
         self.data = data
@@ -20,17 +27,8 @@ class Pooling_Layer:
         out_height = int(height / self.pooling_size[1])
         out_width = int(width / self.pooling_size[0])
         self.out = np.zeros([channel, out_width, out_width])
-        if self.pooling_method == "max-pooling":
-            for h in range(channel):
-                for i in range(out_height):
-                    for j in range(out_width):
-                        self.out[h][i][j] = np.max(self.data[h][i:i + self.pooling_size[1]].T[j:j + self.pooling_size[0]].T)
-        elif self.pooling_method == "mean-pooling":
-            for h in range(channel):
-                for i in range(out_height):
-                    for j in range(out_width):
-                        self.out[h][i][j] = np.average(self.data[h][i:i + self.pooling_size[1]].T[j:j +
-                                                                                             self.pooling_size[0]].T)
-        else:
-            sys.stdout.write("Error: The pooling_method is not found\n")
-            sys.exit(1)
+        for h in range(channel):
+            for i in range(out_height):
+                for j in range(out_width):
+                    self.out[h][i][j] = np.max(self.data[h][i:i + self.pooling_size[1]].T[j:j + self.pooling_size[0]].T)
+        
