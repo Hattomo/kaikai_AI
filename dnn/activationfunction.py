@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 e = np.e
+
 ## 活性化関数
 # sigmoid関数
 def non_universal_sigmoid(x):
@@ -41,7 +42,7 @@ def non_universal_swish(x):
         return -1e+5
     elif x < identity_range:
         return 1e+5
-    return x/(1+e^-x)
+    return x / (1 + e ^ -x)
 
 def swish(x):
     swi = np.vectorize(non_universal_swish)
@@ -66,14 +67,14 @@ def non_universal_elu(x):
     elif x > 1e+5:
         return 1e+5
     elif x < 0 and x > -15:
-        return e^x-1
+        return e ^ x - 1
     else:
         return -1
 
 def elu(x):
     el = np.vectorize(non_universal_elu)
     return el(x)
-    
+
 ## 活性化関数の微分
 # sigmoid関数の微分
 def diffsigmoid(x):
@@ -106,7 +107,7 @@ def diffelu(x):
     if x >= 0:
         return 1
     elif x < 0 and x > -15:
-        return e^x
+        return e ^ x
     else:
         return 0
 
