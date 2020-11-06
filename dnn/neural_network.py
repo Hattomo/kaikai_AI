@@ -83,7 +83,6 @@ class Neural_Network:
         else:
             sys.stdout.write("Error: The lossfunc is not found\n")
             sys.exit(1)
-        self.difffunc = af.msigmoid
 
     # フォワードプロパゲーション
     def forwordpropagation(self, x):
