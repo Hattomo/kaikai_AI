@@ -7,18 +7,16 @@ import neural_network as nn
 import files
 import logic_circuit as lc
 
-structure = [3, 3, 1]
+structure = [3, 3, 2]
 epoch = 30
-logic = "nand"
+logic = "w_not"
 # set data
 (trainData, trainLabel) = lc.dset(logic, epoch)
 (testData, testLabel) = lc.dset(logic, 20)
 # ニューラルネットワークの生成
-orNN = nn.Neural_Network(structure)
+orNN = nn.Neural_Network(structure, "he", "tanh")
 # 学習
-count = 200
-# ニューラルネットワークのトレーニングデータ、レイヤー、重み番号、活性化関数番号の設定,cost func
-orNN.model("xivier", "sigmoid", "rss")
+count = 25
 for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)

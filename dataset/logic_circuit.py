@@ -68,20 +68,20 @@ def dset(d_name, num):
         return dataset
     elif d_name == "w_not":
         dataset = list()
-        data = np.zeros((4 * num, 3), dtype=np.float128)
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 1]
-            data[4*i + 1] = [0, 1, 1]
-            data[4*i + 2] = [1, 0, 0]
-            data[4*i + 3] = [1, 1, 0]
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
         dataset.append(data)
-        label = np.zeros((4 * num, 1), dtype=np.float128)
+        label = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            label[4 * i] = [1]
-            label[4*i + 1] = [1]
-            label[4*i + 2] = [0]
-            label[4*i + 3] = [0]
-        dataset.appen(data)
+            label[4 * i] = [1, 1]
+            label[4*i + 1] = [1, 0]
+            label[4*i + 2] = [0, 1]
+            label[4*i + 3] = [0, 0]
+        dataset.append(data)
         return dataset
     elif d_name == "mnist_train" or d_name == "mnist_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data()
