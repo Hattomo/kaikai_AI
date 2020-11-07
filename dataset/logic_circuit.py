@@ -11,45 +11,78 @@ import mnist
 # data 0,1番目が学習データ 2番目が答え
 def dset(d_name, num):
     if d_name == "or":
-        data = np.zeros((4 * num, 3), dtype=np.float128)
+        dataset = list()
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 0]
-            data[4*i + 1] = [0, 1, 1]
-            data[4*i + 2] = [1, 0, 1]
-            data[4*i + 3] = [1, 1, 1]
-        return data
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
+        dataset.append(data)
+        label = np.zeros((4 * num, 1), dtype=np.float128)
+        for i in range(4 * num):
+            label[i] = data[i][0] or data[i][1]
+        dataset.append(label)
+        return dataset
     elif d_name == "and":
-        data = np.zeros((4 * num, 3), dtype=np.float128)
+        dataset = list()
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 0]
-            data[4*i + 1] = [0, 1, 0]
-            data[4*i + 2] = [1, 0, 0]
-            data[4*i + 3] = [1, 1, 1]
-        return data
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
+        dataset.append(data)
+        label = np.zeros((4 * num, 1), dtype=np.float128)
+        for i in range(4 * num):
+            label[i] = data[i][0] and data[i][1]
+        dataset.append(label)
+        return dataset
     elif d_name == "nand":
-        data = np.zeros((4 * num, 3), dtype=np.float128)
+        dataset = list()
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 1]
-            data[4*i + 1] = [0, 1, 1]
-            data[4*i + 2] = [1, 0, 1]
-            data[4*i + 3] = [1, 1, 0]
-        return data
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
+        dataset.append(data)
+        label = np.zeros((4 * num, 1), dtype=np.float128)
+        for i in range(4 * num):
+            label[i] = not (data[i][0] and data[i][1])
+        dataset.append(label)
+        return dataset
     elif d_name == "xor":
-        data = np.zeros((4 * num, 3), dtype=np.float128)
+        dataset = list()
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 1]
-            data[4*i + 1] = [0, 1, 0]
-            data[4*i + 2] = [1, 0, 0]
-            data[4*i + 3] = [1, 1, 1]
-        return data
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
+        dataset.append(data)
+        label = np.zeros((4 * num, 1), dtype=np.float128)
+        for i in range(4 * num):
+            label[i] = data[i][0] ^ data[i][1]
+        dataset.append(label)
+        return dataset
     elif d_name == "w_not":
-        data = np.zeros((4 * num, 4), dtype=np.float128)
+        dataset = list()
+        data = np.zeros((4 * num, 2), dtype=np.float128)
         for i in range(num):
-            data[4 * i] = [0, 0, 1, 1]
-            data[4*i + 1] = [0, 1, 1, 0]
-            data[4*i + 2] = [1, 0, 0, 1]
-            data[4*i + 3] = [1, 1, 0, 0]
-        return data
+            data[4 * i] = [0, 0]
+            data[4*i + 1] = [0, 1]
+            data[4*i + 2] = [1, 0]
+            data[4*i + 3] = [1, 1]
+        dataset.append(data)
+        label = np.zeros((4 * num, 2), dtype=np.float128)
+        for i in range(num):
+            label[4 * i] = [1, 1]
+            label[4*i + 1] = [1, 0]
+            label[4*i + 2] = [0, 1]
+            label[4*i + 3] = [0, 0]
+        dataset.append(data)
+        return dataset
     elif d_name == "mnist_train" or d_name == "mnist_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data()
         data = np.zeros((num, 784 + 10), dtype=np.float128)
