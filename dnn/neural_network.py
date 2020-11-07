@@ -11,132 +11,134 @@ import vectormath as vmath
 
 class Neural_Network:
 
-    def __init__(self, layer):
-        self.layer = layer
-        self.length = len(layer)
-        self.y = None
-        self.z = None
-        self.weight = None
-        self.backweight = None
-        self.actfunc = None
-        self.difffunc = None
-        self.costfunc = None
-        self.diffcost = None
+    def __init__(self, structure, w_method="xivier", actfunc="sigmoid", costfunc="rss"):
+        self.structure = structure
+        self.y = dsetting.ynet(self.structure)
+        self.z = dsetting.znet(self.structure)
+        self.weight = self.__set_weight(self.structure, w_method)
+        (self.actfunc, self.diffact) = self.__set_actfunc(actfunc)
+        (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
         self.train_ratio = 0.5
         self.cost = list()
 
-    def model(self, data, testdata, w_method="unif", actfunc="sigmoid", costfunc="rss"):
-        self.data = data
-        self.testdata = testdata
-        self.y = dsetting.ynet(self.layer)
-        self.z = dsetting.znet(self.layer)
-        # 重みの初期化
+    # 重みの初期化
+    def __set_weight(self, structure, w_method):
         if w_method == "xivier":
-            self.weight = dsetting.wnet(self.layer, dsetting.xivier)
+            weight = dsetting.wnet(structure, dsetting.xivier)
         elif w_method == "he":
-            self.weight = dsetting.wnet(self.layer, dsetting.he)
+            weight = dsetting.wnet(structure, dsetting.he)
         elif w_method == "unif":
-            self.weight = dsetting.wnet(self.layer, dsetting.unif)
+            weight = dsetting.wnet(structure, dsetting.unif)
         else:
-            self.weight = files.load(w_method)
-        # 活性化関数の初期化
+            weight = files.load(w_method)
+        return weight
+
+    # 活性化関数の初期化
+    def __set_actfunc(self, actfunc):
         if actfunc == "sigmoid":
-            self.actfunc = af.sigmoid
-            self.difffunc = af.diffsigmoid
+            func = af.sigmoid
+            diffact = af.diffsigmoid
         elif actfunc == "tanh":
-            self.actfunc = af.tanh
-            self.difffunc = af.difftanh
+            func = af.tanh
+            diffact = af.difftanh
         elif actfunc == "relu":
-            self.actfunc = af.mrelu
-            self.difffunc = af.diffrelu
+            func = af.vrelu
+            diffact = af.diffrelu
         elif actfunc == "identity":
-            self.actfunc = af.identity
-            self.difffunc = af.diffidentity
+            func = af.identity
+            diffact = af.diffidentity
         elif actfunc == "bentIdentity":
-            self.actfunc = af.bentIdentity
-            self.difffunc = af.diffbentIdentity
+            func = af.bentIdentity
+            diffact = af.diffbentIdentity
         elif actfunc == "hardShrink":
-            self.actfunc = af.hardShrink
-            self.difffunc = af.diffhardShrink
+            func = af.hardShrink
+            diffact = af.diffhardShrink
         elif actfunc == "log_Sigmoid":
-            self.actfunc = af.logSigmoid
-            self.difffunc = af.difflogSigmoid
+            func = af.logSigmoid
+            diffact = af.difflogSigmoid
         elif actfunc == "tanhShrink":
-            self.actfunc = af.tanhShrink
-            self.difffunc = af.difftanhShrink
+            func = af.tanhShrink
+            diffact = af.difftanhShrink
         elif actfunc == "elu":
-            self.actfunc = af.elu
-            self.difffunc = af.diffelu
+            func = af.elu
+            diffact = af.diffelu
         elif actfunc == "swish":
-            self.actfunc = af.swish
-            self.difffunc = af.diffswish
+            func = af.swish
+            diffact = af.diffswish
         elif actfunc == "mish":
-            self.actfunc = af.mish
-            self.difffunc = af.diffmish
+            func = af.mish
+            diffact = af.diffmish
         else:
             sys.stdout.write("Error: The actfunc is not found\n")
             sys.exit(1)
-        # 損失関数の初期化
+        return (func, diffact)
+
+    # 損失関数の初期化
+    def __set_costfunc(self, costfunc):
         if costfunc == "rss":
-            self.costfunc = costfunction.rss
-            self.diffcost = costfunction.diffrss
+            func = costfunction.rss
+            diffcost = costfunction.diffrss
         else:
             sys.stdout.write("Error: The lossfunc is not found\n")
             sys.exit(1)
+        return (func, diffcost)
+
 
     # フォワードプロパゲーション
-    def forwordpropagation(self, x):
+    def forwordpropagation(self, train_data):
         self.z[0][0] = 1
-        self.z[0][1:] = x
-        for i in range(len(self.layer) - 1):
-            if i == len(self.weight) - 1:
-                self.y[i + 1] = self.weight[i] @ self.z[i]
-                self.z[i + 1] = self.actfunc(self.y[i + 1])
-                break
+        self.z[0][1:] = train_data
+        for i in range(len(self.structure) - 2):
             self.y[i + 1][1:] = self.weight[i] @ self.z[i]
             self.z[i + 1] = self.actfunc(self.y[i + 1])
+        self.y[-1] = self.weight[-1] @ self.z[-2]
+        self.z[-1] = self.actfunc(self.y[-1])
 
     # バックプロパゲーション
-    def backpropagation(self, x, y):
+    def backpropagation(self, train_data, train_label):
+        #学習率の変更
+        self.__fit_train_ratio(train_label, self.z[-1])
         # out layer to middle layer
-        if self.costfunc(y, self.z[-1]) < 0.5:
-            self.train_ratio = 0.1
-        elif self.costfunc(y, self.z[-1]) < 0.1:
-            self.train_ratio = 0.01
-        tmp = self.difffunc(self.y[-1]) * self.diffcost(y, self.z[-1])
+        tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
         self.weight[-1] -= self.train_ratio * diff.T
         # middle layer to input layer
-        for i in range(len(self.layer) - 2):
+        for i in range(len(self.structure) - 2):
             weight = (self.weight[-i - 1].T[1:]).T
             z = (self.z[-i - 2].T[1:]).T
-            tmp = self.difffunc(z) * (weight.T @ tmp)
+            tmp = self.diffact(z) * (weight.T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
 
+    def __fit_train_ratio(self, train_label, ans):
+        if self.costfunc(train_label, ans) < 0.5:
+            self.train_ratio = 0.1
+        elif self.costfunc(train_label, ans) < 0.1:
+            self.train_ratio = 0.01
+
     # 学習
-    def train(self):
-        length = len(self.data)
-        for i in range(length):
-            self.forwordpropagation(self.data[i][:-self.layer[-1]])
-            self.backpropagation(self.data[i][:-self.layer[-1]], self.data[i][-self.layer[-1]:])
+    def train(self, train_data, train_label):
+        for i in range(len(train_data)):
+            self.forwordpropagation(train_data[i])
+            self.backpropagation(train_data[i], train_label[i])
 
     # テスト
-    def test(self):
+    def test(self, test_data, test_label):
         count = 0
         cost = 0
-        z = np.zeros(self.layer[-1], dtype=np.float128)
-        length = len(self.testdata)
+        output_node = self.structure[-1]
+        z = np.zeros(output_node)
+        length = len(test_data)
         for i in range(length):
-            self.forwordpropagation(self.testdata[i][:-self.layer[-1]])
-            for j in range(self.layer[-1]):
+            self.forwordpropagation(test_data[i])
+            for j in range(output_node):
                 if self.z[-1][j] >= 0.8:
                     z[j] = 1.0
                 elif self.z[-1][j] <= 0.2:
                     z[j] = 0.0
-            if (z == self.testdata[i][-self.layer[-1]:]).all():
+            if (z == test_label[i]).all():
                 count += 1
-            cost += self.costfunc(self.testdata[i][-self.layer[-1]:], self.z[-1])
+            cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
         if math.isnan(cost):
             sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
