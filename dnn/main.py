@@ -1,15 +1,16 @@
 import sys
 
 sys.path.append("./dataset")
+sys.path.append("./shared")
 import activationfunction as af
 import analysistool as atool
 import neural_network as nn
 import files
 import logic_circuit as lc
 
-structure = [3, 3, 2]
+structure = [3, 3, 1]
 epoch = 30
-logic = "w_not"
+logic = "or"
 # set data
 (trainData, trainLabel) = lc.dset(logic, epoch)
 (testData, testLabel) = lc.dset(logic, 20)

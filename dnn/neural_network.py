@@ -3,6 +3,7 @@ import sys
 
 import numpy as np
 
+sys.path.append('./shared')
 import activationfunction as af
 import costfunction
 import files
