@@ -3,8 +3,6 @@ import math
 
 import numpy as np
 
-e = np.e
-
 ## 活性化関数
 # sigmoid関数
 def non_universal_sigmoid(x):
@@ -21,7 +19,7 @@ def sigmoid(x):
 
 # tanh関数
 def tanh(x):
-    return (e**x - e**-x) / (e**x + e**-x)
+    return (np.exp(x) - np.exp(-x) / (np.exp(x) + np.exp(-x))
 
 #identity関数
 def non_universal_identity(x):
@@ -42,7 +40,7 @@ def non_universal_swish(x):
         return -1e+5
     elif x < identity_range:
         return 1e+5
-    return x / (1 + e ^ -x)
+    return x / (1 + np.exp(-x))
 
 def swish(x):
     swi = np.vectorize(non_universal_swish)
@@ -67,7 +65,7 @@ def non_universal_elu(x):
     elif x > 1e+5:
         return 1e+5
     elif x < 0 and x > -15:
-        return e ^ x - 1
+        return np.exp(x) - 1
     else:
         return -1
 
@@ -82,38 +80,32 @@ def diffsigmoid(x):
 
 # tanh関数の微分
 def difftanh(x):
-    return 4 / (e**x + e**-x)**2
+    return 4 / (np.exp(x) + np.exp(-x))**2
 
 # relu関数の微分
-def diffrelu(x):
+def non_universal_diffrelu(x):
     if x < 0:
         return 0
     else:
         return 1
 
-# mdiffrelu(一次元配列 x)
-def mdiffrelu(x):
-    ans = x
-    node = len(x)
-    for i in range(node):
-        ans[i] = diffrelu(x[i])
-    return ans
+# diffrelu
+def diffrelu(x):
+    drelu = np.vectorize(non_universal_diffrelu)
+    return drelu(x)
 
 # identityの微分
 def diffidentity(x):
     return 1
 
-def diffelu(x):
+def non_universal_diffelu(x):
     if x >= 0:
         return 1
     elif x < 0 and x > -15:
-        return e ^ x
+        return np.exp(x)
     else:
         return 0
 
-def mdiffelu(x):
-    ans = x
-    node = len(x)
-    for i in range(node):
-        ans[i] = diffrelu(x[i])
-    return ans
+def diffelu(x):
+    delu = np.vectorize(non_universal_diffelu)
+    return delu(x)
