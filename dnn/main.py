@@ -13,8 +13,6 @@ epoch = 30
 logic = "or"
 # set data
 (trainData, trainLabel) = lc.dset(logic, epoch)
-(trainData, trainLabel) = lc.dset(logic, epoch)
-(trainData, trainLabel) = lc.dset(logic, epoch)
 (testData, testLabel) = lc.dset(logic, 20)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(structure, "he", "tanh")
