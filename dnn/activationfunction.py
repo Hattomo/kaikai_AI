@@ -19,7 +19,7 @@ def sigmoid(x):
 
 # tanh関数
 def tanh(x):
-    return (np.exp(x) - np.exp(-x) / (np.exp(x) + np.exp(-x))
+    return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
 
 #identity関数
 def non_universal_identity(x):
