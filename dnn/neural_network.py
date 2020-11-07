@@ -128,7 +128,7 @@ class Neural_Network:
         length = len(test_data)
         for i in range(length):
             self.forwordpropagation(test_data[i])
-            if self.__compare(test_label,self.z[-1]):
+            if self.__compare(test_label, self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
