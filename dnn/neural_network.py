@@ -125,18 +125,10 @@ class Neural_Network:
     # テスト
     def test(self, test_data, test_label):
         count = 0
-        cost = 0
-        output_node = self.structure[-1]
-        z = np.zeros(output_node)
         length = len(test_data)
         for i in range(length):
             self.forwordpropagation(test_data[i])
-            for j in range(output_node):
-                if self.z[-1][j] >= 0.8:
-                    z[j] = 1.0
-                elif self.z[-1][j] <= 0.2:
-                    z[j] = 0.0
-            if (z == test_label[i]).all():
+            if self.__compare(test_label, self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
@@ -146,3 +138,14 @@ class Neural_Network:
         print(
             str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost / length) + " : " +
             str(len(self.cost)))
+
+    def __compare(self, label, predict):
+        z = np.zeros(len(label))
+        for i in range(len(label)):
+            if self.predict[i] >= 0.8:
+                predict[i] = 1.0
+            elif self.z[-1][j] <= 0.2:
+                z[i] = 0.0
+        if (predict == test_label).all():
+            return True
+        return False
