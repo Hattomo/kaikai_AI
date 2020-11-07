@@ -83,7 +83,6 @@ class Neural_Network:
             sys.exit(1)
         return (func, diffcost)
 
-
     # フォワードプロパゲーション
     def forwordpropagation(self, train_data):
         self.z[0][0] = 1
