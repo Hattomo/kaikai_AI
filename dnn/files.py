@@ -6,7 +6,7 @@ import numpy as np
 # save wieght
 def save(nn):
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
-    path = os.path.join(os.path.dirname(__file__), 'out/np_savez')
+    path = os.path.join(os.path.dirname(__file__), '../out/np_savez')
     np.savez(path, weight=nn.weight)
     np.warnings.filterwarnings('default', category=np.VisibleDeprecationWarning)
 
