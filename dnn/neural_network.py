@@ -144,9 +144,11 @@ class Neural_Network:
         z = np.zeros(len(label))
         for i in range(len(label)):
             if predict[i] >= 0.8:
-                predict[i] = 1.0
-            elif self.z[-1][i] <= 0.2:
+                z[i] = 1.0
+            elif predict[i] <= 0.2:
                 z[i] = 0.0
-        if (predict == label).all():
+            else:
+                z[i] = predict[i]
+        if (z == label).all():
             return True
         return False
