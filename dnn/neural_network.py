@@ -129,10 +129,11 @@ class Neural_Network:
     # テスト
     def test(self, test_data, test_label):
         count = 0
+        cost = 0
         length = len(test_data)
         for i in range(length):
             self.forwordpropagation(test_data[i])
-            if self.__compare(test_label, self.z[-1]):
+            if self.__compare(test_label[i], self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
@@ -146,10 +147,12 @@ class Neural_Network:
     def __compare(self, label, predict):
         z = np.zeros(len(label))
         for i in range(len(label)):
-            if self.predict[i] >= 0.8:
-                predict[i] = 1.0
-            elif self.z[-1][j] <= 0.2:
+            if predict[i] >= 0.8:
+                z[i] = 1.0
+            elif predict[i] <= 0.2:
                 z[i] = 0.0
-        if (predict == test_label).all():
+            else:
+                z[i] = predict[i]
+        if (z == label).all():
             return True
         return False
