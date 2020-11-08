@@ -18,5 +18,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy pytest
       - name: Test with pytest
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: pytest -v
