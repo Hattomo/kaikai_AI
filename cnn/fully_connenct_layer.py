@@ -11,11 +11,11 @@ class Fully_Connect_Layer(nn.Neural_Network):
         super().__init__(structure)
 
     def __call__(self, input_data, train_label):
+        train_data = self.flattend(input_data)
         return self.train(input_data, train_label)
 
-    # train in dnn and get error
-    def train(self, input_data, train_label):
-        #　平坦化
+    #　平坦化
+    def flattened(self,input_data):
         channel = len(input_data)
         height = len(input_data[0])
         width = len(input_data[0][0])
@@ -26,6 +26,10 @@ class Fully_Connect_Layer(nn.Neural_Network):
                 for j in range(width):
                     train_data[count] = input_data[h][i][j]
                     count += 1
+        return train_data
+        
+    # train in dnn and get error
+    def train(self, train_data, train_label):
         # 学習
         super().forwordpropagation(train_data)
         # 誤差の伝播
