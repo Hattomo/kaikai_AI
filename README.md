@@ -30,7 +30,7 @@ if you use `Visual Studio Code`, please set as below.
 ```
 
 ### Test
-We use pytest to test our code.  
+We use `pytest` to test our code.  
 Please install and run.  
 The test run with `python3.8`.  
 
