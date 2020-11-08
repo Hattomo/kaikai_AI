@@ -86,9 +86,9 @@ def dset(d_name, num):
     elif d_name == "mnist_train" or d_name == "mnist_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data()
         if d_name == "mnist_train":
-            return (train_data, train_label)
+            return (train_data[:num], train_label[:num])
         elif d_name == "mnist_test":
-            return (test_data, test_label)
+            return (test_data[:num], test_label[:num])
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
