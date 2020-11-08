@@ -63,7 +63,7 @@ def dset(d_name, num):
         dataset.append(data)
         label = np.zeros((4 * num, 1))
         for i in range(4 * num):
-            label[i] = data[i][0] ^ data[i][1]
+            label[i] = int(data[i][0]) ^ int(data[i][1])
         dataset.append(label)
         return dataset
     elif d_name == "w_not":
