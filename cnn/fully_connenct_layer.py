@@ -13,7 +13,9 @@ class Fully_Connect_Layer(nn.Neural_Network):
     def __call__(self, input_data, train_label):
         return self.train(input_data, train_label)
 
+    # train in dnn and get error
     def train(self, input_data, train_label):
+        #　平坦化
         channel = len(input_data)
         height = len(input_data[0])
         width = len(input_data[0][0])
@@ -24,6 +26,8 @@ class Fully_Connect_Layer(nn.Neural_Network):
                 for j in range(width):
                     train_data[count] = input_data[h][i][j]
                     count += 1
+        # 学習
         super().forwordpropagation(train_data)
+        # 誤差の伝播
         error = super().backpropagation(train_data, train_label, flag=True)
         return error.reshape([channel, height, width])
