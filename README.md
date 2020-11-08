@@ -6,6 +6,7 @@ You have to install `python3`, `numpy`, and `matplotlib`.
 To run cnn with [THE MNIST DATABASE of handwritten digits](http://yann.lecun.com/exdb/mnist/),
 please download the data set from [here](https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz) and locate the file to `dataset/input/`.  
 
+Create `out` folder to save graph, and numpy files.
 
 ### Format
 Install `yapf (Yet Another Python Formatter)`.
