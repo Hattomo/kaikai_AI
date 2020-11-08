@@ -105,6 +105,23 @@ def dset(d_name, num):
                     else:
                         data[i][l] = 0.0
         return data
+    elif d_name == "cnn_ex":
+        dataset = []
+        data = np.zeros((4 * num, 16))
+        for i in range(num):
+            data[4 * i] = [[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]]
+            data[4*i + 1] = [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]]
+            data[4*i + 2] = [[0, 0, 255, 0], [255, 255, 255, 255], [0, 0, 255, 0], [0, 0, 255, 0]]
+            data[4*i + 3] = [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 255]]
+        dataset.append(data)
+        label = np.zeros((4 * num, 4))
+        for i in range(num):
+            label[4 * i] = [1, 0, 0, 0]
+            label[4*i + 1] = [0, 1, 0, 0]
+            label[4*i + 2] = [0, 0, 1, 0]
+            label[4*i + 3] = [0, 0, 0, 1]
+        dataset.append(data)
+        return dataset
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
