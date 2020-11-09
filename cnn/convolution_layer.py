@@ -64,7 +64,6 @@ class Convolution_Layer:
             sys.exit(1)
         c_result = self.convolution(train_data, self.kernel)
         return self.actfunc(c_result)
-        
 
     def backpropagation(self, input_error):
         error = self.__backconvolution(input_error)
