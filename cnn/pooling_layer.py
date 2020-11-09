@@ -8,17 +8,14 @@ class Pooling_Layer:
         self.poolfunc = self.__set_pooling_method(pooling_method)
         self.pooling_size = pooling_size
         self.index = []
-    
+
     # select max index
     def __get_index(self, partical_data):
         max_ = np.argmax(partical_data)
         return (int(max_ / self.pooling_size[0]), int(max_ % self.pooling_size[1]))
 
-    # pooling 
-    def pooling(self, train_data):
-        channel = len(train_data)
-        height = len(train_data[0])
-        width = len(train_data[0][0])
+    def forwordpropagation(self, train_data):
+        (channel, height, width) = np.shape(train_data)
         # check pooling size
         if width % self.pooling_size[0] != 0 or height % self.pooling_size[1] != 0:
             sys.stdout.write("Error: The pooling_size is not right\n")
@@ -38,16 +35,13 @@ class Pooling_Layer:
 
     def __set_pooling_method(self, pooling_method):
         if pooling_method == "max-pooling":
-            poolfunc = np.max
+            return np.max
         elif pooling_method == "mean-pooling":
-            poolfunc = np.average
-        else:
-            sys.stdout.write("Error: The pooling method is not found\n")
-            sys.exit(1)
-        return poolfunc
+            return np.average
+        sys.stdout.write("Error: The pooling method is not found\n")
+        sys.exit(1)
 
-    # back pooling
-    def backpooling(self, input_error):
+    def backpropagation(self, input_error):
         channel = len(input_error)
         height = len(input_error[0]) * self.pooling_size[0]
         width = len(input_error[0][0]) * self.pooling_size[1]
