@@ -36,9 +36,9 @@ def identity(x):
 
 def non_universal_swish(x):
     swish_range = 1e+5
-    if x < -identity_range:
+    if x < -swish_range:
         return -1e+5
-    elif x < identity_range:
+    elif x > swish_range:
         return 1e+5
     return x / (1 + np.exp(-x))
 
