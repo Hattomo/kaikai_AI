@@ -9,11 +9,14 @@ def draw(y):
     x = list()
     for i in range(len(y)):
         x.append(i)
-    plt.plot(x, y, "cornflowerblue")
-    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost.png'))
+    fig = plt.figure(figsize=(8.0, 6.0))
+    ax1 = fig.add_subplot(111)
     plt.yscale("log")
-    plt.plot(x, y, "hotpink")
-    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost_log.png'))
+    ax2 = ax1.twinx()
+    ax1.plot(x, y, "cornflowerblue")
+    ax2.plot(x, y, "hotpink")
+    plt.title("loss func-ish")
+    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost.png'))
     #plt.show()
 
 def tdchart(nn):
