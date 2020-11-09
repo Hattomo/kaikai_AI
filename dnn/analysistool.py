@@ -9,8 +9,11 @@ def draw(y):
     x = list()
     for i in range(len(y)):
         x.append(i)
-    plt.plot(x, y)
+    plt.plot(x, y, "cornflowerblue")
     plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost.png'))
+    plt.yscale("log")
+    plt.plot(x, y, "hotpink")
+    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost_log.png'))
     #plt.show()
 
 def tdchart(nn):
@@ -32,6 +35,6 @@ def tdchart(nn):
                 y.append(j / dence)
                 nn.forwordpropagation([i / dence, j / dence])
                 z.append(nn.z[-1])
-        ax.scatter3D(x, y, z)
+        ax.scatter3D(x, y, z, c="darkorange")
         plt.savefig(os.path.join(os.path.dirname(__file__), '../out/3d.png'))
         #plt.show()
