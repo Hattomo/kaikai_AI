@@ -9,16 +9,11 @@ import activationfunction as af
 import csetting
 """
 convolution
-    train_data (numpy) :  data_channel*N*M
-    kernel (list[int]) : L*L
+    mask (numpy) :  data_channel * N * M
+    kernel (list[int]) : L * L
     stride (int) : s
-    c_result (numpy) : channel*{(N-L+1)/s}*{(N-L+1)/s}
+    c_result (numpy) : channel * {( N - L + 1 )/s} * {( M - L + 1 )/s}
 
-padding(valid-padding)
-    p_result (numpy) : N*N
-
-backconvolution
-    train_data (numpy) : N*N
 """
 
 class Convolution_Layer:
@@ -61,27 +56,15 @@ class Convolution_Layer:
 
     # convolution
     def __convolution(self, train_data):
-        data_height = len(train_data[0])
-        data_width = len(train_data[0][0])
-        kernel_size = len(self.kernel[0])
+        (data_channel, data_height, data_width) = np.shape(train_data)
+        (kernel_channel, kernel_height, kernel_width) = np.shape(self.kernel)
         # check
-        if ((data_height-kernel_size) % self.stride) or ((data_width-kernel_size) % self.stride):
+        if ((data_height-kernel_height) % self.stride) or ((data_width-kernel_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
-        # make c_result
-        # c_result_height = int((data_height - kernel_size) / self.stride + 1)
-        # c_result_width = int((data_width - kernel_size) / self.stride + 1)
-        # c_result = np.zeros([self.channel, c_result_height, c_result_width])
-        # forword convolution
         c_result = self.convolution(train_data, self.kernel)
-        c_result = self.actfunc(c_result)
-        # for h in range(self.channel):
-        #     for i in range(c_result_height):
-        #         for j in range(c_result_width):
-        #             y = train_data[0][i:i + kernel_size, j:j + kernel_size] @ self.kernel[h]
-        #             z = np.sum(y)
-        #             c_result[h][i][j] = self.actfunc(z)
-        return c_result
+        return self.actfunc(c_result)
+        
 
     def backpropagation(self, input_error):
         error = self.__backconvolution(input_error)
@@ -90,24 +73,8 @@ class Convolution_Layer:
 
     # backconvolution
     def __backconvolution(self, input_error):
-        input_size = len(input_error[0])
-        data_channel = len(self.train_data)
-        data_height = len(self.train_data[0])
-        data_width = len(self.train_data[0][0])
-        kernel_size = len(self.kernel)
-        # make output_error array
-        c_result_height = data_height
-        c_result_width = data_width
-        output_error = np.zeros([data_channel, kernel_size, kernel_size])
-        # back convolution
         z = self.diffact(input_error)
-        self.convolution(self.train_data, z)
-        # for h in range(data_channel):
-        #     for i in range(c_result_height - input_size + 1):
-        #         for j in range(c_result_width - input_size + 1):
-        #             z = self.diffact(input_error)
-        #             output_error[h][i][j] = np.sum(self.train_data[h][i:i + input_size, j:j + input_size] @ z[h])
-        return output_error
+        return self.convolution(self.train_data, z)
 
     def convolution(self, mask, _filter):
         c_result_channel = len(mask)
