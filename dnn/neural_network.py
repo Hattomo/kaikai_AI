@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append('./shared')
 import activationfunction as af
 import costfunction
-import files
+import numpy_files as npfiles
 import dsetting
 import vectormath as vmath
 
@@ -31,7 +31,7 @@ class Neural_Network:
         elif w_method == "unif":
             weight = dsetting.wnet(structure, dsetting.unif)
         else:
-            weight = files.load(w_method)
+            weight = npfiles.load(w_method)
         return weight
 
     # 活性化関数の初期化

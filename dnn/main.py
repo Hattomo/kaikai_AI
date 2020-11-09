@@ -5,7 +5,7 @@ sys.path.append("./shared")
 import activationfunction as af
 import analysistool as atool
 import neural_network as nn
-import files
+import numpy_files as npfiles
 import logic_circuit as lc
 
 structure = [3, 3, 1]
@@ -23,4 +23,4 @@ for i in range(count):
     orNN.test(testData, testLabel)
 atool.draw(orNN.cost)
 atool.tdchart(orNN)
-files.save(orNN)
+npfiles.save(orNN)
