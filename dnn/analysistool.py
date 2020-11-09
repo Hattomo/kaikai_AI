@@ -15,7 +15,6 @@ def draw(y):
     plt.yscale("log")
     plt.plot(x, y, "hotpink")
     plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost_log.png'))
-
     #plt.show()
 
 def tdchart(nn):
