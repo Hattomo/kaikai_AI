@@ -4,9 +4,10 @@
 ## Related Issues and Reference
 <!-- please write related issues. for example, close #xx or part of #xx  -->
 
-<!--
 ## Test
-Nothing Yet
+<!--Add Test when you add new func, if not reson is required.-->
+
+<!--
 ## Checklist
 Nothing Yet
 -->
