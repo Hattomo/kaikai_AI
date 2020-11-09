@@ -22,69 +22,51 @@ class Neural_Network:
         self.train_ratio = 0.5
         self.cost = list()
 
-    # 重みの初期化
     def __set_weight(self, structure, w_method):
         if w_method == "xivier":
-            weight = dsetting.wnet(structure, dsetting.xivier)
+            return dsetting.wnet(structure, dsetting.xivier)
         elif w_method == "he":
-            weight = dsetting.wnet(structure, dsetting.he)
+            return dsetting.wnet(structure, dsetting.he)
         elif w_method == "unif":
-            weight = dsetting.wnet(structure, dsetting.unif)
+            return dsetting.wnet(structure, dsetting.unif)
         else:
-            weight = files.load(w_method)
-        return weight
+            return files.load(w_method)
 
-    # 活性化関数の初期化
     def __set_actfunc(self, actfunc):
         if actfunc == "sigmoid":
-            func = af.sigmoid
+            return (af.sigmoid, af.diffsigmoid)
             diffact = af.diffsigmoid
         elif actfunc == "tanh":
-            func = af.tanh
-            diffact = af.difftanh
+            return (af.tanh, af.difftanh)
         elif actfunc == "relu":
-            func = af.vrelu
-            diffact = af.diffrelu
+            return (af.relu, af.diffrelu)
         elif actfunc == "identity":
-            func = af.identity
-            diffact = af.diffidentity
+            return (af.identity, af.diffidentity)
         elif actfunc == "bentIdentity":
-            func = af.bentIdentity
-            diffact = af.diffbentIdentity
+            return (af.bentIdentity, af.diffbentIdentity)
         elif actfunc == "hardShrink":
-            func = af.hardShrink
-            diffact = af.diffhardShrink
+            return (af.hardShrink, af.diffhardShrink)
         elif actfunc == "log_Sigmoid":
-            func = af.logSigmoid
-            diffact = af.difflogSigmoid
+            return (af.logSigmoid, af.difflogSigmoid)
         elif actfunc == "tanhShrink":
-            func = af.tanhShrink
-            diffact = af.difftanhShrink
+            return (af.tanhShrink, af.difftanhShrink)
         elif actfunc == "elu":
-            func = af.elu
-            diffact = af.diffelu
+            return (af.elu, af.diffelu)
         elif actfunc == "swish":
-            func = af.swish
-            diffact = af.diffswish
+            return (af.swish, af.diffswish)
         elif actfunc == "mish":
-            func = af.mish
-            diffact = af.diffmish
-        else:
-            sys.stdout.write("Error: The actfunc is not found\n")
-            sys.exit(1)
-        return (func, diffact)
+            return (af.mish, af.diffmish)
+        sys.stdout.write("Error: The actfunc is not found\n")
+        sys.exit(1)
+        
 
-    # 損失関数の初期化
     def __set_costfunc(self, costfunc):
         if costfunc == "rss":
-            func = costfunction.rss
-            diffcost = costfunction.diffrss
-        else:
-            sys.stdout.write("Error: The lossfunc is not found\n")
-            sys.exit(1)
-        return (func, diffcost)
+            return (costfunction.rss, costfunction.diffrss)
+        sys.stdout.write("Error: The lossfunc is not found\n")
+        sys.exit(1)
+        
 
-    # フォワードプロパゲーション
     def forwordpropagation(self, train_data):
         self.z[0][0] = 1
         self.z[0][1:] = train_data
@@ -94,9 +76,7 @@ class Neural_Network:
         self.y[-1] = self.weight[-1] @ self.z[-2]
         self.z[-1] = self.actfunc(self.y[-1])
 
-    # バックプロパゲーション
     def backpropagation(self, train_data, train_label):
-        #学習率の変更
         self.__fit_train_ratio(train_label, self.z[-1])
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
@@ -104,9 +84,7 @@ class Neural_Network:
         self.weight[-1] -= self.train_ratio * diff.T
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
-            weight = (self.weight[-i - 1].T[1:]).T
-            z = (self.z[-i - 2].T[1:]).T
-            tmp = self.diffact(z) * (weight.T @ tmp)
+            tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i-1][:,1:].T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
 
@@ -116,13 +94,11 @@ class Neural_Network:
         elif self.costfunc(train_label, ans) < 0.1:
             self.train_ratio = 0.01
 
-    # 学習
     def train(self, train_data, train_label):
         for i in range(len(train_data)):
             self.forwordpropagation(train_data[i])
             self.backpropagation(train_data[i], train_label[i])
 
-    # テスト
     def test(self, test_data, test_label):
         count = 0
         cost = 0
