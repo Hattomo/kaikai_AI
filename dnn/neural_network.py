@@ -58,14 +58,12 @@ class Neural_Network:
             return (af.mish, af.diffmish)
         sys.stdout.write("Error: The actfunc is not found\n")
         sys.exit(1)
-        
 
     def __set_costfunc(self, costfunc):
         if costfunc == "rss":
             return (costfunction.rss, costfunction.diffrss)
         sys.stdout.write("Error: The lossfunc is not found\n")
         sys.exit(1)
-        
 
     def forwordpropagation(self, train_data):
         self.z[0][0] = 1
@@ -84,7 +82,7 @@ class Neural_Network:
         self.weight[-1] -= self.train_ratio * diff.T
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
-            tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i-1][:,1:].T @ tmp)
+            tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i - 1][:, 1:].T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
 
