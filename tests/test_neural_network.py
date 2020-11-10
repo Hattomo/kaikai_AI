@@ -12,3 +12,9 @@ import logic_circuit as lc
 
 def test_forwordpropagation():
     pass
+
+def test_backpropagation():
+    pass
+
+def test_compare():
+    pass
