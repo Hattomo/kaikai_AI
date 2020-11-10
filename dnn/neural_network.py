@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append('./shared')
 import activationfunction as af
 import costfunction
-import files
+import numpy_files as npfiles
 import dsetting
 import vectormath as vmath
 
@@ -29,8 +29,7 @@ class Neural_Network:
             return dsetting.wnet(structure, dsetting.he)
         elif w_method == "unif":
             return dsetting.wnet(structure, dsetting.unif)
-        else:
-            return files.load(w_method)
+        return npfiles.load(w_method)
 
     def __set_actfunc(self, actfunc):
         if actfunc == "sigmoid":
@@ -73,7 +72,9 @@ class Neural_Network:
         self.y[-1] = self.weight[-1] @ self.z[-2]
         self.z[-1] = self.actfunc(self.y[-1])
 
-    def backpropagation(self, train_data, train_label):
+    # バックプロパゲーション
+    def backpropagation(self, train_data, train_label, flag=False):
+        #学習率の変更
         self.__fit_train_ratio(train_label, self.z[-1])
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
@@ -84,6 +85,10 @@ class Neural_Network:
             tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i - 1][:, 1:].T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
+        if flag:
+            weight = (self.weight[0].T[1:]).T
+            z = (self.z[0].T[1:]).T
+            return z * (weight.T @ tmp)
 
     def __fit_train_ratio(self, train_label, ans):
         if self.costfunc(train_label, ans) < 0.5:
@@ -91,10 +96,11 @@ class Neural_Network:
         elif self.costfunc(train_label, ans) < 0.1:
             self.train_ratio = 0.01
 
-    def train(self, train_data, train_label):
+    # 学習
+    def train(self, train_data, train_label, flag=False):
         for i in range(len(train_data)):
             self.forwordpropagation(train_data[i])
-            self.backpropagation(train_data[i], train_label[i])
+            self.backpropagation(train_data[i], train_label[i],flag)
 
     def test(self, test_data, test_label):
         count = 0
