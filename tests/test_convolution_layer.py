@@ -18,3 +18,18 @@ def test_concolution_layer_forwordpropagation():
     out = conv.forwordpropagation(a)
     ans = np.array([[3.4, 4.4, 5.4], [7.4, 8.4, 9.4], [11.4, 12.4, 13.4]])
     assert ((out - ans) < 1e-3).all()
+
+def test_convolution_layer_backpropagation():
+    a = np.zeros([1, 4, 4])
+    count = 0
+    for i in range(4):
+        for j in range(4):
+            a[0][i][j] = count
+            count += 1
+    error = np.array([[-1, 2], [3, 4]])
+    conv = cl.Convolution_Layer(1, 2, "test")
+    # set train_data on convolution layer
+    conv.forwordpropagation(a)
+    out = conv.backpropagation(error)
+    ans = 
+    assert ((out - ans) < 1e-3).all()
