@@ -39,6 +39,8 @@ class Convolution_Layer:
             return csetting.knet(self.channel, kernel_size, csetting.xivier)
         elif k_method == "he":
             return csetting.knet(self.channel, kernel_size, csetting.he)
+        elif k_method == "test":
+            return csetting.knet(self.channel, kernel_size, csetting.test)
         sys.stdout.write("Error: The kernel method is not found\n")
         sys.exit(1)
 
@@ -81,6 +83,9 @@ class Convolution_Layer:
             for h in range(len(_filter)):
                 for i in range(c_result_height):
                     for j in range(c_result_width):
-                        y = mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])] @ _filter[h]
+                        print(mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])])
+                        print(_filter[h])
+                        y = mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])] * _filter[h]
                         c_result[h][i][j] = np.sum(y)
+                        print(c_result[h][i][j])
         return c_result
