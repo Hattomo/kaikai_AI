@@ -31,7 +31,7 @@ class Fully_Connect_Layer(nn.Neural_Network):
     def __train(self, train_data, train_label, output_size):
         (channel, height, width) = output_size
         # 学習
-        super().forwordpropagation(train_data)
+        super().forwardpropagation(train_data)
         # 誤差の伝播
         error = super().backpropagation(train_data, train_label, flag=True)
         return error.reshape([channel, height, width])

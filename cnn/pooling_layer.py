@@ -14,7 +14,7 @@ class Pooling_Layer:
         max_ = np.argmax(partical_data)
         return (int(max_ / self.pooling_size[0]), int(max_ % self.pooling_size[1]))
 
-    def forwordpropagation(self, train_data):
+    def forwardpropagation(self, train_data):
         (channel, height, width) = np.shape(train_data)
         # check pooling size
         if width % self.pooling_size[0] != 0 or height % self.pooling_size[1] != 0:

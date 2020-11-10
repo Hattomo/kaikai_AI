@@ -50,12 +50,12 @@ class Convolution_Layer:
         sys.stdout.write("Error: The padding method is not found\n")
         sys.exit(1)
 
-    def forwordpropagation(self, train_data):
+    def forwardpropagation(self, train_data):
         self.train_data = train_data
         padding_data = self.__padding(self.padding_method, train_data)
-        return self.__forwordconvolution(padding_data)
+        return self.__forwardconvolution(padding_data)
 
-    def __forwordconvolution(self, train_data):
+    def __forwardconvolution(self, train_data):
         (data_channel, data_height, data_width) = np.shape(train_data)
         (kernel_channel, kernel_height, kernel_width) = np.shape(self.kernel)
         # check
