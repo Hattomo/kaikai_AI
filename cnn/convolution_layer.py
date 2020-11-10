@@ -66,12 +66,12 @@ class Convolution_Layer:
 
     def backpropagation(self, input_error):
         self.kernel -= self.train_ratio * self.__backconvolution(input_error)
-        error = self.__convolution(self.__zeropadding(self.train_data),np.flip(self.kernel))
+        error = self.__convolution(self.__zeropadding(self.train_data), np.flip(self.kernel))
         return error
 
     def __zeropadding(self, data):
         (data_channel, data_height, data_width) = np.shape(data)
-        mat = np.zeros([data_channel,data_height + 2,data_width + 2])
+        mat = np.zeros([data_channel, data_height + 2, data_width + 2])
         for i in range(data_channel):
             mat[i][1:data_height + 1, 1:data_width + 1] = data[i]
         return mat
@@ -84,8 +84,8 @@ class Convolution_Layer:
         (mask_channel, mask_height, mask_width) = np.shape(mask)
         (filter_channel, filter_height, filter_width) = np.shape(_filter)
         c_result_channel = mask_channel
-        c_result_height = (mask_height - filter_height) // self.stride + 1
-        c_result_width = (mask_width - filter_width) // self.stride + 1
+        c_result_height = (mask_height-filter_height) // self.stride + 1
+        c_result_width = (mask_width-filter_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
         for g in range(c_result_channel):
             for h in range(filter_channel):

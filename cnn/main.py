@@ -22,7 +22,7 @@ for i in range(4):
         a[0][i][j] = count
         count += 1
 
-error = np.array([[[-1,2],[3,4]]])
+error = np.array([[[-1, 2], [3, 4]]])
 
 conv = cl.Convolution_Layer(1, 3, "test")
 
