@@ -67,7 +67,7 @@ class Convolution_Layer:
 
     def backpropagation(self, input_error):
         error = self.__backconvolution(input_error)
-        self.kernel = self.train_ratio * error
+        self.kernel -= self.train_ratio * error
         return
 
     def __backconvolution(self, input_error):
@@ -75,7 +75,7 @@ class Convolution_Layer:
         return self.__convolution(self.train_data, z)
 
     def __convolution(self, mask, _filter):
-        c_result_channel = len(mask)
+        c_result_channel = len(_filter)
         c_result_height = int((len(mask[0]) - len(_filter[0])) / self.stride) + 1
         c_result_width = int((len(mask[0][0]) - len(_filter[0][0])) / self.stride) + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
@@ -83,9 +83,6 @@ class Convolution_Layer:
             for h in range(len(_filter)):
                 for i in range(c_result_height):
                     for j in range(c_result_width):
-                        print(mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])])
-                        print(_filter[h])
                         y = mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])] * _filter[h]
                         c_result[h][i][j] = np.sum(y)
-                        print(c_result[h][i][j])
         return c_result
