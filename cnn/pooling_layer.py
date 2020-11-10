@@ -47,7 +47,7 @@ class Pooling_Layer:
         for h in range(input_channel):
             for i in range(input_height // self.p_size[0]):
                 for j in range(input_width // self.p_size[1]):
-                    output_error[h][i*self.p_size[0] + self.index[count][0],
-                                    j*self.p_size[1] + self.index[count][1]] = input_error[h][i][j]
+                    output_error[h][i * self.p_size[0] + self.index[count][0],
+                                    j * self.p_size[1] + self.index[count][1]] = input_error[h][i][j]
                     count += 1
         return output_error
