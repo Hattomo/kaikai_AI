@@ -31,6 +31,6 @@ def test_convolution_layer_backpropagation():
     # set train_data on convolution layer
     conv.forwordpropagation(a)
     out = conv.backpropagation(error)
-    ans = [[[1.08, 2.81, 4.34, 4.31], [5.01, 10.605, 13.98, 12.315], [12.99, 24.105, 27.48, 22.335],
-            [17.96, 30.89, 33.86, 25.83]]]
+    ans = np.array([[[1.08, 2.81, 4.34, 4.31], [5.01, 10.605, 13.98, 12.315], [12.99, 24.105, 27.48, 22.335],
+                     [17.96, 30.89, 33.86, 25.83]]])
     assert ((out - ans) < 1e-3).all()
