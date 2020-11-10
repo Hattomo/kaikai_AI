@@ -23,6 +23,13 @@ def he(kernel_w_size, kernel_h_size):
     kernel = kernel.reshape(kernel_w_size, kernel_h_size)
     return abs(kernel)
 
+def test(kernel_w_size, kernel_h_size):
+    kernel = np.zeros(kernel_w_size * kernel_h_size)
+    for i in range(kernel_w_size * kernel_h_size):
+        kernel[i] = (i+1) / 10
+    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
+    return abs(kernel)
+
 def knet(channel, kernel_size, k_method):
     net = list()
     for i in range(channel):
