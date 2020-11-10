@@ -14,16 +14,14 @@ import pooling_layer as pl
 import mnist
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("cnn_ex",1000)
-(testData, testLabel) = lc.dset("cnn_ex",1) 
-
+(trainData, trainLabel) = lc.dset("cnn_ex", 1000)
+(testData, testLabel) = lc.dset("cnn_ex", 1)
 
 conv = cl.Convolution_Layer(3, 3)
 myfc = fc.Fully_Connect_Layer([4 + 1, 4, 4])
 
 for i in range(1000):
     out = conv.forwordpropagation(trainData[i])
-    error = myfc(out,trainLabel[i])
+    error = myfc(out, trainLabel[i])
     conv.backpropagation(error)
-    myfc.test(out,trainLabel)
-
+    myfc.test(out, trainLabel)
