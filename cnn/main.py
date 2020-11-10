@@ -15,16 +15,18 @@ import mnist
 
 (train_data, train_label), (test_data, test_label) = mnist.load_data()
 
-a = np.zeros([1, 10, 10])
-for i in range(10):
-    for j in range(10):
-        a[0][i][j] = i
+a = np.zeros([1, 4, 4])
+count = 0
+for i in range(4):
+    for j in range(4):
+        a[0][i][j] = count
+        count += 1
 
-conv = cl.Convolution_Layer(1, 3)
-pool = pl.Pooling_Layer([2, 2])
-myfc = fc.Fully_Connect_Layer([16 + 1, 5, 1])
+error = np.array([[[-1,2],[3,4]]])
 
-conv_out = conv.forwordpropagation(a)
-pool_out = pool.forwordpropagation(conv_out)
-error = myfc(pool_out, [1])
-print(error)
+conv = cl.Convolution_Layer(1, 3, "test")
+
+conv.forwordpropagation(a)
+conv_out = conv.backpropagation(error)
+
+print(conv_out)
