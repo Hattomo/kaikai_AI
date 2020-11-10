@@ -42,40 +42,37 @@ class Convolution_Layer:
         sys.stdout.write("Error: The kernel method is not found\n")
         sys.exit(1)
 
-    def forwordpropagation(self, train_data):
-        self.train_data = train_data
-        padding_data = self.__padding(self.padding_method, train_data)
-        return self.__convolution(padding_data)
-
     def __padding(self, padding_method, train_data):
-        #padding
         if padding_method == "valid-padding":
             return train_data
         sys.stdout.write("Error: The padding method is not found\n")
         sys.exit(1)
 
-    # convolution
-    def __convolution(self, train_data):
+    def forwordpropagation(self, train_data):
+        self.train_data = train_data
+        padding_data = self.__padding(self.padding_method, train_data)
+        return self.__forwordconvolution(padding_data)
+
+    def __forwordconvolution(self, train_data):
         (data_channel, data_height, data_width) = np.shape(train_data)
         (kernel_channel, kernel_height, kernel_width) = np.shape(self.kernel)
         # check
         if ((data_height-kernel_height) % self.stride) or ((data_width-kernel_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
-        c_result = self.convolution(train_data, self.kernel)
+        c_result = self.__convolution(train_data, self.kernel)
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
         error = self.__backconvolution(input_error)
         self.kernel = self.train_ratio * error
-        return self.kernel
+        return 
 
-    # backconvolution
     def __backconvolution(self, input_error):
         z = self.diffact(input_error)
-        return self.convolution(self.train_data, z)
+        return self.__convolution(self.train_data, z)
 
-    def convolution(self, mask, _filter):
+    def __convolution(self, mask, _filter):
         c_result_channel = len(mask)
         c_result_height = int((len(mask[0]) - len(_filter[0])) / self.stride) + 1
         c_result_width = int((len(mask[0][0]) - len(_filter[0][0])) / self.stride) + 1
