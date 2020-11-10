@@ -9,29 +9,9 @@ class Pooling_Layer:
         self.pooling_size = pooling_size
         self.index = []
 
-    # select max index
     def __get_index(self, partical_data):
         max_ = np.argmax(partical_data)
-        return (int(max_ / self.pooling_size[0]), int(max_ % self.pooling_size[1]))
-
-    def forwordpropagation(self, train_data):
-        (channel, height, width) = np.shape(train_data)
-        # check pooling size
-        if width % self.pooling_size[0] != 0 or height % self.pooling_size[1] != 0:
-            sys.stdout.write("Error: The pooling_size is not right\n")
-            sys.exit(1)
-        # pooling
-        out_height = int(height / self.pooling_size[0])
-        out_width = int(width / self.pooling_size[1])
-        out = np.zeros([channel, out_height, out_width])
-        for h in range(channel):
-            for i in range(out_height):
-                for j in range(out_width):
-                    partical_data = train_data[h][i * self.pooling_size[0]:(i+1) * self.pooling_size[0],
-                                                  i * self.pooling_size[1]:(i+1) * self.pooling_size[1]]
-                    out[h][i][j] = self.poolfunc(partical_data)
-                    self.index.append(self.__get_index(partical_data))
-        return out
+        return (max_ // self.pooling_size[0], max_ % self.pooling_size[1])
 
     def __set_pooling_method(self, pooling_method):
         if pooling_method == "max-pooling":
@@ -41,16 +21,35 @@ class Pooling_Layer:
         sys.stdout.write("Error: The pooling method is not found\n")
         sys.exit(1)
 
+    def forwordpropagation(self, train_data):
+        (data_channel, data_height, data_width) = np.shape(train_data)
+        (pooling_height, pooling_width) = np.shape(self.pooling_size)
+        # check pooling size
+        if data_height % pooling_height != 0 or width % pooling_width != 0:
+            sys.stdout.write("Error: The pooling_size is not right\n")
+            sys.exit(1)
+        # pooling
+        p_result_height = data_height // pooling_height
+        p_result_width = data_width // pooling_width
+        p_result = np.zeros([data_channel, p_result_height, p_result_width])
+        for h in range(data_channel):
+            for i in range(p_result_height):
+                for j in range(p_result_width):
+                    partical_data = train_data[h][i * pooling_height:(i+1) * pooling_height,
+                                                  j * pooling_width:(j+1) * pooling_width]
+                    p_result[h][i][j] = self.poolfunc(partical_data)
+                    self.index.append(self.__get_index(partical_data))
+        return p_result
+
     def backpropagation(self, input_error):
-        channel = len(input_error)
-        height = len(input_error[0]) * self.pooling_size[0]
-        width = len(input_error[0][0]) * self.pooling_size[1]
-        output_error = np.zeros([channel, height, width])
+        (input_channel, input_height, input_width) = np.shape(input_error)
+        (pooling_height, pooling_width) = np.shape(self.pooling_size)
+        output_error = np.zeros([input_channel, input_height * pooling_height, width * pooling_width])
         count = 0
-        for h in range(channel):
-            for i in range(int(height / self.pooling_size[0])):
-                for j in range(int(width / self.pooling_size[1])):
-                    output_error[h][i * self.pooling_size[0] + self.index[count][0],
-                                    j * self.pooling_size[1] + self.index[count][1]] = input_error[h][i][j]
+        for h in range(input_channel):
+            for i in range(input_height // pooling_height):
+                for j in range(input_width // pooling_width):
+                    output_error[h][i*pooling_height + self.index[count][0],
+                                    j*pooling_width + self.index[count][1]] = input_error[h][i][j]
                     count += 1
         return output_error
