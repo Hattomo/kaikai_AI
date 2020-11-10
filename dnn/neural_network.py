@@ -100,7 +100,7 @@ class Neural_Network:
     def train(self, train_data, train_label, flag=False):
         for i in range(len(train_data)):
             self.forwordpropagation(train_data[i])
-            self.backpropagation(train_data[i], train_label[i],flag)
+            self.backpropagation(train_data[i], train_label[i], flag)
 
     def test(self, test_data, test_label):
         count = 0
