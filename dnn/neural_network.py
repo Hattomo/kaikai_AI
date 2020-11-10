@@ -95,7 +95,7 @@ class Neural_Network:
         self.z[-1] = self.actfunc(self.y[-1])
 
     # バックプロパゲーション
-    def backpropagation(self, train_data, train_label):
+    def backpropagation(self, train_data, train_label, flag=False):
         #学習率の変更
         self.__fit_train_ratio(train_label, self.z[-1])
         # out layer to middle layer
@@ -109,6 +109,10 @@ class Neural_Network:
             tmp = self.diffact(z) * (weight.T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
+        if flag:
+            weight = (self.weight[0].T[1:]).T
+            z = (self.z[0].T[1:]).T
+            return z * (weight.T @ tmp)
 
     def __fit_train_ratio(self, train_label, ans):
         if self.costfunc(train_label, ans) < 0.5:
@@ -117,7 +121,7 @@ class Neural_Network:
             self.train_ratio = 0.01
 
     # 学習
-    def train(self, train_data, train_label):
+    def train(self, train_data, train_label, flag=0):
         for i in range(len(train_data)):
             self.forwordpropagation(train_data[i])
             self.backpropagation(train_data[i], train_label[i])
