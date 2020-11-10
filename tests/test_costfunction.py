@@ -18,9 +18,9 @@ class Test_Cost_Function(unittest.TestCase):
 
     def test_rss(self):
         pass
-    
+
     def test_cross_entropy(self):
-        pass 
+        pass
 
 if __name__ == "__main__":
     unittest.main()
