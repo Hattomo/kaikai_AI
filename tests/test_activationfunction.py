@@ -66,9 +66,8 @@ class Test_Activation_Function(unittest.TestCase):
         self.assertEqual(af.diffidentity(0), np.array(1))
         self.assertEqual(af.diffidentity(10e+5), np.array(1))
 
-    # def test_diffswish(self):
-    #     self.assertEqual(af.diffswish(0), np.array(0.5))
-    #     self.assertEqual(af.diffswish(1), np.array(1e+5))
+    def test_diffswish(self):
+        pass
 
     def test_diffelu(self):
         self.assertEqual(af.diffelu(0), np.array(1))
