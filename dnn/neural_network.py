@@ -35,7 +35,6 @@ class Neural_Network:
     def __set_actfunc(self, actfunc):
         if actfunc == "sigmoid":
             return (af.sigmoid, af.diffsigmoid)
-            diffact = af.diffsigmoid
         elif actfunc == "tanh":
             return (af.tanh, af.difftanh)
         elif actfunc == "relu":
