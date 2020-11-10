@@ -35,3 +35,8 @@ class Fully_Connect_Layer(nn.Neural_Network):
         # 誤差の伝播
         error = super().backpropagation(train_data, train_label, flag=True)
         return error.reshape([channel, height, width])
+
+    def test(self, input_data, train_label):
+        data_size = np.shape(input_data)
+        train_data = self.__flattened(input_data, data_size)
+        super().test(train_data, train_label)
