@@ -15,5 +15,8 @@ jobs:
       - name: check conflicts
         uses: eps1lon/actions-label-merge-conflict@releases/2.x
         with:
-          dirtyLabel: "CONFLICTING"
+          dirtyLabel: "Conflicting"
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          retryAfter: 60
+          retryMax: 3
+
