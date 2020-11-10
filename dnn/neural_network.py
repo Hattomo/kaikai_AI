@@ -60,6 +60,8 @@ class Neural_Network:
     def __set_costfunc(self, costfunc):
         if costfunc == "rss":
             return (costfunction.rss, costfunction.diffrss)
+        elif costfunc == "cross_entropy":
+            return (costfunction.cross_entropy, costfunction.diffcross_entropy)
         sys.stdout.write("Error: The lossfunc is not found\n")
         sys.exit(1)
 
