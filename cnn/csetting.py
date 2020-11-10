@@ -26,7 +26,7 @@ def he(kernel_w_size, kernel_h_size):
 def test(kernel_w_size, kernel_h_size):
     kernel = np.zeros(kernel_w_size * kernel_h_size)
     for i in range(kernel_w_size * kernel_h_size):
-        kernel[i] = (i + 1)  / 10
+        kernel[i] = (i+1) / 10
     kernel = kernel.reshape(kernel_w_size, kernel_h_size)
     return abs(kernel)
 
