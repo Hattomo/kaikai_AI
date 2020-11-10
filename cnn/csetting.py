@@ -9,38 +9,27 @@ import numpy as np
 def unif(kernel_w_size, kernel_h_size):
     kernel = np.random.rand(kernel_w_size * kernel_h_size) * 2 - 1
     kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return kernel
+    return abs(kernel)
 
 #正規分布(xivier)
 def xivier(kernel_w_size, kernel_h_size):
     kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(kernel_w_size), size=kernel_w_size * kernel_h_size)
     kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return kernel
+    return abs(kernel)
 
 #正規分布(he)
 def he(kernel_w_size, kernel_h_size):
     kernel = np.random.normal(loc=0.0, scale=math.sqrt(2 / kernel_w_size), size=kernel_w_size * kernel_h_size)
     kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return kernel
+    return abs(kernel)
 
-# x
-def xnet(layer):
-    length = len(layer)
-    net = list()
-    for i in range(1, length):
-        y = np.ones(layer[i])
-        net.append(y)
-    return net
+def test(kernel_w_size, kernel_h_size):
+    kernel = np.zeros(kernel_w_size * kernel_h_size)
+    for i in range(kernel_w_size * kernel_h_size):
+        kernel[i] = (i+1) / 10
+    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
+    return abs(kernel)
 
-# y
-def ynet(layer):
-    net = list()
-    for i in range(len(layer)):
-        x = np.zeros(layer[i])
-        net.append(x)
-    return net
-
-# すべての重み
 def knet(channel, kernel_size, k_method):
     net = list()
     for i in range(channel):

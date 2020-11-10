@@ -3,61 +3,89 @@ import sys
 import numpy as np
 
 sys.path.append('./dnn')
+sys.path.append('./shared')
 import neural_network as nn
 import activationfunction as af
 import csetting
+"""
+convolution
+    mask (numpy) :  data_channel * N * M
+    kernel (list[int]) : L * L
+    stride (int) : s
+    c_result (numpy) : channel * {( N - L + 1 )/s} * {( M - L + 1 )/s}
+
+"""
 
 class Convolution_Layer:
 
     def __init__(self,
-                 data,
                  channel,
                  kernel_size,
                  k_method="xivier",
                  stride=1,
-                 actfunc="sigmoid",
-                 padding_method="valid-method"):
-        self.data = data
+                 actfunc="relu",
+                 padding_method="valid-padding",
+                 train_ratio=0.1):
         self.channel = channel
-        self.kernel_size = kernel_size
         self.stride = stride
-        self.actfunc = actfunc
+        self.actfunc = af.relu
+        self.diffact = af.diffrelu
         self.padding_method = padding_method
-        self.__select_w(k_method)
+        self.kernel = self.__select_w(k_method, kernel_size)
+        self.train_ratio = 0.1
 
-    def __select_w(self, k_method):
+    def __select_w(self, k_method, kernel_size):
         if k_method == "xivier":
-            self.kernel = csetting.knet(self.channel, self.kernel_size, csetting.xivier)
+            return csetting.knet(self.channel, kernel_size, csetting.xivier)
         elif k_method == "he":
-            self.kernel = csetting.knet(self.channel, self.kernel_size, csetting.he)
-        else:
-            sys.stdout.write("Error: The kernel method is not found\n")
-            sys.exit(1)
+            return csetting.knet(self.channel, kernel_size, csetting.he)
+        elif k_method == "test":
+            return csetting.knet(self.channel, kernel_size, csetting.test)
+        sys.stdout.write("Error: The kernel method is not found\n")
+        sys.exit(1)
 
-    def padding(self):
-        #padding
-        if self.padding_method == "valid-padding":
-            x = x
-            padding_size = 0
-            data_size += padding_size
-        else:
-            sys.stdout.write("Error: The padding method is not found\n")
-            sys.exit(1)
+    def __padding(self, padding_method, train_data):
+        if padding_method == "valid-padding":
+            return train_data
+        sys.stdout.write("Error: The padding method is not found\n")
+        sys.exit(1)
 
-    def convolution(self):
-        data_size = len(self.data)
-        # make output array
-        if (data_size - self.kernel_size) % self.stride == 0:
-            out_size = int((data_size - self.kernel_size) / self.stride + 1)
-            out = np.zeros([self.channel, out_size, out_size])
-        else:
+    def forwordpropagation(self, train_data):
+        self.train_data = train_data
+        padding_data = self.__padding(self.padding_method, train_data)
+        return self.__forwordconvolution(padding_data)
+
+    def __forwordconvolution(self, train_data):
+        (data_channel, data_height, data_width) = np.shape(train_data)
+        (kernel_channel, kernel_height, kernel_width) = np.shape(self.kernel)
+        # check
+        if ((data_height-kernel_height) % self.stride) or ((data_width-kernel_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
-        #convolution
-        for h in range(self.channel):
-            for i in range(out_size):
-                for j in range(out_size):
-                    y = (self.data[i:i + self.kernel_size].T[j:j + self.kernel_size].T) @ self.kernel[h]
-                    z = af.sigmoid(y)
-                    out[h][i][j] = np.sum(z)
-        return out
+        c_result = self.__convolution(train_data, self.kernel)
+        return self.actfunc(c_result)
+
+    def backpropagation(self, input_error):
+        error = self.__backconvolution(input_error)
+        self.kernel = self.train_ratio * error
+        return
+
+    def __backconvolution(self, input_error):
+        z = self.diffact(input_error)
+        return self.__convolution(self.train_data, z)
+
+    def __convolution(self, mask, _filter):
+        c_result_channel = len(mask)
+        c_result_height = int((len(mask[0]) - len(_filter[0])) / self.stride) + 1
+        c_result_width = int((len(mask[0][0]) - len(_filter[0][0])) / self.stride) + 1
+        c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
+        for g in range(c_result_channel):
+            for h in range(len(_filter)):
+                for i in range(c_result_height):
+                    for j in range(c_result_width):
+                        print(mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])])
+                        print(_filter[h])
+                        y = mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])] * _filter[h]
+                        c_result[h][i][j] = np.sum(y)
+                        print(c_result[h][i][j])
+        return c_result
