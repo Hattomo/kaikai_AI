@@ -16,5 +16,5 @@ def test_concolution_layer_forwordpropagation():
             count += 1
     conv = cl.Convolution_Layer(1, 2, "test")
     out = conv.forwordpropagation(a)
-    ans = np.array([[3.4 , 4.4, 5.4],[7.4, 8.4, 9.4],[11.4, 12.4, 13.4]])
+    ans = np.array([[3.4, 4.4, 5.4], [7.4, 8.4, 9.4], [11.4, 12.4, 13.4]])
     assert ((out - ans) < 1e-3).all()

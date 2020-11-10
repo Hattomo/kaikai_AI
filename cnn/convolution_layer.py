@@ -68,7 +68,7 @@ class Convolution_Layer:
     def backpropagation(self, input_error):
         error = self.__backconvolution(input_error)
         self.kernel = self.train_ratio * error
-        return 
+        return
 
     def __backconvolution(self, input_error):
         z = self.diffact(input_error)
