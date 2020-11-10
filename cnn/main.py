@@ -12,8 +12,10 @@ import fully_connenct_layer as fc
 import neural_network as nn
 import pooling_layer as pl
 import mnist
+import logic_circuit as lc
 
-(train_data, train_label), (test_data, test_label) = mnist.load_data()
+(trainData, trainLabel) = lc.dset("cnn_ex", 1000)
+(testData, testLabel) = lc.dset("cnn_ex", 1)
 
 a = np.zeros([1, 4, 4])
 count = 0

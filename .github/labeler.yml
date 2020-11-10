@@ -1,0 +1,18 @@
+# https://github.com/actions/labeler
+# Add 'Documentation' label to md file change
+Documentation:
+  - /**/*.md
+  
+# Add 'CNN', 'DNN' label 
+CNN:
+  - cnn/**/*
+  - shared/**/*
+ 
+DNN:
+  - dnn/**/*
+  - shared/**/*
+  - dataset/mnist.py
+
+# Add 'Tests' label to any change to  `tests/*`
+Tests:
+  - tests/**/*
