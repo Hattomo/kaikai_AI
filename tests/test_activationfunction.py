@@ -35,11 +35,11 @@ class Test_Activation_Function(unittest.TestCase):
         self.assertEqual(af.identity(50), np.array(50))
         self.assertEqual(af.identity(-50), np.array(-50))
         self.assertEqual(af.identity(0), np.array(0))
-        self.assertEqual(af.identity(10e+5), np.array(1e+5))
+        self.assertEqual(af.identity(10e+5), np.array(1e5))
 
     def test_swish(self):
         self.assertEqual(af.swish(0), np.array(0))
-        self.assertEqual(af.swish(1e+15), np.array(1e+5))
+        self.assertEqual(af.swish(1e+15), np.array(1e5))
 
     def test_elu(self):
         self.assertEqual(af.elu(0), np.array(0))
@@ -48,7 +48,7 @@ class Test_Activation_Function(unittest.TestCase):
 
     def test_diffsigmoid(self):
         self.assertEqual(af.diffsigmoid(0), np.array(0.25))
-        self.assertLess(abs(af.diffsigmoid(1) - np.array(0.19661193324148185)), 1e5)
+        self.assertLess(abs(af.diffsigmoid(1) - np.array(0.19661193324148185)), 1e-5)
 
     def test_diffrelu(self):
         self.assertEqual(af.diffrelu(-50), np.array(0))
@@ -57,8 +57,8 @@ class Test_Activation_Function(unittest.TestCase):
 
     def test_difftanh(self):
         self.assertEqual(af.difftanh(0), np.array(1))
-        self.assertLess(abs(af.difftanh(4) - np.array(0)), 1e5)
-        self.assertLess(abs(af.difftanh(4) - np.array(0)), 1e5)
+        self.assertLess(abs(af.difftanh(4) - np.array(0)), 1e-2)
+        self.assertLess(abs(af.difftanh(4) - np.array(0)), 1e-2)
 
     def test_diffidentity(self):
         self.assertEqual(af.diffidentity(50), np.array(1))
@@ -67,12 +67,14 @@ class Test_Activation_Function(unittest.TestCase):
         self.assertEqual(af.diffidentity(10e+5), np.array(1))
 
     def test_diffswish(self):
-        pass
+        self.assertEqual(af.diffswish(0), np.array(0.5))
+        self.assertLess(abs(af.diffswish(-4) - np.array(-0.05266461)), 1e-2)
+        self.assertLess(abs(af.diffswish(4) - np.array(1.05266461)), 1e-2)
 
     def test_diffelu(self):
         self.assertEqual(af.diffelu(0), np.array(1))
         self.assertEqual(af.diffelu(4), np.array(1))
-        self.assertLess(abs(af.diffelu(-1) - np.array(0.36787944)), 1e5)
+        self.assertLess(abs(af.diffelu(-1) - np.array(0.36787944)), 1e-5)
 
 if __name__ == "__main__":
     unittest.main()
