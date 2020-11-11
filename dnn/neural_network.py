@@ -65,7 +65,7 @@ class Neural_Network:
         sys.stdout.write("Error: The lossfunc is not found\n")
         sys.exit(1)
 
-    def forwordpropagation(self, train_data):
+    def forwardpropagation(self, train_data):
         self.z[0][0] = 1
         self.z[0][1:] = train_data
         for i in range(len(self.structure) - 2):
@@ -101,7 +101,7 @@ class Neural_Network:
     # 学習
     def train(self, train_data, train_label, flag=False):
         for i in range(len(train_data)):
-            self.forwordpropagation(train_data[i])
+            self.forwardpropagation(train_data[i])
             self.backpropagation(train_data[i], train_label[i], flag)
 
     def test(self, test_data, test_label):
@@ -109,7 +109,7 @@ class Neural_Network:
         cost = 0
         length = len(test_data)
         for i in range(length):
-            self.forwordpropagation(test_data[i])
+            self.forwardpropagation(test_data[i])
             if self.__compare(test_label[i], self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
