@@ -28,7 +28,7 @@ error = np.array([[[-1, 2], [3, 4]]])
 
 conv = cl.Convolution_Layer(1, 3, "test")
 
-conv.forwordpropagation(a)
+conv.forwardpropagation(a)
 conv_out = conv.backpropagation(error)
 
 print(conv_out)
