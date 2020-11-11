@@ -17,11 +17,11 @@ def cross_entropy(label, ans):
     sum_ = 0
     delta = 1e-5
     if label.size == 1:
-        return -label * math.log(abs(ans)+delta)
+        return -label * math.log(abs(ans) + delta)
     for i in range(label.size):
         if ans <= 0:
             return label.size
-        sum_ += -label[i] * math.log(abs(ans)+delta)
+        sum_ += -label[i] * math.log(abs(ans) + delta)
     return sum_
 
 def diffcross_entropy(label, ans):
