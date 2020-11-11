@@ -8,7 +8,7 @@ import neural_network as nn
 import numpy_files as npfiles
 import logic_circuit as lc
 
-structure = [3, 3, 1]
+structure = [3, 20, 2]
 epoch = 30
 logic = "or"
 # set data

@@ -55,9 +55,10 @@ def wnet(layer, w_method):
 def donet(layer):
     length = len(layer)
     net = list()
-    for i in range(length - 2):
-        w = np.ones((layer[i], layer[i + 1] - 1))
+    for i in range(length - 1):
+        w = np.identity(layer[i])
         net.append(w)
-    last_w = np.ones((layer[-2], layer[-1]))
-    net.append(last_w)
+    # last_w = np.identity(layer[-1] )
+    # net.append(last_w)
+    print(net[0])
     return net

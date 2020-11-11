@@ -16,6 +16,7 @@ class Neural_Network:
         self.structure = structure
         self.y = dsetting.ynet(self.structure)
         self.z = dsetting.znet(self.structure)
+        self.do = dsetting.donet(self.structure)
         self.weight = self.__set_weight(self.structure, w_method)
         (self.actfunc, self.diffact) = self.__set_actfunc(actfunc)
         (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
@@ -69,9 +70,9 @@ class Neural_Network:
         self.z[0][0] = 1
         self.z[0][1:] = train_data
         for i in range(len(self.structure) - 2):
-            self.y[i + 1][1:] = self.weight[i] @ self.z[i]
+            self.y[i + 1][1:] = self.weight[i] @ self.do[i] @ self.z[i]
             self.z[i + 1] = self.actfunc(self.y[i + 1])
-        self.y[-1] = self.weight[-1] @ self.z[-2]
+        self.y[-1] = self.weight[-1] @ self.do[-1] @ self.z[-2]
         self.z[-1] = self.actfunc(self.y[-1])
 
     # バックプロパゲーション
