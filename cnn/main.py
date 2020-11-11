@@ -17,11 +17,18 @@ import logic_circuit as lc
 (trainData, trainLabel) = lc.dset("cnn_ex", 1000)
 (testData, testLabel) = lc.dset("cnn_ex", 1)
 
-conv = cl.Convolution_Layer(3, 3)
-myfc = fc.Fully_Connect_Layer([4 + 1, 4, 4])
+a = np.zeros([1, 4, 4])
+count = 0
+for i in range(4):
+    for j in range(4):
+        a[0][i][j] = count
+        count += 1
 
-for i in range(1000):
-    out = conv.forwordpropagation(trainData[i])
-    error = myfc(out, trainLabel[i])
-    conv.backpropagation(error)
-    myfc.test(out, trainLabel)
+error = np.array([[[-1, 2], [3, 4]]])
+
+conv = cl.Convolution_Layer(1, 3, "test")
+
+conv.forwardpropagation(a)
+conv_out = conv.backpropagation(error)
+
+print(conv_out)

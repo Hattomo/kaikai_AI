@@ -19,20 +19,19 @@ convolution
 class Convolution_Layer:
 
     def __init__(self,
-                 channel,
+                 output_channel,
                  kernel_size,
                  k_method="xivier",
                  stride=1,
                  actfunc="relu",
                  padding_method="valid-padding",
-                 train_ratio=0.1):
-        self.channel = channel
+                 train_ratio=0.005):
+        self.channel = output_channel
         self.stride = stride
-        self.actfunc = af.relu
-        self.diffact = af.diffrelu
+        (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
         self.padding_method = padding_method
         self.kernel = self.__select_w(k_method, kernel_size)
-        self.train_ratio = 0.1
+        self.train_ratio = train_ratio
 
     def __select_w(self, k_method, kernel_size):
         if k_method == "xivier":
@@ -66,23 +65,32 @@ class Convolution_Layer:
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
-        error = self.__backconvolution(input_error)
-        self.kernel -= self.train_ratio * error
-        return
+        self.kernel -= self.train_ratio * self.__backconvolution(input_error)
+        error = self.__convolution(self.__zeropadding(self.train_data), np.flip(self.kernel))
+        return error
+
+    def __zeropadding(self, data):
+        (data_channel, data_height, data_width) = np.shape(data)
+        mat = np.zeros([data_channel, data_height + 2, data_width + 2])
+        for i in range(data_channel):
+            mat[i][1:data_height + 1, 1:data_width + 1] = data[i]
+        return mat
 
     def __backconvolution(self, input_error):
         z = self.diffact(input_error)
         return self.__convolution(self.train_data, z)
 
     def __convolution(self, mask, _filter):
-        c_result_channel = len(_filter)
-        c_result_height = int((len(mask[0]) - len(_filter[0])) / self.stride) + 1
-        c_result_width = int((len(mask[0][0]) - len(_filter[0][0])) / self.stride) + 1
+        (mask_channel, mask_height, mask_width) = np.shape(mask)
+        (filter_channel, filter_height, filter_width) = np.shape(_filter)
+        c_result_channel = mask_channel
+        c_result_height = (mask_height-filter_height) // self.stride + 1
+        c_result_width = (mask_width-filter_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
         for g in range(c_result_channel):
-            for h in range(len(_filter)):
+            for h in range(filter_channel):
                 for i in range(c_result_height):
                     for j in range(c_result_width):
-                        y = mask[g][i:i + len(_filter[0]), j:j + len(_filter[0][0])] * _filter[h]
+                        y = mask[g][i:i + filter_height, j:j + filter_width] * _filter[h]
                         c_result[h][i][j] = np.sum(y)
         return c_result
