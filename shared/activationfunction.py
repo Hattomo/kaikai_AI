@@ -98,6 +98,14 @@ def diffrelu(x):
 def diffidentity(x):
     return 1
 
+def non_universal_diffswish(x):
+    diffswi = swish(x) + ((1 - swish(x)) / (1 + np.exp(-x)))
+    return diffswi
+
+def diffswish(x):
+    diffswi = np.vectorize(non_universal_diffswish)
+    return diffswi(x)
+
 def non_universal_diffelu(x):
     if x >= 0:
         return 1
