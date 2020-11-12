@@ -7,7 +7,9 @@ sys.path.append("./dataset")
 sys.path.append('./dnn')
 sys.path.append("./shared")
 import activationfunction as af
+import analysistool as atool
 import neural_network as nn
+import numpy_files as npfiles
 import logic_circuit as lc
 
 def test_main_or():
@@ -24,3 +26,8 @@ def test_main_or():
     for i in range(count):
         orNN.train(trainData, trainLabel)
         orNN.test(testData, testLabel)
+    # test chart
+    atool.draw(orNN.cost)
+    atool.tdchart(orNN)
+    # test npfiles save
+    npfiles.save(orNN)
