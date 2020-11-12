@@ -37,7 +37,7 @@ def tdchart(nn):
                 for j in range(dence):
                     x.append(i / dence)
                     y.append(j / dence)
-                    nn.forwordpropagation([i / dence, j / dence])
+                    nn.forwardpropagation([i / dence, j / dence])
                     z.append(nn.z[-1][h])
             ax.scatter3D(x, y, z, label=h)
             ax.legend()
