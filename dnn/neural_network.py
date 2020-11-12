@@ -12,8 +12,9 @@ import vectormath as vmath
 
 class Neural_Network:
 
-    def __init__(self, structure, w_method="xivier", actfunc="sigmoid", costfunc="rss"):
+    def __init__(self, structure, dropout=[0, 0, 0], w_method="xivier", actfunc="sigmoid", costfunc="rss"):
         self.structure = structure
+        self.dropout = dropout
         self.y = dsetting.ynet(self.structure)
         self.z = dsetting.znet(self.structure)
         self.do = dsetting.donet(self.structure)
@@ -66,14 +67,20 @@ class Neural_Network:
         sys.stdout.write("Error: The lossfunc is not found\n")
         sys.exit(1)
 
-    def forwardpropagation(self, train_data):
+    def forwardpropagation(self, train_data, istrain=False):
         self.z[0][0] = 1
         self.z[0][1:] = train_data
         for i in range(len(self.structure) - 2):
             self.y[i + 1][1:] = self.weight[i] @ self.do[i] @ self.z[i]
-            self.z[i + 1] = self.actfunc(self.y[i + 1])
+            if istrain:
+                self.z[i + 1] = self.actfunc(self.y[i + 1])
+            else:
+                self.z[i + 1] = self.actfunc(self.y[i + 1]) * (1 - self.dropout[i])
         self.y[-1] = self.weight[-1] @ self.do[-1] @ self.z[-2]
-        self.z[-1] = self.actfunc(self.y[-1])
+        if istrain:
+            self.z[-1] = self.actfunc(self.y[-1])
+        else:
+            self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[i])
 
     # バックプロパゲーション
     def backpropagation(self, train_data, train_label, flag=False):
@@ -87,25 +94,38 @@ class Neural_Network:
         for i in range(len(self.structure) - 2):
             tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i - 1][:, 1:].T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.train_ratio * diff.T @ self.do[- i - 2]
+            self.weight[-i - 2] -= self.train_ratio * diff.T @ self.do[-i - 2]
         if flag:
             weight = (self.weight[0].T[1:]).T
             z = (self.z[0].T[1:]).T
             return z * (weight.T @ tmp)
+
+    def __dropout_shake(self, istrain=True):
+        for i in range(len(self.structure) - 1):
+            for j in range(self.do[i].shape[1]):
+                if istrain:
+                    if (np.random.rand() < self.dropout[i]):
+                        self.do[i][j][j] = 0
+                else:
+                    self.do[i][j][j] = 1
 
     def __fit_train_ratio(self, train_label, ans):
         if self.costfunc(train_label, ans) < 0.5:
             self.train_ratio = 0.1
         elif self.costfunc(train_label, ans) < 0.1:
             self.train_ratio = 0.01
+        elif self.costfunc(train_label, ans) < 0.01:
+            self.train_ratio = 0.0001
 
     # 学習
     def train(self, train_data, train_label, flag=False):
+        self.__dropout_shake()
         for i in range(len(train_data)):
-            self.forwardpropagation(train_data[i])
+            self.forwardpropagation(train_data[i], False)
             self.backpropagation(train_data[i], train_label[i], flag)
 
     def test(self, test_data, test_label):
+        self.__dropout_shake(False)
         count = 0
         cost = 0
         length = len(test_data)
