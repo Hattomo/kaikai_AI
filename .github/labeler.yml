@@ -16,3 +16,8 @@ DNN:
 # Add 'Tests' label to any change to  `tests/*`
 Tests:
   - tests/**/*
+
+GitHub Action:
+  - .github/**/*
+  - ./.style.yapf
+  - ./requirements.txt
