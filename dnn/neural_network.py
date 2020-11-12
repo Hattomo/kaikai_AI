@@ -82,12 +82,12 @@ class Neural_Network:
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
-        self.weight[-1] -= self.train_ratio * diff.T
+        self.weight[-1] -= self.train_ratio * diff.T @ self.do[-1]
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
             tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i - 1][:, 1:].T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.train_ratio * diff.T
+            self.weight[-i - 2] -= self.train_ratio * diff.T @ self.do[- i - 2]
         if flag:
             weight = (self.weight[0].T[1:]).T
             z = (self.z[0].T[1:]).T
