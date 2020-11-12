@@ -19,78 +19,76 @@ convolution
 class Convolution_Layer:
 
     def __init__(self,
-                 output_channel,
-                 kernel_size,
-                 k_method="xivier",
+                 in_channel,
+                 out_channel,
+                 ksize,
                  stride=1,
+                 pad=0,
+                 k_method="xivier",
                  actfunc="relu",
-                 padding_method="valid-padding",
                  train_ratio=0.005):
-        self.channel = output_channel
         self.stride = stride
+        self.pad = pad
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
-        self.padding_method = padding_method
-        self.kernel = self.__select_w(k_method, kernel_size)
+        self.kernel = self.__select_w(k_method, in_channel, out_channel, ksize)
         self.train_ratio = train_ratio
 
-    def __select_w(self, k_method, kernel_size):
+    def __select_w(self, k_method, in_channel,out_channel, ksize):
         if k_method == "xivier":
-            return csetting.knet(self.channel, kernel_size, csetting.xivier)
+            return csetting.xivier(in_channel, out_channel, ksize)
         elif k_method == "he":
-            return csetting.knet(self.channel, kernel_size, csetting.he)
+            return csetting.he(in_channel,out_channel, ksize)
         elif k_method == "test":
-            return csetting.knet(self.channel, kernel_size, csetting.test)
+            return csetting.test(in_channel, out_channel, ksize)
         sys.stdout.write("Error: The kernel method is not found\n")
         sys.exit(1)
 
-    def __padding(self, padding_method, train_data):
-        if padding_method == "valid-padding":
-            return train_data
-        sys.stdout.write("Error: The padding method is not found\n")
-        sys.exit(1)
+    def __padding(self, pad, train_data):
+        (channel, height, width) = np.shape(train_data)
+        p_result = np.zeros([channel, height+2*pad, width+2*pad])
+        for i in range(channel):
+            p_result[i][pad:height+pad,pad:width+pad] = train_data[i]
+        return p_result
 
     def forwardpropagation(self, train_data):
         self.train_data = train_data
-        padding_data = self.__padding(self.padding_method, train_data)
+        padding_data = self.__padding(self.pad, train_data)
         return self.__forwardconvolution(padding_data)
 
     def __forwardconvolution(self, train_data):
-        (data_channel, data_height, data_width) = np.shape(train_data)
-        (kernel_channel, kernel_height, kernel_width) = np.shape(self.kernel)
+        (in_channel, d_height, d_width) = np.shape(train_data)
+        (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # check
-        if ((data_height-kernel_height) % self.stride) or ((data_width-kernel_width) % self.stride):
+        if ((d_height-k_height) % self.stride) or ((d_width-k_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
+        #convolution
         c_result = self.__convolution(train_data, self.kernel)
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
+        # back convolution
         self.kernel -= self.train_ratio * self.__backconvolution(input_error)
-        error = self.__convolution(self.__zeropadding(self.train_data), np.flip(self.kernel))
+        error = self.__convolution(self.__padding(1, self.train_data), np.flip(self.kernel))
         return error
-
-    def __zeropadding(self, data):
-        (data_channel, data_height, data_width) = np.shape(data)
-        mat = np.zeros([data_channel, data_height + 2, data_width + 2])
-        for i in range(data_channel):
-            mat[i][1:data_height + 1, 1:data_width + 1] = data[i]
-        return mat
 
     def __backconvolution(self, input_error):
         z = self.diffact(input_error)
         return self.__convolution(self.train_data, z)
 
     def __convolution(self, mask, _filter):
-        (mask_channel, mask_height, mask_width) = np.shape(mask)
-        (filter_channel, filter_height, filter_width) = np.shape(_filter)
-        c_result_channel = mask_channel
-        c_result_height = (mask_height-filter_height) // self.stride + 1
-        c_result_width = (mask_width-filter_width) // self.stride + 1
+        (m_channel, m_height, m_width) = np.shape(mask)
+        (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
+        c_result_channel = m_channel
+        c_result_height = (m_height-f_height) // self.stride + 1
+        c_result_width = (m_width-f_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
-        for g in range(c_result_channel):
-            for h in range(filter_channel):
-                for i in range(c_result_height):
-                    for j in range(c_result_width):
-                        y = mask[g][i:i + filter_height, j:j + filter_width] * _filter[h]
-                        c_result[h][i][j] = np.sum(y)
-        return c_result
+        for i in range(c_result_channel):
+            for j in range(c_result_height):
+                for k in range(c_result_width):
+                    y = mask[:,j:j+f_height,k:k+f_width] * _filter[i]
+                    z = np.sum(y)
+                    c_result[i][j][k] = z
+        max_ = np.max(c_result)
+        return c_result/max_ * 255
+                    
