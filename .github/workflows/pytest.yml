@@ -13,10 +13,22 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
+      - name: set environments macOS & Linux
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macOS-latest'
+        run: |
+          mkdir out
+          wget -P dataset/input/ --tries=4 https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+      - name: set environments Windows
+        if: matrix.os == 'windows-latest'
+        timeout-minutes: 3
+        run: |
+          mkdir out
+          mkdir dataset/input/
+          Invoke-WebRequest -Uri https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz -OutFile dataset/input/mnist.npz
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pytest
+          pip install -r requirements.txt
       - name: Test with pytest
         timeout-minutes: 5
         run: pytest -v
