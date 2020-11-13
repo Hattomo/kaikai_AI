@@ -33,11 +33,11 @@ class Convolution_Layer:
         self.kernel = self.__select_w(k_method, in_channel, out_channel, ksize)
         self.train_ratio = train_ratio
 
-    def __select_w(self, k_method, in_channel,out_channel, ksize):
+    def __select_w(self, k_method, in_channel, out_channel, ksize):
         if k_method == "xivier":
             return csetting.xivier(in_channel, out_channel, ksize)
         elif k_method == "he":
-            return csetting.he(in_channel,out_channel, ksize)
+            return csetting.he(in_channel, out_channel, ksize)
         elif k_method == "test":
             return csetting.test(in_channel, out_channel, ksize)
         sys.stdout.write("Error: The kernel method is not found\n")
@@ -45,16 +45,16 @@ class Convolution_Layer:
 
     def __padding(self, pad, train_data):
         (channel, height, width) = np.shape(train_data)
-        p_result = np.zeros([channel, height+2*pad, width+2*pad])
+        p_result = np.zeros([channel, height + 2*pad, width + 2*pad])
         for i in range(channel):
-            p_result[i][pad:height+pad,pad:width+pad] = train_data[i]
+            p_result[i][pad:height + pad, pad:width + pad] = train_data[i]
         return p_result
 
     def forwardpropagation(self, train_data):
         self.train_data = train_data
         (in_channel, d_height, d_width) = np.shape(train_data)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
-        # to prevent error from setting wrong stride 
+        # to prevent error from setting wrong stride
         if ((d_height-k_height) % self.stride) or ((d_width-k_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
@@ -64,7 +64,7 @@ class Convolution_Layer:
 
     def backpropagation(self, input_error):
         z = self.diffact(input_error)
-        b_result =  self.__convolution(self.train_data, z)
+        b_result = self.__convolution(self.train_data, z)
         self.kernel -= self.train_ratio * b_result
         error = self.__convolution(self.__padding(1, self.train_data), np.flip(self.kernel))
         return error
@@ -80,10 +80,9 @@ class Convolution_Layer:
         for i in range(c_result_channel):
             for j in range(c_result_height):
                 for k in range(c_result_width):
-                    y = mask[:,j:j+f_height,k:k+f_width] * _filter[i]
+                    y = mask[:, j:j + f_height, k:k + f_width] * _filter[i]
                     z = np.sum(y)
                     c_result[i][j][k] = z
-        # The feature(output_data) have to have values from 0 to 255 
-        c_result = c_result / np.max(c_result) *255
+        # The feature(output_data) have to have values from 0 to 255
+        c_result = c_result / np.max(c_result) * 255
         return c_result
-                    

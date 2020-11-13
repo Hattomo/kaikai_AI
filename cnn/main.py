@@ -20,19 +20,19 @@ import logic_circuit as lc
 in_channel = 3
 out_channel = 3
 data_size = 4
-a = np.zeros(in_channel*data_size**2)
-for i in range(in_channel*data_size**2):
+a = np.zeros(in_channel * data_size**2)
+for i in range(in_channel * data_size**2):
     a[i] = i
 data = a.reshape([in_channel, data_size, data_size])
 
 # forward propagation of cl
-conv = cl.Convolution_Layer(in_channel=3,out_channel=3,ksize=3,pad=1,k_method="test")
+conv = cl.Convolution_Layer(in_channel=3, out_channel=3, ksize=3, pad=1, k_method="test")
 conv_out = conv.forwardpropagation(data)
 # print(conv_out)
 
-b = np.zeros(out_channel*in_channel*data_size**2)
-for i in range(out_channel*in_channel*data_size**2):
-    b[i] = 1/(i+1)
+b = np.zeros(out_channel * in_channel * data_size**2)
+for i in range(out_channel * in_channel * data_size**2):
+    b[i] = 1 / (i+1)
 error = b.reshape([out_channel, in_channel, data_size, data_size])
 
 # back propagation of cl
