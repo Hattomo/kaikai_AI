@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 # Residual Sum-Of-Squares
 def rss(label, ans):
@@ -13,20 +14,20 @@ def rss(label, ans):
 def diffrss(label, ans):
     return ans - label
 
+def non_universal_cross_entropy(label, ans):
+    if ans < 0:
+        sys.stdout.write(
+            "Calculation Error(cross entropy): The actfunc is not right.\nplease change actfunc of return only plus\n")
+        sys.exit(1)
+    return -label * math.log(ans) - (1 - label) * math.log(1 - ans)
+
 def cross_entropy(label, ans):
-    sum_ = 0
-    delta = 1e-5
-    if label.size == 1:
-        return -label * math.log(abs(ans) + delta)
-    for i in range(label.size):
-        if ans <= 0:
-            return label.size
-        sum_ += -label[i] * math.log(abs(ans) + delta)
-    return sum_
+    centropy = np.vectorize(non_universal_cross_entropy)
+    return np.sum(centropy(label, ans))
+
+def non_universal_diffcross_entropy(label, ans):
+    return -label / (ans) + (1 - label) / (1 - ans)
 
 def diffcross_entropy(label, ans):
-    diff = ans
-    delta = 1e-5
-    for i in range(label.size):
-        diff[i] = -label[i] / (ans+delta)
-    return diff
+    diffcentropy = np.vectorize(non_universal_diffcross_entropy)
+    return diffcentropy(label, ans)
