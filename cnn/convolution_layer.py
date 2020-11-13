@@ -52,31 +52,25 @@ class Convolution_Layer:
 
     def forwardpropagation(self, train_data):
         self.train_data = train_data
-        padding_data = self.__padding(self.pad, train_data)
-        return self.__forwardconvolution(padding_data)
-
-    def __forwardconvolution(self, train_data):
         (in_channel, d_height, d_width) = np.shape(train_data)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
-        # check
+        # to prevent error from setting wrong stride 
         if ((d_height-k_height) % self.stride) or ((d_width-k_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
-        #convolution
-        c_result = self.__convolution(train_data, self.kernel)
+        padding_data = self.__padding(self.pad, train_data)
+        c_result = self.__convolution(padding_data, self.kernel)
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
-        # back convolution
-        self.kernel -= self.train_ratio * self.__backconvolution(input_error)
+        z = self.diffact(input_error)
+        b_result =  self.__convolution(self.train_data, z)
+        self.kernel -= self.train_ratio * b_result
         error = self.__convolution(self.__padding(1, self.train_data), np.flip(self.kernel))
         return error
 
-    def __backconvolution(self, input_error):
-        z = self.diffact(input_error)
-        return self.__convolution(self.train_data, z)
-
     def __convolution(self, mask, _filter):
+        print(_filter.shape)
         (m_channel, m_height, m_width) = np.shape(mask)
         (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
         c_result_channel = m_channel
@@ -89,6 +83,7 @@ class Convolution_Layer:
                     y = mask[:,j:j+f_height,k:k+f_width] * _filter[i]
                     z = np.sum(y)
                     c_result[i][j][k] = z
-        max_ = np.max(c_result)
-        return c_result/max_ * 255
+        # The feature(output_data) have to have values from 0 to 255 
+        c_result = c_result / np.max(c_result) *255
+        return c_result
                     
