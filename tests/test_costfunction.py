@@ -29,5 +29,3 @@ def test_diffcross_entropy():
     error = costfunction.diffcross_entropy(label, ans)
     assert np.isclose(error, np.array([1.250, 1.428, -2.500, -2.000]), rtol=1e-3,
                       atol=1e-3).all(), "check diffcross_entropy or test"
-
-test_diffrss()
