@@ -72,8 +72,8 @@ class Convolution_Layer:
         (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
         # make convolution result
         c_result_channel = m_channel
-        c_result_height = (m_height + 2 * self.pad - f_height) // self.stride + 1
-        c_result_width = (m_width + 2 * self.pad - f_width) // self.stride + 1
+        c_result_height = (m_height - f_height) // self.stride + 1
+        c_result_width = (m_width - f_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
         for i in range(c_result_channel):
             for j in range(c_result_height):
