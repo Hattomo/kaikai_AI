@@ -58,7 +58,4 @@ def donet(layer):
     for i in range(length - 1):
         w = np.identity(layer[i])
         net.append(w)
-    # last_w = np.identity(layer[-1] )
-    # net.append(last_w)
-    print(net[0])
     return net

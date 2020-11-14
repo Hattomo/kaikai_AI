@@ -92,9 +92,9 @@ class Neural_Network:
         self.weight[-1] -= self.train_ratio * diff.T @ self.do[-1]
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
-            tmp = self.diffact(self.z[-i - 2][1:]) * (self.weight[-i - 1][:, 1:].T @ tmp)
+            tmp = self.diffact(self.z[-i - 2][1:]) * ((self.weight[-i - 1][:, 1:] @ self.do[-i - 1][:-1, :-1]).T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.train_ratio * diff.T @ self.do[-i - 2]
+            self.weight[-i - 2] -= self.train_ratio * diff.T
         if flag:
             weight = (self.weight[0].T[1:]).T
             z = (self.z[0].T[1:]).T
@@ -107,7 +107,8 @@ class Neural_Network:
                     if (np.random.rand() < self.dropout[i]):
                         self.do[i][j][j] = 0
                 else:
-                    self.do[i][j][j] = 1
+                    shape = np.shape(self.do[i])
+                    self.do[i] = np.identity(shape[0])
 
     def __fit_train_ratio(self, train_label, ans):
         if self.costfunc(train_label, ans) < 0.5:
