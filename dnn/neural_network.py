@@ -67,7 +67,7 @@ class Neural_Network:
         sys.stdout.write("Error: The lossfunc is not found\n")
         sys.exit(1)
 
-    def forwardpropagation(self, train_data, istrain=False):
+    def forwardpropagation(self, train_data, istrain=True):
         self.z[0][0] = 1
         self.z[0][1:] = train_data
         for i in range(len(self.structure) - 2):
@@ -80,7 +80,7 @@ class Neural_Network:
         if istrain:
             self.z[-1] = self.actfunc(self.y[-1])
         else:
-            self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[i])
+            self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[-1])
 
     # バックプロパゲーション
     def backpropagation(self, train_data, train_label, flag=False):
@@ -131,7 +131,7 @@ class Neural_Network:
         cost = 0
         length = len(test_data)
         for i in range(length):
-            self.forwardpropagation(test_data[i])
+            self.forwardpropagation(test_data[i], False)
             if self.__compare(test_label[i], self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
