@@ -20,7 +20,7 @@ def draw(y):
     #plt.show()
 
 def tdchart(nn):
-    if (nn.structure[-1] == 1):
+    if (nn.structure[-1] == 1 or nn.structure[0] != 2):
         print("tdchart : dimention is not right")
     else:
         fig = plt.figure()
