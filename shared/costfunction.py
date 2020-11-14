@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 def rss(label, ans):
@@ -8,19 +7,11 @@ def diffrss(label, ans):
     return ans - label
 
 def cross_entropy(label, ans):
-    sum_ = 0
-    delta = 1e-5
-    if label.size == 1:
-        return -label * math.log(abs(ans) + delta)
-    for i in range(label.size):
-        if ans <= 0:
-            return label.size
-        sum_ += -label[i] * math.log(abs(ans) + delta)
-    return sum_
+    if ans.any() < 0:
+        sys.stdout.write(
+            "Calculation Error(cross entropy): The actfunc is not right.\nplease change actfunc of return only plus\n")
+        sys.exit(1)
+    return np.sum(-label * np.log(ans) - (1-label) * np.log(1 - ans))
 
 def diffcross_entropy(label, ans):
-    diff = ans
-    delta = 1e-5
-    for i in range(label.size):
-        diff[i] = -label[i] / (ans+delta)
-    return diff
+    return -label / (ans) + (1-label) / (1-ans)

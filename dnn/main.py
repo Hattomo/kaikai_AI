@@ -15,9 +15,9 @@ logic = "or"
 trainData, trainLabel = lc.dset(logic, epoch)
 testData, testLabel = lc.dset(logic, 20)
 # ニューラルネットワークの生成
-orNN = nn.Neural_Network(structure, "he", "tanh")
+orNN = nn.Neural_Network(structure, "he", "sigmoid", costfunc="cross_entropy")
 # 学習
-count = 25
+count = 200
 for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
