@@ -7,14 +7,6 @@ sys.path.append('./shared')
 import neural_network as nn
 import activationfunction as af
 import csetting
-"""
-convolution
-    mask (numpy) :  data_channel * N * M
-    kernel (list[int]) : L * L
-    stride (int) : s
-    c_result (numpy) : channel * {( N - L + 1 )/s} * {( M - L + 1 )/s}
-
-"""
 
 class Convolution_Layer:
 
@@ -45,6 +37,7 @@ class Convolution_Layer:
 
     def __padding(self, pad, train_data):
         (channel, height, width) = np.shape(train_data)
+        # <zero padding>
         p_result = np.zeros([channel, height + 2*pad, width + 2*pad])
         for i in range(channel):
             p_result[i][pad:height + pad, pad:width + pad] = train_data[i]
@@ -58,24 +51,29 @@ class Convolution_Layer:
         if ((d_height-k_height) % self.stride) or ((d_width-k_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
+        # <padding>  Be careful,size of train data change!
+        # (padding size is [channel, height+2*pad-k_height/stride, width+2*pad-k_height/stride])
         padding_data = self.__padding(self.pad, train_data)
+        # <convolution>
         c_result = self.__convolution(padding_data, self.kernel)
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
+        # updata kernel
         z = self.diffact(input_error)
         b_result = self.__convolution(self.train_data, z)
         self.kernel -= self.train_ratio * b_result
+        # make next error
         error = self.__convolution(self.__padding(1, self.train_data), np.flip(self.kernel))
         return error
 
     def __convolution(self, mask, _filter):
-        print(_filter.shape)
         (m_channel, m_height, m_width) = np.shape(mask)
         (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
+        # make convolution result
         c_result_channel = m_channel
-        c_result_height = (m_height-f_height) // self.stride + 1
-        c_result_width = (m_width-f_width) // self.stride + 1
+        c_result_height = (m_height + 2 * self.pad - f_height) // self.stride + 1
+        c_result_width = (m_width + 2 * self.pad - f_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
         for i in range(c_result_channel):
             for j in range(c_result_height):
