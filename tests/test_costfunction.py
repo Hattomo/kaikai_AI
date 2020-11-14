@@ -1,26 +1,25 @@
 import sys
-import unittest
 
 import numpy as np
 
 sys.path.append('./shared')
-import activationfunction as af
+import costfunction
 
-class Test_Cost_Function(unittest.TestCase):
+def setUp():
+    # init
+    pass
 
-    def setUp(self):
-        # init
-        pass
+def tearDown():
+    # dispose
+    pass
 
-    def tearDown(self):
-        # dispose
-        pass
+def test_rss():
+    pass
 
-    def test_rss(self):
-        pass
-
-    def test_cross_entropy(self):
-        pass
-
-if __name__ == "__main__":
-    unittest.main()
+def test_cross_entropy():
+    label = np.array([0, 0, 1, 1])
+    ans = np.array([0.2, 0.3, 0.4, 0.5])
+    error = costfunction.cross_entropy(label, ans)
+    assert error - 2.189 < 1e-3, "check cross_entropy or test"
+    error = costfunction.diffcross_entropy(label, ans)
+    assert (error - [1.25, 1.428, -2.50, -2.00]).all() < 1e-3, "check diffcross_entropy or test"
