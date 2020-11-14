@@ -116,7 +116,7 @@ class Neural_Network:
         elif self.costfunc(train_label, ans) < 0.1:
             self.train_ratio = 0.01
         elif self.costfunc(train_label, ans) < 0.01:
-            self.train_ratio = 0.0001
+            self.train_ratio = 0.001
 
     # 学習
     def train(self, train_data, train_label, flag=False):
