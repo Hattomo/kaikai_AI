@@ -15,7 +15,7 @@ Install `yapf (Yet Another Python Formatter)`.
 $ pip3 install yapf
 ```
 Our format settings is [here](./.style.yapf)  
-if you use `Visual Studio Code`, please set as below.     
+if you use `Visual Studio Code`, please set as below.  
 
 ```json
 .vscode/settings.json
