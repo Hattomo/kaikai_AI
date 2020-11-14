@@ -1,7 +1,7 @@
 # https://github.com/actions/labeler
 # Add 'Documentation' label to md file change
 Documentation:
-  - /**/*.md
+  - '**/*.md'
   
 # Add 'CNN', 'DNN' label 
 CNN:
