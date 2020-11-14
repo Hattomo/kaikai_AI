@@ -144,8 +144,8 @@ class Neural_Network:
             str(len(self.cost)))
 
     def __compare(self, label, predict):
-        z = np.zeros(len(label))
-        for i in range(len(label)):
+        z = np.zeros(label.size)
+        for i in range(label.size):
             if predict[i] >= 0.8:
                 z[i] = 1.0
             elif predict[i] <= 0.2:

@@ -15,7 +15,7 @@ Install `yapf (Yet Another Python Formatter)`.
 $ pip3 install yapf
 ```
 Our format settings is [here](./.style.yapf)  
-if you use `Visual Studio Code`, please set as below.  
+if you use `Visual Studio Code`, please set as below.     
 
 ```json
 .vscode/settings.json
@@ -38,8 +38,19 @@ The test run with `python3.8`.
 $ pip3 install pytest
 $ pytest -v
 ```
-## Learning ML  
-1. 深層学習(NN)
-1. オートエンコーダ　or　CNN
-1. サポートベクタマシン
-1. RL(Q-learning)  
+## Road Map & Status
+|No.|Road Map|Status|
+|:--:|:--:|:--:|
+|1|DNN|🐥|
+|2|CNN|🐣|
+|3|RNN|🥚|
+|4|RL(Q-learning)|🥚|
+|4|Auto Encoder|🥚|
+|5|SVM|🥚|
+
+🍳: No plan yet  
+🥚: Not started  
+🐣: Early stage   
+🐥: Alost Developed  
+🐤: More Developed 🔨  
+🐔: More and More Developed 🔨  
