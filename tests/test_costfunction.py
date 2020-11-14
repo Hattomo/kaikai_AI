@@ -15,7 +15,7 @@ def test_diffrss():
     label = np.array([0, 0, 1, 1])
     ans = np.array([0.2, 0.3, 0.4, 0.5])
     error = costfunction.diffrss(label, ans)
-    assert np.isclose(error, np.array([0.2, 0.3, -0.6, -0.5])).all(), "check rss or test"
+    assert np.allclose(error, np.array([0.2, 0.3, -0.6, -0.5])), "check rss or test"
 
 def test_cross_entropy():
     label = np.array([0, 0, 1, 1])
@@ -27,5 +27,5 @@ def test_diffcross_entropy():
     label = np.array([0, 0, 1, 1])
     ans = np.array([0.2, 0.3, 0.4, 0.5])
     error = costfunction.diffcross_entropy(label, ans)
-    assert np.isclose(error, np.array([1.250, 1.428, -2.500, -2.000]), rtol=1e-3,
-                      atol=1e-3).all(), "check diffcross_entropy or test"
+    assert np.allclose(error, np.array([1.250, 1.428, -2.500, -2.000]), rtol=1e-3,
+                       atol=1e-3), "check diffcross_entropy or test"
