@@ -17,18 +17,24 @@ import logic_circuit as lc
 (trainData, trainLabel) = lc.dset("cnn_ex", 1000)
 (testData, testLabel) = lc.dset("cnn_ex", 1)
 
-a = np.zeros([1, 4, 4])
-count = 0
-for i in range(4):
-    for j in range(4):
-        a[0][i][j] = count
-        count += 1
+in_channel = 3
+out_channel = 3
+data_size = 4
+a = np.zeros(in_channel * data_size**2)
+for i in range(in_channel * data_size**2):
+    a[i] = i
+data = a.reshape([in_channel, data_size, data_size])
 
-error = np.array([[[-1, 2], [3, 4]]])
+# forward propagation of cl
+conv = cl.Convolution_Layer(in_channel=3, out_channel=3, ksize=3, pad=1, k_method="test")
+conv_out = conv.forwardpropagation(data)
+# print(conv_out)
 
-conv = cl.Convolution_Layer(1, 3, "test")
+b = np.zeros(out_channel * in_channel * data_size**2)
+for i in range(out_channel * in_channel * data_size**2):
+    b[i] = 1 / (i+1)
+error = b.reshape([out_channel, in_channel, data_size, data_size])
 
-conv.forwardpropagation(a)
-conv_out = conv.backpropagation(error)
-
-print(conv_out)
+# back propagation of cl
+conv_error = conv.backpropagation(error)
+print(conv_error)

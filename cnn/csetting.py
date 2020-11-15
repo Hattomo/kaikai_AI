@@ -6,33 +6,23 @@ import numpy as np
 
 # 重みの作成
 #一様分布
-def unif(kernel_w_size, kernel_h_size):
-    kernel = np.random.rand(kernel_w_size * kernel_h_size) * 2 - 1
-    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return abs(kernel)
+def unif(in_channel, out_channel, ksize):
+    kernel = np.random.rand(in_channel * out_channel * ksize**2) * 2 - 1
+    kernel = kernel.reshape([out_channel, in_channel, ksize, ksize])
+    return kernel
 
 #正規分布(xivier)
-def xivier(kernel_w_size, kernel_h_size):
-    kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(kernel_w_size), size=kernel_w_size * kernel_h_size)
-    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return abs(kernel)
+def xivier(in_channel, out_channel, ksize):
+    kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(out_channel), size=in_channel * out_channel * ksize**2)
+    return kernel.reshape(out_channel, in_channel, ksize, ksize)
 
 #正規分布(he)
-def he(kernel_w_size, kernel_h_size):
-    kernel = np.random.normal(loc=0.0, scale=math.sqrt(2 / kernel_w_size), size=kernel_w_size * kernel_h_size)
-    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return abs(kernel)
+def he(in_channel, out_channel, ksize):
+    kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(2 / out_channel), size=in_channel * out_channel * ksize**2)
+    return kernel.reshape(out_channel, in_channel, ksize, ksize)
 
-def test(kernel_w_size, kernel_h_size):
-    kernel = np.zeros(kernel_w_size * kernel_h_size)
-    for i in range(kernel_w_size * kernel_h_size):
+def test(in_channel, out_channel, ksize):
+    kernel = np.zeros(out_channel * in_channel * ksize**2)
+    for i in range(out_channel * in_channel * ksize**2):
         kernel[i] = (i+1) / 10
-    kernel = kernel.reshape(kernel_w_size, kernel_h_size)
-    return abs(kernel)
-
-def knet(channel, kernel_size, k_method):
-    net = list()
-    for i in range(channel):
-        k = k_method(kernel_size, kernel_size)
-        net.append(k)
-    return net
+    return kernel.reshape([out_channel, in_channel, ksize, ksize])
