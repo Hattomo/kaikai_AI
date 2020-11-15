@@ -50,3 +50,12 @@ def wnet(layer, w_method):
     last_w = w_method(layer[-2], layer[-1])
     net.append(last_w)
     return net
+
+# drop out matrix
+def donet(layer):
+    length = len(layer)
+    net = list()
+    for i in range(length - 1):
+        w = np.identity(layer[i])
+        net.append(w)
+    return net
