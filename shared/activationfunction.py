@@ -18,8 +18,17 @@ def sigmoid(x):
     return sig(x)
 
 # tanh関数
-def tanh(x):
+def non_universal_tanh(x):
+    tanh_range = 34.538776394910684
+    if x <= -tanh_range:
+        return -1.0 + 1e-15
+    elif x >= tanh_range:
+        return 1.0 - 1e-15
     return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
+
+def tanh(x):
+    tanh = np.vectorize(non_universal_tanh)
+    return tanh(x)
 
 #identity関数
 def non_universal_identity(x):
