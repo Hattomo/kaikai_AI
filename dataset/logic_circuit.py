@@ -103,3 +103,10 @@ def dset(d_name, num):
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
+
+def data_shuffle(data, label):
+    print(data, label)
+    shuffle = np.random.permutation(len(label))
+    data = data[shuffle]
+    label = label[shuffle]
+    print(data, label)
