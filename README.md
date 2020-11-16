@@ -1,7 +1,7 @@
 # AI Learning with kaikai
 
 ## Start Developing
-You have to install `python3`, `numpy`, and `matplotlib`.
+You have to install `python3`, and module written in [./requirements.txt](./requirements.txt).
 
 To run cnn with [THE MNIST DATABASE of handwritten digits](http://yann.lecun.com/exdb/mnist/),
 please download the data set from [here](https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz) and locate the file to `dataset/input/`.  
@@ -29,15 +29,24 @@ if you use `Visual Studio Code`, please set as below.
 }
 ```
 
-### Test
+### Tests
 We use `pytest` to test our code.  
 Please install and run.  
-The test run with `python3.8`.  
+The tests run with `python3.8`.  
 
 ```sh
 $ pip3 install pytest
 $ pytest -v
 ```
+We add tests when we confirm that the theory is correct.
+
+### Comments
+We write comments actively, because we can see more easily.  
+Comments are written English or Japanese sentence, and required in situations like below.
+- Attention needed
+- Multiple tasks in one function
+- Complex tasks
+
 ## Road Map & Status
 |No.|Road Map|Status|
 |:--:|:--:|:--:|
@@ -50,7 +59,7 @@ $ pytest -v
 
 🍳: No plan yet  
 🥚: Not started  
-🐣: Early stage   
-🐥: Alost Developed  
-🐤: More Developed 🔨  
-🐔: More and More Developed 🔨  
+🐣: Early Developing stage 🌱  
+🐥: Tests stage 🧪  
+🐤: v1 Completed 🎉  
+🐔: Advanced Developing stage🔨 (v2)  
