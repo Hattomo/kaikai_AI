@@ -33,7 +33,7 @@ class Fully_Connect_Layer(nn.Neural_Network):
         # 学習
         super().forwardpropagation(train_data)
         # 誤差の伝播
-        error = super().backpropagation(train_data, train_label, flag=True)
+        error = super().backpropagation(train_data, train_label, isexternal=True)
         return error.reshape([channel, height, width])
 
     def test(self, input_data, train_label):
