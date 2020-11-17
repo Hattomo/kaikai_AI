@@ -28,8 +28,8 @@ def accurancygraph(y):
     ax1.plot(x, y, "mediumseagreen")
     plt.title("accurancy")
     plt.savefig(os.path.join(os.path.dirname(__file__), '../out/accurancy.png'))
-
     #plt.show()
+
 def tdchart(nn):
     if (nn.structure[-1] == 1 or nn.structure[0] != 3):
         print("tdchart : dimention is not right")
