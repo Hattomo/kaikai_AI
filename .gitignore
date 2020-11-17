@@ -144,3 +144,6 @@ kaikai_ML_env/*
 # numpy binary
 *.npy
 *.npz
+
+# html
+*html
