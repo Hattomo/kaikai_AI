@@ -12,9 +12,18 @@ import vectormath as vmath
 
 class Neural_Network:
 
-    def __init__(self, structure, dropout=[0, 0, 0], w_method="xivier", actfunc="sigmoid", costfunc="rss"):
+    def __init__(
+        self,
+        structure,
+        dropout=[0, 0, 0],
+        w_method="xivier",
+        actfunc="sigmoid",
+        costfunc="rss",
+        testmode="classify",
+    ):
         self.structure = structure
         self.dropout = dropout
+        self.testmode = testmode
         self.y = dsetting.ynet(self.structure)
         self.z = dsetting.znet(self.structure)
         self.do = dsetting.donet(self.structure)
@@ -144,14 +153,13 @@ class Neural_Network:
             str(len(self.cost)))
 
     def __compare(self, label, predict):
-        z = np.zeros(label.size)
-        for i in range(label.size):
-            if predict[i] >= 0.8:
-                z[i] = 1.0
-            elif predict[i] <= 0.2:
-                z[i] = 0.0
-            else:
-                z[i] = predict[i]
-        if (z == label).all():
-            return True
-        return False
+        if self.testmode == "classify":
+            if np.argmax(predict) == np.argmax(label):
+                return True
+            return False
+        elif self.testmode == "predict":
+            sys.stdout.write("Error : __compare() mode predict is not supported")
+            sys.exit(7)
+        else:
+            sys.stdout.write("Error : __compare() mode is not right")
+            sys.exit(6)
