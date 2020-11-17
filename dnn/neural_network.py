@@ -144,14 +144,6 @@ class Neural_Network:
             str(len(self.cost)))
 
     def __compare(self, label, predict):
-        z = np.zeros(label.size)
-        for i in range(label.size):
-            if predict[i] >= 0.8:
-                z[i] = 1.0
-            elif predict[i] <= 0.2:
-                z[i] = 0.0
-            else:
-                z[i] = predict[i]
-        if (z == label).all():
+        if np.argmax(predict) == np.argmax(label):
             return True
         return False

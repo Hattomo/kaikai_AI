@@ -1,5 +1,7 @@
 import sys
 
+import numpy as np
+
 sys.path.append("./dataset")
 sys.path.append("./shared")
 import activationfunction as af
