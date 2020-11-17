@@ -43,12 +43,12 @@ class Convolution_Layer:
             p_result[i][pad:height + pad, pad:width + pad] = train_data[i]
         return p_result
 
-    def forwardpropagation(self, train_data):
-        self.train_data = train_data
-        (in_channel, d_height, d_width) = np.shape(train_data)
+    def forwardpropagation(self, image_data):
+        self.image_data = image_data
+        (in_channel, img_height, img_width) = np.shape(image_data)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # to prevent error from setting wrong stride
-        if ((d_height-k_height) % self.stride) or ((d_width-k_width) % self.stride):
+        if ((d_height-k_height) % self.stride[0]) or ((d_width-k_width) % self.stride[1]):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
         # <padding>  Be careful,size of train data change!
