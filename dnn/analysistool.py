@@ -19,6 +19,17 @@ def draw(y):
     plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost.png'))
     #plt.show()
 
+def accurancygraph(y):
+    x = []
+    for i in range(len(y)):
+        x.append(i)
+    fig = plt.figure(figsize=(8.0, 6.0))
+    ax1 = fig.add_subplot(111)
+    ax1.plot(x, y, "mediumseagreen")
+    plt.title("accurancy")
+    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/accurancy.png'))
+
+    #plt.show()
 def tdchart(nn):
     if (nn.structure[-1] == 1 or nn.structure[0] != 3):
         print("tdchart : dimention is not right")

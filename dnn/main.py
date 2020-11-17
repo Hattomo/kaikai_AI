@@ -23,5 +23,6 @@ for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
 atool.draw(orNN.cost)
+atool.accurancygraph(orNN.accurancy)
 atool.tdchart(orNN)
 npfiles.save(orNN)
