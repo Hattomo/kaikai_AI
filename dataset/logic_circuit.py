@@ -72,6 +72,18 @@ def dset(d_name, num):
             return train_data[:num], train_label[:num]
         elif d_name == "mnist_test":
             return test_data[:num], test_label[:num]
+    elif d_name == "mnist16_mean_train" or d_name == "mnist16_mean_test":
+        (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist16_mean")
+        if d_name == "mnist16_mean_train":
+            return train_data[:num], train_label[:num]
+        elif d_name == "mnist16_mean_test":
+            return test_data[:num], test_label[:num]
+    elif d_name == "mnist16_direct_train" or d_name == "mnist16_direct_test":
+        (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist16_direct")
+        if d_name == "mnist16_direct_train":
+            return train_data[:num], train_label[:num]
+        elif d_name == "mnist16_direct_test":
+            return test_data[:num], test_label[:num]
     elif d_name == "cnn_ex":
         data = np.zeros((4 * num, 1, 4, 4))
         for i in range(num):
@@ -103,3 +115,10 @@ def dset(d_name, num):
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
+
+def data_shuffle(data, label):
+    print(data, label)
+    shuffle = np.random.permutation(len(label))
+    data = data[shuffle]
+    label = label[shuffle]
+    print(data, label)

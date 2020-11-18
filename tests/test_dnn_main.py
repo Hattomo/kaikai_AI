@@ -20,6 +20,11 @@ def test_main_or_with_dropout():
     # set data
     (trainData, trainLabel) = lc.dset(logic, epoch)
     (testData, testLabel) = lc.dset(logic, 5)
+
+    # randomize
+    lc.data_shuffle(trainData, trainLabel)
+    lc.data_shuffle(testData, testLabel)
+
     # ニューラルネットワークの生成
     orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
     # 学習
@@ -41,6 +46,11 @@ def test_main_or_without_dropout():
     # set data
     (trainData, trainLabel) = lc.dset(logic, epoch)
     (testData, testLabel) = lc.dset(logic, 5)
+
+    # randomize
+    lc.data_shuffle(trainData, trainLabel)
+    lc.data_shuffle(testData, testLabel)
+
     # ニューラルネットワークの生成
     orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
     # 学習

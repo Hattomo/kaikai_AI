@@ -32,6 +32,7 @@ class Neural_Network:
         (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
         self.train_ratio = 0.5
         self.cost = list()
+        self.accurancy = []
 
     def __set_weight(self, structure, w_method):
         if w_method == "xivier":
@@ -92,7 +93,7 @@ class Neural_Network:
             self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[-1])
 
     # バックプロパゲーション
-    def backpropagation(self, train_data, train_label, flag=False):
+    def backpropagation(self, train_data, train_label, isexternal=False):
         #学習率の変更
         self.__fit_train_ratio(train_label, self.z[-1])
         # out layer to middle layer
@@ -104,7 +105,7 @@ class Neural_Network:
             tmp = self.diffact(self.z[-i - 2][1:]) * ((self.weight[-i - 1][:, 1:] @ self.do[-i - 1][:-1, :-1]).T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
-        if flag:
+        if isexternal:
             weight = (self.weight[0].T[1:]).T
             z = (self.z[0].T[1:]).T
             return z * (weight.T @ tmp)
@@ -128,11 +129,11 @@ class Neural_Network:
             self.train_ratio = 0.001
 
     # 学習
-    def train(self, train_data, train_label, flag=False):
+    def train(self, train_data, train_label, isexternal=False):
         self.__dropout_shake()
         for i in range(len(train_data)):
             self.forwardpropagation(train_data[i], False)
-            self.backpropagation(train_data[i], train_label[i], flag)
+            self.backpropagation(train_data[i], train_label[i], isexternal)
 
     def test(self, test_data, test_label):
         self.__dropout_shake(False)
@@ -145,6 +146,7 @@ class Neural_Network:
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
+        self.accurancy.append(count / length)
         if math.isnan(cost):
             sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
             sys.exit(2)
