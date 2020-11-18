@@ -21,3 +21,18 @@ GitHub Action:
   - .github/**/*
   - ./.style.yapf
   - ./requirements.txt
+
+RNN:
+  - rnn/**/*
+
+Tools:
+  - tools/**/*
+
+RL:
+  - rl/**/*
+
+SVM:
+  - svm/**/*
+
+Auto Encoder:
+  - autoencoder/**/*
