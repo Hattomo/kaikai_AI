@@ -10,15 +10,20 @@ import logic_circuit as lc
 
 structure = [3, 3, 2]
 dropout = [0, 0, 0]
-epoch = 1
+epoch = 30
 logic = "or"
 # set data
 trainData, trainLabel = lc.dset(logic, epoch)
 testData, testLabel = lc.dset(logic, 10)
+
+# randomize
+lc.data_shuffle(trainData, trainLabel)
+lc.data_shuffle(testData, testLabel)
+
 # ニューラルネットワークの生成
-orNN = nn.Neural_Network(structure, dropout, "he", "sigmoid")
+orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
 # 学習
-count = 30
+count = 300
 for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
