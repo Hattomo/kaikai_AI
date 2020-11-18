@@ -21,7 +21,7 @@ class Pooling_Layer:
         sys.stdout.write("Error: The pooling method is not found\n")
         sys.exit(1)
 
-    def forwordpropagation(self, train_data):
+    def forwardpropagation(self, train_data):
         (data_channel, data_height, data_width) = np.shape(train_data)
         # check pooling size
         if data_height % self.p_size[0] != 0 or data_width % self.p_size[1] != 0:
@@ -42,11 +42,11 @@ class Pooling_Layer:
 
     def backpropagation(self, input_error):
         (input_channel, input_height, input_width) = np.shape(input_error)
-        output_error = np.zeros([input_channel, input_height * self.p_size[0], width * self.p_size[1]])
+        output_error = np.zeros([input_channel, input_height * self.p_size[0], input_width * self.p_size[1]])
         count = 0
         for h in range(input_channel):
-            for i in range(input_height // self.p_size[0]):
-                for j in range(input_width // self.p_size[1]):
+            for i in range(input_height):
+                for j in range(input_width):
                     output_error[h][i * self.p_size[0] + self.index[count][0],
                                     j * self.p_size[1] + self.index[count][1]] = input_error[h][i][j]
                     count += 1

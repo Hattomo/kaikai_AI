@@ -18,7 +18,7 @@ class Convolution_Layer:
                  pad=0,
                  k_method="xivier",
                  actfunc="relu",
-                 train_ratio=0.005):
+                 train_ratio=0.05):
         self.stride = stride
         self.pad = pad
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
@@ -48,30 +48,49 @@ class Convolution_Layer:
         (in_channel, img_height, img_width) = np.shape(image_data)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # to prevent error from setting wrong stride
-        if ((d_height-k_height) % self.stride[0]) or ((d_width-k_width) % self.stride[1]):
+        if ((img_height-k_height) % self.stride) or ((img_width-k_width) % self.stride):
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
         # <padding>  Be careful,size of train data change!
         # (padding size is [channel, height+2*pad-k_height/stride, width+2*pad-k_height/stride])
-        padding_data = self.__padding(self.pad, train_data)
+        padding_data = self.__padding(self.pad, image_data)
+        self.train_data = padding_data
         # <convolution>
         c_result = self.__convolution(padding_data, self.kernel)
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
-        # updata kernel
-        z = self.diffact(input_error)
-        b_result = self.__convolution(self.train_data, z)
-        self.kernel -= self.train_ratio * b_result
+        (in_channel, tr_height, tr_width) = np.shape(self.train_data)
+        (out_channel, er_height, er_width) = np.shape(input_error)
+        (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
+        # update kernel
+        result = np.zeros([out_channel, in_channel, k_height, k_width])
+        z = np.zeros(in_channel)
+        for i in range(in_channel):
+            for j in range(out_channel):
+                for k in range((tr_height-er_height)//self.stride+1):
+                    for l in range((tr_width-er_width)//self.stride+1):
+                        y = self.train_data[:, k:k + er_height, l:l + er_width] * input_error[j]
+                        for a in range(in_channel):
+                            z[a] = np.sum(y[a])
+                        result[j][:, k, l] = z
+        self.kernel -= self.train_ratio * result
         # make next error
-        error = self.__convolution(self.__padding(1, self.train_data), np.flip(self.kernel))
+        (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
+        _kernel = np.zeros([in_channel, out_channel,k_height, k_width])
+        for i in range(out_channel):
+            for j in range(in_channel):
+                _kernel[j][i] = np.flip(self.kernel[i][j])
+        error = self.__convolution(self.__padding(1, input_error),_kernel)
+        error = self.diffact(error)
+        # return error
         return error
 
     def __convolution(self, mask, _filter):
         (m_channel, m_height, m_width) = np.shape(mask)
         (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
         # make convolution result
-        c_result_channel = m_channel
+        c_result_channel = out_channel
         c_result_height = (m_height-f_height) // self.stride + 1
         c_result_width = (m_width-f_width) // self.stride + 1
         c_result = np.zeros([c_result_channel, c_result_height, c_result_width])
@@ -81,6 +100,4 @@ class Convolution_Layer:
                     y = mask[:, j:j + f_height, k:k + f_width] * _filter[i]
                     z = np.sum(y)
                     c_result[i][j][k] = z
-        # The feature(output_data) have to have values from 0 to 255
-        c_result = c_result / np.max(c_result) * 255
         return c_result

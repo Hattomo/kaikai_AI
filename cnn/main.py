@@ -14,27 +14,23 @@ import pooling_layer as pl
 import mnist
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("cnn_ex", 1000)
-(testData, testLabel) = lc.dset("cnn_ex", 1)
+(trainData, trainLabel) = lc.dset("cnn_exs", 1000)
+(testData, testLabel) = lc.dset("cnn_exs", 1)
 
-in_channel = 3
-out_channel = 3
-data_size = 4
-a = np.zeros(in_channel * data_size**2)
-for i in range(in_channel * data_size**2):
-    a[i] = i
-data = a.reshape([in_channel, data_size, data_size])
 
-# forward propagation of cl
-conv = cl.Convolution_Layer(in_channel=3, out_channel=3, ksize=3, pad=1, k_method="test")
-conv_out = conv.forwardpropagation(data)
-# print(conv_out)
 
-b = np.zeros(out_channel * in_channel * data_size**2)
-for i in range(out_channel * in_channel * data_size**2):
-    b[i] = 1 / (i+1)
-error = b.reshape([out_channel, in_channel, data_size, data_size])
+conv = cl.Convolution_Layer(in_channel=1, out_channel=4, ksize=3, pad=1)
+pool = pl.Pooling_Layer(pooling_size=[2,2])
+cnnfc = fc.Fully_Connect_Layer([16+1,10,2])
 
-# back propagation of cl
-conv_error = conv.backpropagation(error)
-print(conv_error)
+count = 100
+for i in range(count):
+    # fp
+    conv_out = conv.forwardpropagation(trainData[i])
+    pool_out = pool.forwardpropagation(conv_out)
+    error = cnnfc(pool_out, trainLabel[i])
+    # bp
+    pool_error = pool.backpropagation(error)
+    conv_error = conv.backpropagation(pool_error)
+    cnnfc.test(pool_out, trainLabel) 
+
