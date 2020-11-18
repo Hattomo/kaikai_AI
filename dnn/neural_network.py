@@ -23,6 +23,7 @@ class Neural_Network:
         (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
         self.train_ratio = 0.5
         self.cost = list()
+        self.accurancy = []
 
     def __set_weight(self, structure, w_method):
         if w_method == "xivier":
@@ -136,6 +137,7 @@ class Neural_Network:
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
+        self.accurancy.append(count / length)
         if math.isnan(cost):
             sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
             sys.exit(2)
