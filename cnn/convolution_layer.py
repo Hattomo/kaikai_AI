@@ -18,7 +18,7 @@ class Convolution_Layer:
                  pad=0,
                  k_method="xivier",
                  actfunc="relu",
-                 train_ratio=0.05):
+                 train_ratio=0.01):
         self.stride = stride
         self.pad = pad
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
@@ -57,6 +57,7 @@ class Convolution_Layer:
         self.train_data = padding_data
         # <convolution>
         c_result = self.__convolution(padding_data, self.kernel)
+        c_result = c_result / np.max(c_result) * 255
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
@@ -74,6 +75,7 @@ class Convolution_Layer:
                         for a in range(in_channel):
                             z[a] = np.sum(y[a])
                         result[j][:, k, l] = z
+        result = result/np.max(abs(result))
         self.kernel -= self.train_ratio * result
         # make next error
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
