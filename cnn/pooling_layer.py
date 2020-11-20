@@ -23,32 +23,34 @@ class Pooling_Layer:
 
     def forwardpropagation(self, train_data):
         self.index = list()
-        (data_channel, data_height, data_width) = np.shape(train_data)
+        (batch, data_channel, data_height, data_width) = np.shape(train_data)
         # check pooling size
         if data_height % self.p_size[0] != 0 or data_width % self.p_size[1] != 0:
             sys.stdout.write("Error: The pooling_size is not right\n")
             sys.exit(1)
         # pooling
-        p_result_height = data_height // self.p_size[0]
-        p_result_width = data_width // self.p_size[1]
-        p_result = np.zeros([data_channel, p_result_height, p_result_width])
-        for h in range(data_channel):
-            for i in range(p_result_height):
-                for j in range(p_result_width):
-                    partical_data = train_data[h][i * self.p_size[0]:(i+1) * self.p_size[0],
-                                                  j * self.p_size[1]:(j+1) * self.p_size[1]]
-                    p_result[h][i][j] = self.poolfunc(partical_data)
-                    self.index.append(self.__get_index(partical_data))
+        result_height = data_height // self.p_size[0]
+        result_width = data_width // self.p_size[1]
+        result = np.zeros([batch, data_channel, result_height, result_width])
+        for h in range(batch):
+            for i in range(data_channel):
+                for j in range(result_height):
+                    for k in range(result_width):
+                        patch = train_data[h][i][j * self.p_size[0]:(j+1) * self.p_size[0],
+                                                    k * self.p_size[1]:(k+1) * self.p_size[1]]
+                        p_result[h][i][j][k] = self.poolfunc(patch)
+                        self.index.append(self.__get_index(patch))
         return p_result
 
     def backpropagation(self, input_error):
-        (input_channel, input_height, input_width) = np.shape(input_error)
+        (batch, input_channel, input_height, input_width) = np.shape(input_error)
         output_error = np.zeros([input_channel, input_height * self.p_size[0], input_width * self.p_size[1]])
         count = 0
-        for h in range(input_channel):
-            for i in range(input_height):
-                for j in range(input_width):
-                    output_error[h][i * self.p_size[0] + self.index[count][0],
-                                    j * self.p_size[1] + self.index[count][1]] = input_error[h][i][j]
-                    count += 1
+        for h in range(batch):
+            for i in range(input_channel):
+                for j in range(input_height):
+                    for k in range(input_width):
+                        output_error[h][i][j * self.p_size[0] + self.index[count][0],
+                                        k * self.p_size[1] + self.index[count][1]] = input_error[h][i][j][k]
+                        count += 1
         return output_error
