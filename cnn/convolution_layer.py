@@ -40,7 +40,7 @@ class Convolution_Layer:
         # <zero padding>
         p_result = np.zeros([batch, channel, height + 2*pad, width + 2*pad])
         for i in range(batch):
-            p_result[i][:,pad:height + pad, pad:width + pad] = train_data[i]
+            p_result[i][:, pad:height + pad, pad:width + pad] = train_data[i]
         return p_result
 
     def forwardpropagation(self, image_data):
@@ -88,7 +88,8 @@ class Convolution_Layer:
         (batch, m_channel, m_height, m_width) = np.shape(mask)
         (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
         # make convolution result
-        result_channel, result_height, result_width = out_channel, (m_height-f_height) // self.stride + 1, (m_width-f_width) // self.stride + 1
+        result_channel, result_height, result_width = out_channel, (m_height-f_height) // self.stride + 1, (
+            m_width-f_width) // self.stride + 1
         c_result = np.zeros([batch, result_channel, result_height, result_width])
         for h in range(batch):
             for i in range(result_channel):
