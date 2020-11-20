@@ -53,26 +53,25 @@ class Convolution_Layer:
             sys.exit(1)
         # <padding>  Be careful,size of train data change!
         # (padding size is [channel, height+2*pad-k_height/stride, width+2*pad-k_height/stride])
-        padding_data = self.__padding(self.pad, image_data)
-        self.train_data = padding_data
+        self.train_data = self.__padding(self.pad, image_data)
         # <convolution>
-        c_result = self.__convolution(padding_data, self.kernel)
+        c_result = self.__convolution(self.train_data, self.kernel)
         c_result = c_result / np.max(c_result) * 255
         return self.actfunc(c_result)
 
     def backpropagation(self, input_error):
-        (in_channel, tr_height, tr_width) = np.shape(self.train_data)
-        (out_channel, er_height, er_width) = np.shape(input_error)
+        (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
+        (batch, out_channel, er_height, er_width) = np.shape(input_error)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # update kernel
         result = np.zeros([out_channel, in_channel, k_height, k_width])
-        for i in range(in_channel):
-            for j in range(out_channel):
-                for k in range((tr_height-er_height) // self.stride + 1):
-                    for l in range((tr_width-er_width) // self.stride + 1):
-                        y = self.train_data[:, k:k + er_height, l:l + er_width] * input_error[j]
-                        result[j][:, k, l] = np.sum(y, axis=(1, 2))
-        self.kernel -= self.train_ratio * result
+        for h in range(batch):
+            for i in range(out_channel):
+                for j in range((tr_height-er_height) // self.stride + 1):
+                    for k in range((tr_width-er_width) // self.stride + 1):
+                        y = self.train_data[h][:, j:j + er_height, k:k + er_width] * input_error[h][i]
+                        result[i][:, j, k] = np.sum(y, axis=(1, 2))
+            self.kernel -= self.train_ratio * result
         # make next error
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         _kernel = np.zeros([in_channel, out_channel, k_height, k_width])

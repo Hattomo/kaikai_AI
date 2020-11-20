@@ -38,13 +38,13 @@ class Pooling_Layer:
                     for k in range(result_width):
                         patch = train_data[h][i][j * self.p_size[0]:(j+1) * self.p_size[0],
                                                  k * self.p_size[1]:(k+1) * self.p_size[1]]
-                        p_result[h][i][j][k] = self.poolfunc(patch)
+                        result[h][i][j][k] = self.poolfunc(patch)
                         self.index.append(self.__get_index(patch))
-        return p_result
+        return result
 
     def backpropagation(self, input_error):
         (batch, input_channel, input_height, input_width) = np.shape(input_error)
-        output_error = np.zeros([input_channel, input_height * self.p_size[0], input_width * self.p_size[1]])
+        output_error = np.zeros([batch, input_channel, input_height * self.p_size[0], input_width * self.p_size[1]])
         count = 0
         for h in range(batch):
             for i in range(input_channel):

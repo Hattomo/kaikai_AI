@@ -13,11 +13,12 @@ class Fully_Connect_Layer(nn.Neural_Network):
     # train in dnn and get error
     def __call__(self, input_data, input_label):
         (batch, channel, height, width) = np.shape(input_data)
+        up_error = np.zeros([batch, channel * height * width])
         for i in range(batch):
             (train_data, train_label) = (input_data[i].flatten(), input_label[i])
             super().forwardpropagation(train_data)
-            error = super().backpropagation(train_data, train_label, isexternal=True)
-        return error
+            up_error[i] = super().backpropagation(train_data, train_label, isexternal=True)
+        return up_error.reshape(batch, channel, height, width)
 
     def test(self, input_data, train_label):
         (batch, channel, height, width) = np.shape(input_data)

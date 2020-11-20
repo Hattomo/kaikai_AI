@@ -14,13 +14,18 @@ import pooling_layer as pl
 import mnist
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("cnn_exs", 1)
+(trainData, trainLabel) = lc.dset("cnn_exs", 5)
 (testData, testLabel) = lc.dset("cnn_exs", 1)
 
 conv = cl.Convolution_Layer(in_channel=1, out_channel=3, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
-# cnnfc = fc.Fully_Connect_Layer([128 + 1, 10, 2])
+fullc = fc.Fully_Connect_Layer([12 + 1, 10, 2])
 
-conv_out = conv.forwardpropagation(trainData)
-pool_out = conv.forwardpropagation(conv_out)
-print(pool_out)
+epoch = 100
+for i in range(epoch):
+    conv_out = conv.forwardpropagation(trainData)
+    pool_out = pool.forwardpropagation(conv_out)
+    error = fullc(pool_out, trainLabel)
+    pool_error = pool.backpropagation(error)
+    conv.backpropagation(pool_error)
+    fullc.test(pool_out, trainLabel)
