@@ -106,9 +106,8 @@ class Neural_Network:
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
         if isexternal:
-            weight = (self.weight[0].T[1:]).T
-            z = (self.z[0].T[1:]).T
-            return z * (weight.T @ tmp)
+            weight = self.weight[0].T[1:]
+            return weight @ tmp
 
     def __dropout_shake(self, istrain=True):
         for i in range(len(self.structure) - 1):

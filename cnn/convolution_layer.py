@@ -66,24 +66,20 @@ class Convolution_Layer:
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # update kernel
         result = np.zeros([out_channel, in_channel, k_height, k_width])
-        z = np.zeros(in_channel)
         for i in range(in_channel):
             for j in range(out_channel):
-                for k in range((tr_height-er_height)//self.stride+1):
-                    for l in range((tr_width-er_width)//self.stride+1):
+                for k in range((tr_height-er_height) // self.stride + 1):
+                    for l in range((tr_width-er_width) // self.stride + 1):
                         y = self.train_data[:, k:k + er_height, l:l + er_width] * input_error[j]
-                        for a in range(in_channel):
-                            z[a] = np.sum(y[a])
-                        result[j][:, k, l] = z
-        result = result/np.max(abs(result))
+                        result[j][:, k, l] = np.sum(y, axis=(1, 2))
         self.kernel -= self.train_ratio * result
         # make next error
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
-        _kernel = np.zeros([in_channel, out_channel,k_height, k_width])
+        _kernel = np.zeros([in_channel, out_channel, k_height, k_width])
         for i in range(out_channel):
             for j in range(in_channel):
                 _kernel[j][i] = np.flip(self.kernel[i][j])
-        error = self.__convolution(self.__padding(1, input_error),_kernel)
+        error = self.__convolution(self.__padding(1, input_error), _kernel)
         error = self.diffact(error)
         # return error
         return error

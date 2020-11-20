@@ -22,6 +22,7 @@ class Pooling_Layer:
         sys.exit(1)
 
     def forwardpropagation(self, train_data):
+        self.index = list()
         (data_channel, data_height, data_width) = np.shape(train_data)
         # check pooling size
         if data_height % self.p_size[0] != 0 or data_width % self.p_size[1] != 0:
