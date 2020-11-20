@@ -141,8 +141,8 @@ class Neural_Network:
         length = len(test_data)
         for i in range(length):
             self.forwardpropagation(test_data[i], False)
-            if (test_label[i]-self.z[-1] < 0.2).all():
-            # if self.__compare(test_label[i], self.z[-1]):
+            if (test_label[i] - self.z[-1] < 0.2).all():
+                # if self.__compare(test_label[i], self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
