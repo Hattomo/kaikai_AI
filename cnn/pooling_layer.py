@@ -37,7 +37,7 @@ class Pooling_Layer:
                 for j in range(result_height):
                     for k in range(result_width):
                         patch = train_data[h][i][j * self.p_size[0]:(j+1) * self.p_size[0],
-                                                    k * self.p_size[1]:(k+1) * self.p_size[1]]
+                                                 k * self.p_size[1]:(k+1) * self.p_size[1]]
                         p_result[h][i][j][k] = self.poolfunc(patch)
                         self.index.append(self.__get_index(patch))
         return p_result
@@ -51,6 +51,6 @@ class Pooling_Layer:
                 for j in range(input_height):
                     for k in range(input_width):
                         output_error[h][i][j * self.p_size[0] + self.index[count][0],
-                                        k * self.p_size[1] + self.index[count][1]] = input_error[h][i][j][k]
+                                           k * self.p_size[1] + self.index[count][1]] = input_error[h][i][j][k]
                         count += 1
         return output_error
