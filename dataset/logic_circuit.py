@@ -105,8 +105,8 @@ def dset(d_name, num):
             data[2*i + 1] = [[[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]]
         label = np.zeros((2 * num, 2))
         for i in range(num):
-            label[2 * i] = [1, 0]
-            label[2*i + 1] = [0, 1]
+            label[2 * i] = [0, 1]
+            label[2*i + 1] = [1, 0]
         return data, label
     elif d_name == "dnn_ex":
         data = np.zeros((4 * num, 16))
