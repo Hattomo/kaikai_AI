@@ -30,7 +30,7 @@ class Neural_Network:
         self.weight = self.__set_weight(self.structure, w_method)
         (self.actfunc, self.diffact) = self.__set_actfunc(actfunc)
         (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
-        self.train_ratio = 0.5
+        self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
 
@@ -121,12 +121,12 @@ class Neural_Network:
                     self.do[i] = np.identity(shape[0])
 
     def __fit_train_ratio(self, train_label, ans):
-        if self.costfunc(train_label, ans) < 0.5:
-            self.train_ratio = 0.1
+        if self.costfunc(train_label, ans) < 0.01:
+            self.train_ratio = 0.001
         elif self.costfunc(train_label, ans) < 0.1:
             self.train_ratio = 0.01
-        elif self.costfunc(train_label, ans) < 0.01:
-            self.train_ratio = 0.001
+        elif self.costfunc(train_label, ans) < 0.5:
+            self.train_ratio = 0.1
 
     # 学習
     def train(self, train_data, train_label, isexternal=False):
