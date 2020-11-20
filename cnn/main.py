@@ -17,19 +17,16 @@ import logic_circuit as lc
 (trainData, trainLabel) = lc.dset("cnn_exs", 1000)
 (testData, testLabel) = lc.dset("cnn_exs", 1)
 
-
-
 conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
-pool = pl.Pooling_Layer(pooling_size=[2,2])
-cnnfc = fc.Fully_Connect_Layer([32+1,6,2])
+pool = pl.Pooling_Layer(pooling_size=[2, 2])
+cnnfc = fc.Fully_Connect_Layer([32 + 1, 6, 2])
 
 count = 10
 for i in range(count):
     # fp
     conv_out = conv.forwardpropagation(trainData[i])
     pool_out = pool.forwardpropagation(conv_out)
-    error = cnnfc(pool_out, trainLabel[i])
-    # bp
-    pool_error = pool.backpropagation(error)
-    conv_error = conv.backpropagation(pool_error)
-    cnnfc.test(pool_out, trainLabel)
+    error = cnnfc([pool_out], trainLabel[i])
+
+    cnnfc.test([pool_out], trainLabel[i])
+    print(pool_out)
