@@ -117,8 +117,6 @@ def dset(d_name, num):
         sys.exit(1)
 
 def data_shuffle(data, label):
-    print(data, label)
     shuffle = np.random.permutation(len(label))
     data = data[shuffle]
     label = label[shuffle]
-    print(data, label)
