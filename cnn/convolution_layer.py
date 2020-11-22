@@ -56,8 +56,10 @@ class Convolution_Layer:
         self.train_data = self.__padding(self.pad, image_data)
         # <convolution>
         c_result = self.__convolution(self.train_data, self.kernel)
-        c_result = c_result / np.max(c_result) * 255
-        return self.actfunc(c_result)
+        c_result = self.actfunc(c_result)
+        # rescaling method
+        # function(c_result)
+        return c_result / np.max(c_result) * 255
 
     def backpropagation(self, input_error):
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
