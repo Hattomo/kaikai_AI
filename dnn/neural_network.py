@@ -5,7 +5,7 @@ import numpy as np
 
 sys.path.append('./shared')
 import activationfunction as af
-import costfunction
+import costfunction as cf
 import numpy_files as npfiles
 import dsetting
 import vectormath as vmath
@@ -24,58 +24,14 @@ class Neural_Network:
         self.structure = structure
         self.dropout = dropout
         self.testmode = testmode
-        self.y = dsetting.ynet(self.structure)
-        self.z = dsetting.znet(self.structure)
+        self.z, self.y = dsetting.set_layer(self.structure)
         self.do = dsetting.donet(self.structure)
-        self.weight = self.__set_weight(self.structure, w_method)
-        (self.actfunc, self.diffact) = self.__set_actfunc(actfunc)
-        (self.costfunc, self.diffcost) = self.__set_costfunc(costfunc)
+        self.weight = dsetting.set_weight(self.structure, w_method)
+        self.actfunc, self.diffact = af.set_actfunc(actfunc)
+        self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
         self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
-
-    def __set_weight(self, structure, w_method):
-        if w_method == "xivier":
-            return dsetting.wnet(structure, dsetting.xivier)
-        elif w_method == "he":
-            return dsetting.wnet(structure, dsetting.he)
-        elif w_method == "unif":
-            return dsetting.wnet(structure, dsetting.unif)
-        return npfiles.load(w_method)
-
-    def __set_actfunc(self, actfunc):
-        if actfunc == "sigmoid":
-            return (af.sigmoid, af.diffsigmoid)
-        elif actfunc == "tanh":
-            return (af.tanh, af.difftanh)
-        elif actfunc == "relu":
-            return (af.relu, af.diffrelu)
-        elif actfunc == "identity":
-            return (af.identity, af.diffidentity)
-        elif actfunc == "bentIdentity":
-            return (af.bentIdentity, af.diffbentIdentity)
-        elif actfunc == "hardShrink":
-            return (af.hardShrink, af.diffhardShrink)
-        elif actfunc == "log_Sigmoid":
-            return (af.logSigmoid, af.difflogSigmoid)
-        elif actfunc == "tanhShrink":
-            return (af.tanhShrink, af.difftanhShrink)
-        elif actfunc == "elu":
-            return (af.elu, af.diffelu)
-        elif actfunc == "swish":
-            return (af.swish, af.diffswish)
-        elif actfunc == "mish":
-            return (af.mish, af.diffmish)
-        sys.stdout.write("Error: The actfunc is not found\n")
-        sys.exit(1)
-
-    def __set_costfunc(self, costfunc):
-        if costfunc == "rss":
-            return (costfunction.rss, costfunction.diffrss)
-        elif costfunc == "cross_entropy":
-            return (costfunction.cross_entropy, costfunction.diffcross_entropy)
-        sys.stdout.write("Error: The lossfunc is not found\n")
-        sys.exit(1)
 
     def forwardpropagation(self, train_data, istrain=True):
         self.z[0][0] = 1
