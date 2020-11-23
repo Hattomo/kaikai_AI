@@ -59,7 +59,7 @@ class Convolution_Layer:
         c_result = self.actfunc(c_result)
         # rescaling method
         # function(c_result)
-        return c_result / np.max(c_result) * 255
+        return (c_result - np.min(c_result)) / (np.max(c_result) - np.min(c_result))
 
     def backpropagation(self, input_error):
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
@@ -74,16 +74,6 @@ class Convolution_Layer:
                         y = self.train_data[h][:, j:j + er_height, k:k + er_width] * input_error[h][i]
                         result[i][:, j, k] = np.sum(y, axis=(1, 2))
             self.kernel -= self.train_ratio * result
-        # make next error
-        (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
-        _kernel = np.zeros([in_channel, out_channel, k_height, k_width])
-        for i in range(out_channel):
-            for j in range(in_channel):
-                _kernel[j][i] = np.flip(self.kernel[i][j])
-        error = self.__convolution(self.__padding(1, input_error), _kernel)
-        error = self.diffact(error)
-        # return error
-        return error
 
     def __convolution(self, mask, _filter):
         (batch, m_channel, m_height, m_width) = np.shape(mask)
