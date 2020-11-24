@@ -40,7 +40,7 @@ class Pooling_Layer:
                                                  k * self.p_size[1]:(k+1) * self.p_size[1]]
                         result[h][i][j][k] = self.poolfunc(patch)
                         self.index.append(self.__get_index(patch))
-        # batch Normalization 
+        # Batch Normalization
         result = (result - result.mean()) / result.std()
         result = result * (2 / (result.max() - result.min()))
         result -= (result.max() - 1)
