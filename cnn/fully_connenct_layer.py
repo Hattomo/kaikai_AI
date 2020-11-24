@@ -11,7 +11,7 @@ class Fully_Connect_Layer(nn.Neural_Network):
         super().__init__(structure)
 
     # train in dnn and get error
-    def __call__(self, input_data, input_label):
+    def train(self, input_data, input_label):
         (batch, channel, height, width) = np.shape(input_data)
         up_error = np.zeros([batch, channel * height * width])
         for i in range(batch):

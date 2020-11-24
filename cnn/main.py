@@ -25,7 +25,7 @@ epoch = 1000
 for i in range(epoch):
     conv_out = conv.forwardpropagation(trainData)
     pool_out = pool.forwardpropagation(conv_out)
-    error = fullc(pool_out, trainLabel)
+    error = fullc.train(pool_out, trainLabel)
     pool_error = pool.backpropagation(error)
     conv.backpropagation(pool_error)
     fullc.test(pool_out, trainLabel)
