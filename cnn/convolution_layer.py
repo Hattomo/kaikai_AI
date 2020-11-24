@@ -59,7 +59,7 @@ class Convolution_Layer:
         c_result = self.actfunc(c_result)
         # rescaling method
         # function(c_result)
-        return (c_result - np.min(c_result)) / (np.max(c_result) - np.min(c_result))
+        return c_result
 
     def backpropagation(self, input_error):
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
