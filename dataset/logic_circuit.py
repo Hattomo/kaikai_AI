@@ -98,6 +98,16 @@ def dset(d_name, num):
             label[4*i + 2] = [0, 0, 1, 0]
             label[4*i + 3] = [0, 0, 0, 1]
         return data, label
+    elif d_name == "cnn_exs":
+        data = np.zeros((2 * num, 1, 4, 4))
+        for i in range(num):
+            data[2 * i] = [[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]]]
+            data[2*i + 1] = [[[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]]
+        label = np.zeros((2 * num, 2))
+        for i in range(num):
+            label[2 * i] = [0, 1]
+            label[2*i + 1] = [1, 0]
+        return data, label
     elif d_name == "dnn_ex":
         data = np.zeros((4 * num, 16))
         for i in range(num):

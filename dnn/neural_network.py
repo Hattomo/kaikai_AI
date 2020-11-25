@@ -62,9 +62,8 @@ class Neural_Network:
             diff = vmath.vvmat(self.z[-i - 3], tmp)
             self.weight[-i - 2] -= self.train_ratio * diff.T
         if isexternal:
-            weight = (self.weight[0].T[1:]).T
-            z = (self.z[0].T[1:]).T
-            return z * (weight.T @ tmp)
+            weight = self.weight[0].T[1:]
+            return weight @ tmp
 
     def __dropout_shake(self, istrain=True):
         for i in range(len(self.structure) - 1):
@@ -98,7 +97,8 @@ class Neural_Network:
         length = len(test_data)
         for i in range(length):
             self.forwardpropagation(test_data[i], False)
-            if self.__compare(test_label[i], self.z[-1]):
+            if (abs(test_label[i] - self.z[-1]) < 0.2).all():
+                # if self.__compare(test_label[i], self.z[-1]):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1])
         self.cost.append(cost / length)
