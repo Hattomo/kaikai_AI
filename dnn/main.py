@@ -10,7 +10,7 @@ import neural_network as nn
 import numpy_files as npfiles
 import logic_circuit as lc
 
-structure = [16 + 1,15, 4]
+structure = [16 + 1, 5, 4]
 dropout = [0, 0, 0]
 epoch = 30
 logic = "dnn_ex"
