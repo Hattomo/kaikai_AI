@@ -6,21 +6,21 @@ import numpy as np
 sys.path.append('./shared')
 import activationfunction as af
 import costfunction as cf
-import numpy_files as npfiles
 import dsetting
+import numpy_files as npfiles
+import optimaize_method as om
 import vectormath as vmath
 
 class Neural_Network:
 
-    def __init__(
-        self,
-        structure,
-        dropout=[0, 0, 0],
-        w_method="xivier",
-        actfunc="sigmoid",
-        costfunc="rss",
-        testmode="classify",
-    ):
+    def __init__(self,
+                 structure,
+                 dropout=[0, 0, 0],
+                 w_method="xivier",
+                 actfunc="sigmoid",
+                 costfunc="rss",
+                 testmode="classify",
+                 optimaize_method="adam"):
         self.structure = structure
         self.dropout = dropout
         self.testmode = testmode
@@ -32,6 +32,20 @@ class Neural_Network:
         self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
+        self.optimaize_method = optimaize_method
+
+    def optimaize(self, error, cnt, layer):
+        if (self.optimaize_method == "gd"):
+            if (len(self.cost) == 0):
+                cost = 1000
+            else:
+                cost = self.cost[-1]
+            return om.GradientDesend().optimaize(error, cost)
+        elif (self.optimaize_method == "adam"):
+            return om.Adam(self.structure).optimaize(error, cnt + 1, layer)
+        else:
+            sys.stdout.write("Error: The optimaize_method is not found\n")
+            sys.exit(1)
 
     def forwardpropagation(self, train_data, istrain=True):
         self.z[0][0] = 1
@@ -49,18 +63,16 @@ class Neural_Network:
             self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[-1])
 
     # バックプロパゲーション
-    def backpropagation(self, train_data, train_label, isexternal=False):
-        #学習率の変更
-        self.__fit_train_ratio(train_label, self.z[-1])
+    def backpropagation(self, train_data, train_label, cnt, isexternal=False):
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
-        self.weight[-1] -= self.train_ratio * diff.T @ self.do[-1]
+        self.weight[-1] -= self.optimaize(diff.T, cnt, len(self.structure) - 1 -1) @ self.do[-1]
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
             tmp = self.diffact(self.z[-i - 2][1:]) * ((self.weight[-i - 1][:, 1:] @ self.do[-i - 1][:-1, :-1]).T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.train_ratio * diff.T
+            self.weight[-i - 2] -= self.optimaize(diff.T, cnt, len(self.structure) - 3 - i)
         if isexternal:
             weight = self.weight[0].T[1:]
             return weight @ tmp
@@ -75,20 +87,12 @@ class Neural_Network:
                     shape = np.shape(self.do[i])
                     self.do[i] = np.identity(shape[0])
 
-    def __fit_train_ratio(self, train_label, ans):
-        if self.costfunc(train_label, ans) < 0.01:
-            self.train_ratio = 0.001
-        elif self.costfunc(train_label, ans) < 0.1:
-            self.train_ratio = 0.01
-        elif self.costfunc(train_label, ans) < 0.5:
-            self.train_ratio = 0.1
-
     # 学習
     def train(self, train_data, train_label, isexternal=False):
         self.__dropout_shake()
         for i in range(len(train_data)):
             self.forwardpropagation(train_data[i], False)
-            self.backpropagation(train_data[i], train_label[i], isexternal)
+            self.backpropagation(train_data[i], train_label[i], i, isexternal)
 
     def test(self, test_data, test_label):
         self.__dropout_shake(False)
