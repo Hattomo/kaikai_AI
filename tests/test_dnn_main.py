@@ -15,51 +15,30 @@ import logic_circuit as lc
 def test_main_or_with_dropout():
     structure = [3, 3, 2]
     dropout = [0, 0.5, 0]
-    epoch = 5
+    batch = 4
+    epoch = 10
     logic = "or"
     # set data
-    (trainData, trainLabel) = lc.dset(logic, epoch)
+    (trainData, trainLabel) = lc.dset(logic, epoch * batch // 4)
     (testData, testLabel) = lc.dset(logic, 5)
 
-    # randomize
-    lc.data_shuffle(trainData, trainLabel)
-    lc.data_shuffle(testData, testLabel)
-
     # ニューラルネットワークの生成
-    orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
+    orNN = nn.Neural_Network(structure, batch, dropout)
     # 学習
-    count = 5
-    for i in range(count):
+    for i in range(epoch):
         orNN.train(trainData, trainLabel)
-        orNN.test(testData, testLabel)
-    # test chart
-    atool.draw(orNN.cost)
-    atool.tdchart(orNN)
-    # test npfiles save
-    npfiles.save(orNN)
 
 def test_main_or_without_dropout():
     structure = [3, 3, 2]
     dropout = [0, 0, 0]
-    epoch = 5
+    batch = 4
+    epoch = 10
     logic = "or"
     # set data
-    (trainData, trainLabel) = lc.dset(logic, epoch)
+    (trainData, trainLabel) = lc.dset(logic, epoch * batch // 4)
     (testData, testLabel) = lc.dset(logic, 5)
-
-    # randomize
-    lc.data_shuffle(trainData, trainLabel)
-    lc.data_shuffle(testData, testLabel)
-
     # ニューラルネットワークの生成
-    orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
+    orNN = nn.Neural_Network(structure, batch, dropout)
     # 学習
-    count = 5
-    for i in range(count):
+    for i in range(epoch):
         orNN.train(trainData, trainLabel)
-        orNN.test(testData, testLabel)
-    # test chart
-    atool.draw(orNN.cost)
-    atool.tdchart(orNN)
-    # test npfiles save
-    npfiles.save(orNN)
