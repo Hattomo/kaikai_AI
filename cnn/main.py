@@ -23,6 +23,7 @@ conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
 conv2 = cl.Convolution_Layer(in_channel=8, out_channel=16, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
 fullc = fc.Fully_Connect_Layer([256 + 1, 10, 10])
+normalize = nl.Normalization_Layer()
 epoch = 300
 for i in range(epoch):
     # train
