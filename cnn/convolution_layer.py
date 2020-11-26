@@ -75,7 +75,6 @@ class Convolution_Layer:
                         result[i][:, j, k] = np.sum(y, axis=(1, 2))
             self.kernel -= self.train_ratio * result
         # make next error
-        # make next error
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         _kernel = np.zeros([in_channel, out_channel, k_height, k_width])
         for i in range(out_channel):
@@ -83,11 +82,7 @@ class Convolution_Layer:
                 _kernel[j][i] = np.flip(self.kernel[i][j])
         error = self.__convolution(self.__padding(1, input_error), _kernel)
         #error = self.diffact(error)
-        # return error
         return error
-        # _kernel = np.flip(self.kernel, axis=(2, 3))
-        # error = self.__convolution(self.__padding(1, input_error), _kernel)
-        # return error
 
     def __convolution(self, mask, _filter):
         (batch, m_channel, m_height, m_width) = np.shape(mask)

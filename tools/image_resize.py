@@ -11,8 +11,6 @@ import cnn_analysistool as ctool
 import convolution_layer as cl
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("mnist_train", 60000)
-(testData, testLabel) = lc.dset("mnist_test", 10000)
 
 def zero_padding(pad, train_data):
     (channel, height, width) = np.shape(train_data)
@@ -23,7 +21,7 @@ def zero_padding(pad, train_data):
     return p_result
 
 def convert2mnist16(data):
-    newdata = np.zeros([data.shape[0], 16, 16])
+    newdata = np.zeros([data.shape[0],data.shape[1] 16, 16])
     for i in range(data.shape[0]):
         for j in range(0, 16):
             for k in range(0, 16):
@@ -55,6 +53,12 @@ def save():
     )
     np.warnings.filterwarnings('default', category=np.VisibleDeprecationWarning)
 
+(trainData, trainLabel) = lc.dset("mnist_train", 60000)
+(testData, testLabel) = lc.dset("mnist_test", 10000)
+print(trainData.shape)
+trainData = trainData[:,np.newaxis]
+print(trainData.shape)
+print(aa)
 args = sys.argv
 if len(args) != 2 or args[1] != "mean" or args[1] != "direct":
     sys.stdout.write("Error : useage  \"python3 tools/image_resize.py [direct or mean]\"\n")
