@@ -16,14 +16,15 @@ import pooling_layer as pl
 import mnist
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("cnn_ex", 50)
+(trainData, trainLabel) = lc.dset("cnn_ex", 5)
 (testData, testLabel) = lc.dset("cnn_ex", 1)
 
 conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
-conv2 = cl.Convolution_Layer(in_channel=8, out_channel=16, ksize=3, pad=1)
+conv2 = cl.Convolution_Layer(in_channel=8, out_channel=8, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
-fullc = fc.Fully_Connect_Layer([64 + 1, 10, 4])
+fullc = fc.Fully_Connect_Layer([32 + 1, 10, 4])
 normalize = nl.Normalization_Layer()
+
 epoch = 300
 for i in range(epoch):
     # train
@@ -39,7 +40,8 @@ for i in range(epoch):
     conv_out = conv.forwardpropagation(testData / 255)
     conv_out2 = conv2.forwardpropagation(conv_out)
     pool_out = pool.forwardpropagation(conv_out2)
-    fullc.test(pool_out, trainLabel)
+    normalized_data = normalize.normalize(pool_out)
+    fullc.test(normalized_data, trainLabel)
 
 # draw graph
 atool.draw(fullc.cost)
