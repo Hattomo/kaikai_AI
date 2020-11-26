@@ -5,6 +5,8 @@ def set_costfunc(costfunc):
         return (rss, diffrss)
     elif costfunc == "cross_entropy":
         return (cross_entropy, diffcross_entropy)
+    elif costfunc == "rss_sdg":
+        return (rss_sdg, diffrss_sdg)
     sys.stdout.write("Error: The lossfunc is not found\n")
     sys.exit(1)
 
@@ -12,6 +14,12 @@ def rss(label, ans):
     return np.sum((ans - label)**2)
 
 def diffrss(label, ans):
+    return ans - label
+
+def rss_sdg(label, ans):
+    return np.sum((ans - label)** 2)
+
+def diffrss_sdg(label, ans):
     return ans - label
 
 def cross_entropy(label, ans):
