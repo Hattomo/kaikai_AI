@@ -15,16 +15,14 @@ import pooling_layer as pl
 import mnist
 import logic_circuit as lc
 
-(trainData, trainLabel) = lc.dset("cnn_ex", 50)
-(testData, testLabel) = lc.dset("cnn_ex", 1)
+(trainData, trainLabel) = lc.dset("mnist8_direct_train", 50)
+(testData, testLabel) = lc.dset("mnist8_direct_test", 1)
 
 conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
 conv2 = cl.Convolution_Layer(in_channel=8, out_channel=16, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
-fullc = fc.Fully_Connect_Layer([64 + 1, 10, 4])
-print(trainData.shape)
-print(aa)
-epoch = 3
+fullc = fc.Fully_Connect_Layer([256 + 1, 10, 10])
+epoch = 300
 for i in range(epoch):
     # train
     conv_out = conv.forwardpropagation(trainData / 255)
