@@ -23,6 +23,7 @@ class Neural_Network:
         testmode="classify",
     ):
         self.structure = structure
+        self.batch = batch
         self.dropout = dropout
         self.testmode = testmode
         self.z, self.y = dsetting.set_layer(self.structure, batch)
