@@ -10,26 +10,20 @@ import neural_network as nn
 import numpy_files as npfiles
 import logic_circuit as lc
 
-structure = [16 + 1, 5, 4]
+structure = [2 + 1, 3, 2]
 dropout = [0, 0, 0]
-epoch = 30
-logic = "dnn_ex"
+batch = 4
+epoch = 100
+logic = "or"
 # set data
-trainData, trainLabel = lc.dset(logic, epoch)
-testData, testLabel = lc.dset(logic, 10)
+Data, Label = lc.dset(logic, 100)
+trainData,trainLabel = Data.reshape([epoch,batch,-1]),Label.reshape([epoch,batch,-1])
 
-# randomize
-lc.data_shuffle(trainData, trainLabel)
-lc.data_shuffle(testData, testLabel)
+# # ニューラルネットワークの生成
+myNN = nn.Neural_Network(structure,batch,dropout)
 
-# ニューラルネットワークの生成
-orNN = nn.Neural_Network(structure, dropout)
-# 学習
-count = 100
-for i in range(count):
-    orNN.train(trainData, trainLabel)
-    orNN.test(testData, testLabel)
-atool.draw(orNN.cost)
-atool.accurancygraph(orNN.accurancy)
-atool.tdchart(orNN)
-npfiles.save(orNN)
+# # 学習
+epoch = 10
+for i in range(epoch):
+    myNN.train(trainData, trainLabel)
+    myNN.test(trainData, trainLabel)
