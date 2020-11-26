@@ -6,7 +6,7 @@ def show_data_gui(digit, data, data_label):
     plt.imshow(data[digit][0], cmap=plt.cm.binary)
     plt.show()
 
-def show_basic_info():
+def show_basic_info(train_data):
     print("Data ndim：" + str(train_data.ndim))
     print("Data shape：" + str(train_data.shape))
     print("Data data type：" + str(train_data.dtype))
