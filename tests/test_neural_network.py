@@ -19,13 +19,8 @@ def test_backpropagation():
 def test_dropout_shake():
     structure = [3, 4, 2]
     dropout = [0, 0.9, 0]
-    epoch = 1
-    logic = "or"
-    # set data
-    trainData, trainLabel = lc.dset(logic, epoch)
-    testData, testLabel = lc.dset(logic, 10)
-    # ニューラルネットワークの生成
-    dnn = nn.Neural_Network(structure, dropout, "he", "sigmoid")
+    batch = 0
+    dnn = nn.Neural_Network(structure, batch, dropout, "he", "sigmoid")
     dnn.do[0] = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1]])
     dnn._Neural_Network__dropout_shake(False)
     assert np.all(dnn.do[0] == np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
