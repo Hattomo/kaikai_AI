@@ -25,7 +25,7 @@ pool = pl.Pooling_Layer(pooling_size=[2, 2])
 fullc = fc.Fully_Connect_Layer([32 + 1, 10, 4])
 normalize = nl.Normalization_Layer()
 
-epoch = 300
+epoch = 10
 for i in range(epoch):
     # train
     conv_out = conv.forwardpropagation(trainData / 255)
