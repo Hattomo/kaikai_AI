@@ -11,6 +11,7 @@ import convolutional_neural_network as cnn
 import csetting
 import fully_connenct_layer as fc
 import neural_network as nn
+import normalization_layer as nl
 import pooling_layer as pl
 import mnist
 import logic_circuit as lc
@@ -28,7 +29,8 @@ for i in range(epoch):
     conv_out = conv.forwardpropagation(trainData / 255)
     conv_out2 = conv2.forwardpropagation(conv_out)
     pool_out = pool.forwardpropagation(conv_out2)
-    error = fullc.train(pool_out, trainLabel)
+    normalized_data = normalize.normalize(pool_out)
+    error = fullc.train(normalized_data, trainLabel)
     pool_error = pool.backpropagation(error)
     error = conv2.backpropagation(pool_error)
     conv.backpropagation(error)
