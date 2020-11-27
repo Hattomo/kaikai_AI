@@ -35,3 +35,6 @@ myNN = nn.Neural_Network(structure, batch, dropout, w_method="he", actfunc="tanh
 for i in range(epoch):
     myNN.train(trainData[i], trainLabel[i])
     myNN.test(testData, testLabel)
+atool.draw(orNN.cost)
+atool.accurancygraph(orNN.accurancy)
+atool.tdchart(orNN)
