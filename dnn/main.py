@@ -12,17 +12,17 @@ import logic_circuit as lc
 
 structure = [2 + 1, 3, 2]
 dropout = [0, 0, 0]
-batch = 20
-epoch = 100
-logic = "or"
+batch = 1
+epoch = 2000
+logic = "and"
 # set data
 Data, Label = lc.dset(logic, batch * epoch // 4)
 trainData, trainLabel = Data.reshape([epoch, batch, -1]), Label.reshape([epoch, batch, -1])
-
+testData, testLabel = lc.dset(logic, 1)
 # # ニューラルネットワークの生成
 myNN = nn.Neural_Network(structure, batch, dropout)
-
+# print(myNN.weight)
 # # 学習
 for i in range(epoch):
     myNN.train(trainData[i], trainLabel[i])
-    myNN.test(trainData[i], trainLabel[i])
+    # myNN.test(testData, testLabel)
