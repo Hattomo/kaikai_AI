@@ -16,24 +16,22 @@ batch = 4
 epoch = 300
 logic = "and"
 # set data
-Data, Label = lc.dset(logic, epoch*batch)
+Data, Label = lc.dset(logic, epoch * batch)
 D_num, D_length = Data.shape
 L_num, L_length = Label.shape
-trainData = np.zeros([epoch,batch,D_length])
-trainLabel = np.zeros([epoch,batch,L_length])
-count=0
+trainData = np.zeros([epoch, batch, D_length])
+trainLabel = np.zeros([epoch, batch, L_length])
+count = 0
 for i in range(epoch):
     for j in range(batch):
         trainData[i][j] = Data[count]
         trainLabel[i][j] = Label[count]
         count += 1
-testData, testLabel = lc.dset(logic, batch //4)
+testData, testLabel = lc.dset(logic, batch // 4)
 # # ニューラルネットワークの生成
-myNN = nn.Neural_Network(structure, batch, dropout,w_method="he",actfunc="tanh")
+myNN = nn.Neural_Network(structure, batch, dropout, w_method="he", actfunc="tanh")
 # # 学習
 
 for i in range(epoch):
     myNN.train(trainData[i], trainLabel[i])
-    myNN.test(testData,testLabel)
-
-
+    myNN.test(testData, testLabel)
