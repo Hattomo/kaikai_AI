@@ -86,21 +86,21 @@ class Neural_Network:
     # 学習
     def train(self, train_data, train_label, isexternal=False):
         self.__dropout_shake()
-        for i in range(len(train_data)):
-            self.forwardpropagation(train_data[i], False)
-            self.backpropagation(train_data[i], train_label[i], isexternal)
+        self.forwardpropagation(train_data, False)
+        self.backpropagation(train_data, train_label, isexternal)
+        # print(self.costfunc(train_label, self.z[-1]))
 
     def test(self, test_data, test_label):
         self.__dropout_shake(False)
         count = 0
         cost = 0
         length = len(test_data)
-        for i in range(length):
-            self.forwardpropagation(test_data[i], False)
-            if (abs(test_label[i] - self.z[-1]) < 0.2).all():
+        self.forwardpropagation(test_data, False)
+        for i in range(len(test_label)):
+            if (abs(test_label[i] - self.z[-1][i]) < 0.2).all():
                 # if self.__compare(test_label[i], self.z[-1]):
                 count += 1
-            cost += self.costfunc(test_label[i], self.z[-1])
+            cost += self.costfunc(test_label[i], self.z[-1][i])
         self.cost.append(cost / length)
         self.accurancy.append(count / length)
         if math.isnan(cost):

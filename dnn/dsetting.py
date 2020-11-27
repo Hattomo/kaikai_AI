@@ -30,7 +30,7 @@ def set_layer(structure, batch):
     layer_num = len(structure)
     znet, ynet = list(), list()
     for i in range(layer_num):
-        x, y = np.ones([batch, structure[i]]), np.zeros([batch, structure[i]])
+        x, y = np.ones([batch, structure[i]]), np.ones([batch, structure[i]])
         znet.append(x)
         ynet.append(y)
     return znet, ynet
