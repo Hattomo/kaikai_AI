@@ -8,7 +8,7 @@ import activationfunction as af
 import costfunction as cf
 import dsetting
 import numpy_files as npfiles
-import optimaize_method as om
+import optimize_method as om
 import vectormath as vmath
 
 class Neural_Network:
@@ -20,7 +20,7 @@ class Neural_Network:
                  actfunc="sigmoid",
                  costfunc="rss",
                  testmode="classify",
-                 optimaize_method="adam"):
+                 optimize_method="adam"):
         self.structure = structure
         self.dropout = dropout
         self.testmode = testmode
@@ -29,30 +29,30 @@ class Neural_Network:
         self.weight = dsetting.set_weight(self.structure, w_method)
         self.actfunc, self.diffact = af.set_actfunc(actfunc)
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
-        self.optimaize_method = self.set_optimaize_method(optimaize_method)
-        self.optimaize_method_name = optimaize_method
+        self.optimize_method = self.set_optimize_method(optimize_method)
+        self.optimize_method_name = optimize_method
         self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
 
-    def set_optimaize_method(self, optimaize_method):
-        if (optimaize_method == "gd"):
+    def set_optimize_method(self, optimize_method):
+        if (optimize_method == "gd"):
             return om.GradientDesend()
-        elif (optimaize_method == "adam"):
+        elif (optimize_method == "adam"):
             return om.Adam(self.structure)
         else:
-            sys.stdout.write("Error: The optimaize_method is not found\n")
+            sys.stdout.write("Error: The optimize_method is not found\n")
             sys.exit(1)
 
-    def optimaize(self, error, cnt, layer):
-        if (self.optimaize_method_name == "gd"):
+    def optimizer(self, error, cnt, layer):
+        if (self.optimize_method_name == "gd"):
             if (len(self.cost) == 0):
                 cost = 1000
             else:
                 cost = self.cost[-1]
-            return self.optimaize_method.optimaize(error, cost)
-        elif (self.optimaize_method_name == "adam"):
-            return self.optimaize_method.optimaize(error, cnt + 1, layer)
+            return self.optimize_method.optimize(error, cost)
+        elif (self.optimize_method_name == "adam"):
+            return self.optimize_method.optimize(error, cnt + 1, layer)
 
     def forwardpropagation(self, train_data, istrain=True):
         self.z[0][0] = 1
@@ -74,12 +74,12 @@ class Neural_Network:
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
-        self.weight[-1] -= self.optimaize(diff.T, cnt, len(self.structure) - 1 - 1) @ self.do[-1]
+        self.weight[-1] -= self.optimizer(diff.T, cnt, len(self.structure) - 1 - 1) @ self.do[-1]
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
             tmp = self.diffact(self.z[-i - 2][1:]) * ((self.weight[-i - 1][:, 1:] @ self.do[-i - 1][:-1, :-1]).T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.optimaize(diff.T, cnt, len(self.structure) - 3 - i)
+            self.weight[-i - 2] -= self.optimizer(diff.T, cnt, len(self.structure) - 3 - i)
         if isexternal:
             weight = self.weight[0].T[1:]
             return weight @ tmp

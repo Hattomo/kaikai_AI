@@ -10,7 +10,7 @@ class GradientDesend():
     def __init__(self):
         self.train_ratio = 0.1
 
-    def optimaize(self, error, cost):
+    def optimize(self, error, cost):
         self.__fit_train_ratio(cost)
         return self.train_ratio * error
 
@@ -32,7 +32,7 @@ class Adam():
         self.epsiron = 10e-8
         self.alpa = 0.001
 
-    def optimaize(self, error, cnt, layer):
+    def optimize(self, error, cnt, layer):
         self.m[layer] = (self.beta1[layer] * self.m[layer]) + (1 - self.beta1[layer]) * error
         self.v[layer] = (self.beta2[layer] * self.v[layer]) + ((1 - self.beta2[layer]) * (error**2))
         m_var = self.m[layer] / (1 - (self.beta1[layer]**cnt))
