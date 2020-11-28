@@ -66,11 +66,11 @@ def dset(d_name, num):
             label[4*i + 2] = [0, 1]
             label[4*i + 3] = [1, 0]
         return data, label
-    elif d_name == "mnist_train" or d_name == "mnist_test":
-        (train_data, train_label), (test_data, test_label) = mnist.load_data()
-        if d_name == "mnist_train":
+    elif d_name == "mnist28_train" or d_name == "mnist28_test":
+        (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist28")
+        if d_name == "mnist28_train":
             return train_data[:num], train_label[:num]
-        elif d_name == "mnist_test":
+        elif d_name == "mnist28_test":
             return test_data[:num], test_label[:num]
     elif d_name == "mnist16_mean_train" or d_name == "mnist16_mean_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist16_mean")
@@ -83,6 +83,18 @@ def dset(d_name, num):
         if d_name == "mnist16_direct_train":
             return train_data[:num], train_label[:num]
         elif d_name == "mnist16_direct_test":
+            return test_data[:num], test_label[:num]
+    elif d_name == "mnist8_mean_train" or d_name == "mnist8_mean_test":
+        (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist8_mean")
+        if d_name == "mnist8_mean_train":
+            return train_data[:num], train_label[:num]
+        elif d_name == "mnist8_mean_test":
+            return test_data[:num], test_label[:num]
+    elif d_name == "mnist8_direct_train" or d_name == "mnist8_direct_test":
+        (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist8_direct")
+        if d_name == "mnist8_direct_train":
+            return train_data[:num], train_label[:num]
+        elif d_name == "mnist8_direct_test":
             return test_data[:num], test_label[:num]
     elif d_name == "cnn_ex":
         data = np.zeros((4 * num, 1, 4, 4))

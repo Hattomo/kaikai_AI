@@ -4,6 +4,7 @@ import numpy as np
 
 sys.path.append('./dnn')
 sys.path.append('./dataset')
+import analysistool as atool
 import cnn_analysistool as catool
 import convolution_layer as cl
 import convolutional_neural_network as cnn
