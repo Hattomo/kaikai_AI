@@ -16,7 +16,7 @@ import mnist
 import logic_circuit as lc
 
 batch = 8
-epoch = 3000
+epoch = 10
 
 Data, Label = lc.dset("cnn_ex", epoch * batch // 4)
 

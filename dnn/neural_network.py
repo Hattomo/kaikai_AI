@@ -88,7 +88,6 @@ class Neural_Network:
         self.__dropout_shake()
         self.forwardpropagation(train_data, False)
         self.backpropagation(train_data, train_label, isexternal)
-        # print(self.costfunc(train_label, self.z[-1]))
 
     def test(self, test_data, test_label):
         self.__dropout_shake(False)
