@@ -15,6 +15,6 @@ for file_name in files:
         #os.remove(file_name+"_cost.*")
         #os.remove(file_name+"__accurancy.*")
         print("delete " + str(file_name))
-# new_path = "demo_folder" 
+# new_path = "demo_folder"
 # if not os.path.exists(new_path):
 #     os.mkdir(new_path)

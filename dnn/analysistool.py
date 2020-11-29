@@ -5,7 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 import neural_network as nn
 
-def draw(y,timestamp):
+def draw(y, timestamp):
     x = list()
     for i in range(len(y)):
         x.append(i)
@@ -19,7 +19,7 @@ def draw(y,timestamp):
     plt.savefig(os.path.join(os.path.dirname(__file__), f'../out/{timestamp}_cost.png'))
     #plt.show()
 
-def accurancygraph(y,timestamp):
+def accurancygraph(y, timestamp):
     x = []
     for i in range(len(y)):
         x.append(i)
