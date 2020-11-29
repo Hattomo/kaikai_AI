@@ -1,8 +1,12 @@
 # 重みと中間層の作成
 import math
 import random
+import sys
 
 import numpy as np
+
+sys.path.append(". / shared ")
+import numpy_files as npfiles
 
 # set all weight
 def set_weight(structure, w_method):
