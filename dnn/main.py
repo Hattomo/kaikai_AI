@@ -5,9 +5,7 @@ import numpy as np
 sys.path.append("./dataset")
 sys.path.append("./shared")
 import activationfunction as af
-import analysistool as atool
 import neural_network as nn
-import numpy_files as npfiles
 import dataset
 
 datasize = 4

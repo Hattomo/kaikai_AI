@@ -26,7 +26,7 @@ class Neural_Network:
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
         self.cost = self.accurancy = list()
 
-    def forwardpropagation(self, train_data,batch):
+    def forwardpropagation(self, train_data, batch):
         self.z, self.y = dsetting.set_layer(self.structure, batch)
         self.z[0][:, 1:] = train_data
         for i in range(len(self.structure) - 2):
@@ -67,17 +67,17 @@ class Neural_Network:
         num, batch, data_num = np.shape(train_data)
         for i in range(num):
             self.__dropout_shake()
-            self.forwardpropagation(train_data[i],batch)
+            self.forwardpropagation(train_data[i], batch)
             self.backpropagation(train_data[i], train_label[i])
 
-    def test(self, test_data, test_label,mode="classify"):
+    def test(self, test_data, test_label, mode="classify"):
         self.__dropout_shake(False)
         count = cost = 0
         length = len(test_data)
         # reset dropout
         dropout = self.dropout
         self.dropout = np.zeros_like(dropout)
-        self.forwardpropagation(test_data,length)
+        self.forwardpropagation(test_data, length)
         for i in range(length):
             if (abs(test_label[i] - self.z[-1][i]) < 0.2).all():
                 # if self.__compare(test_label[i], self.z[-1],mode):

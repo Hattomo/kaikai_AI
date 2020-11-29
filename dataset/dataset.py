@@ -10,7 +10,7 @@ import mnist
 # num データの数
 # data 0,1番目が学習データ 2番目が答え
 def step(x):
-  return 1 * (x > 0)
+    return 1 * (x > 0)
 
 def logic(d_name, datasetsize, batchsize=1):
     if d_name == "original_or":
@@ -19,15 +19,16 @@ def logic(d_name, datasetsize, batchsize=1):
         if datasetsize % batchsize != 0:
             sys.stdout.write("Error : batch size is not good")
             sys.exit(10)
-        data = np.zeros([datasetsize,datasize])
-        label = np.zeros([datasetsize,labelsize])
+        data = np.zeros([datasetsize, datasize])
+        label = np.zeros([datasetsize, labelsize])
         for i in range(datasetsize):
-            data[i] = [step(i%2),(step(i%3))]
+            data[i] = [step(i % 2), (step(i % 3))]
             if data[i][0] or data[i][1]:
-                label[i] = [0,1]
+                label[i] = [0, 1]
             else:
-                label[i] = [1,0]
-        return data.reshape(datasetsize //batchsize,batchsize,datasize), label.reshape(datasetsize //batchsize,batchsize,labelsize)
+                label[i] = [1, 0]
+        return data.reshape(datasetsize // batchsize, batchsize,
+                            datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
     # elif d_name == "or":
     #     datasize = labelsize = 2
     #     # confirm batchsize
@@ -50,15 +51,16 @@ def logic(d_name, datasetsize, batchsize=1):
         if datasetsize % batchsize != 0:
             sys.stdout.write("Error : batch size is not good")
             sys.exit(10)
-        data = np.zeros([datasetsize,datasize])
-        label = np.zeros([datasetsize,labelsize])
+        data = np.zeros([datasetsize, datasize])
+        label = np.zeros([datasetsize, labelsize])
         for i in range(datasetsize):
-            data[i] = [step(i%2),(step(i%3))]
+            data[i] = [step(i % 2), (step(i % 3))]
             if data[i][0] and data[i][1]:
-                label[i] = [0,1]
+                label[i] = [0, 1]
             else:
-                label[i] = [1,0]
-        return data.reshape(datasetsize //batchsize,batchsize,datasize), label.reshape(datasetsize //batchsize,batchsize,labelsize)
+                label[i] = [1, 0]
+        return data.reshape(datasetsize // batchsize, batchsize,
+                            datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
     elif d_name == "nand":
         data = np.zeros((4 * num, 2))
         for i in range(num):
@@ -164,12 +166,12 @@ def data_shuffle(data, label):
     data = data[shuffle]
     label = label[shuffle]
 
-def logictest(data_name,testsize=1):
+def logictest(data_name, testsize=1):
     if data_name == "original_or":
-        data = np.array([[0,0],[0,1],[1,0],[1,1]])
-        label = np.array([[1,0],[0,1],[0,1],[0,1]])
-        return data,label
+        data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        label = np.array([[1, 0], [0, 1], [0, 1], [0, 1]])
+        return data, label
     elif data_name == "original_and":
-        data = np.array([[0,0],[0,1],[1,0],[1,1]])
-        label = np.array([[1,0],[1,0],[1,0],[0,1]])
-        return data,label
+        data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
+        return data, label
