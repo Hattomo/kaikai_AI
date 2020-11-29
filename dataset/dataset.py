@@ -9,10 +9,9 @@ import mnist
 # データの作成
 # num データの数
 # data 0,1番目が学習データ 2番目が答え
-def step(x):
-    return 1 * (x > 0)
-
 def logic(d_name, datasetsize, batchsize=1):
+    def step(x):
+        return 1 * (x > 0)
     if d_name == "original_or":
         datasize = labelsize = 2
         # confirm batchsize
@@ -29,22 +28,22 @@ def logic(d_name, datasetsize, batchsize=1):
                 label[i] = [1, 0]
         return data.reshape(datasetsize // batchsize, batchsize,
                             datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
-    # elif d_name == "or":
-    #     datasize = labelsize = 2
-    #     # confirm batchsize
-    #     if datasetsize % batchsize != 0:
-    #         sys.stdout.write("Error : batch size is not good")
-    #         sys.exit(10)
-    #     # make data and test
-    #     data = np.zeros([datasetsize,datasize])
-    #     label = np.zeros([datasetsize,labelsize])
-    #     for i in range(datasetsize):
-    #         data[i] = np.random.randn()
-    #         if data[i][0] or data[i][1]:
-    #             label[i] = [0,1]
-    #         else:
-    #             label[i] = [1,0]
-    #     return data.reshape([datasetsize // batchsize,batchsize,datasize]),label.reshape([datasetsize // batchsize,batchsize,labelsize])
+    elif d_name == "or":
+        datasize = labelsize = 2
+        # confirm batchsize
+        if datasetsize % batchsize != 0:
+            sys.stdout.write("Error : batch size is not good")
+            sys.exit(10)
+        # make data and test
+        data = np.zeros([datasetsize,datasize])
+        label = np.zeros([datasetsize,labelsize])
+        for i in range(datasetsize):
+            data[i] = np.random.randn()
+            if round(data[i][0]) or round(data[i][1]):
+                label[i] = [0,1]
+            else:
+                label[i] = [1,0]
+        return data.reshape([datasetsize // batchsize,batchsize,datasize]),label.reshape([datasetsize // batchsize,batchsize,labelsize])
     elif d_name == "original_and":
         datasize = labelsize = 2
         # confirm batchsize
@@ -89,7 +88,8 @@ def logic(d_name, datasetsize, batchsize=1):
             label[4*i + 2] = [0, 1]
             label[4*i + 3] = [1, 0]
         return data, label
-    elif d_name == "mnist28_train" or d_name == "mnist28_test":
+def mnist():
+    if d_name == "mnist28_train" or d_name == "mnist28_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist28")
         if d_name == "mnist28_train":
             return train_data[:num], train_label[:num]
@@ -119,7 +119,8 @@ def logic(d_name, datasetsize, batchsize=1):
             return train_data[:num], train_label[:num]
         elif d_name == "mnist8_direct_test":
             return test_data[:num], test_label[:num]
-    elif d_name == "cnn_ex":
+def img_data():
+    if d_name == "cnn_ex":
         data = np.zeros((4 * num, 1, 4, 4))
         for i in range(num):
             data[4 * i] = [[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]]]
