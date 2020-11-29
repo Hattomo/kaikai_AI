@@ -63,10 +63,12 @@ class Neural_Network:
             return 0.05
         return 0.1
 
-    def train(self, train_data, train_label,batch):
-        self.__dropout_shake()
-        self.forwardpropagation(train_data,batch)
-        self.backpropagation(train_data, train_label)
+    def train(self, train_data, train_label):
+        num, batch, data_num = np.shape(train_data)
+        for i in range(num):
+            self.__dropout_shake()
+            self.forwardpropagation(train_data[i],batch)
+            self.backpropagation(train_data[i], train_label[i])
 
     def test(self, test_data, test_label,mode="classify"):
         self.__dropout_shake(False)
@@ -75,7 +77,6 @@ class Neural_Network:
         # reset dropout
         dropout = self.dropout
         self.dropout = np.zeros_like(dropout)
-        # test
         self.forwardpropagation(test_data,length)
         for i in range(length):
             if (abs(test_label[i] - self.z[-1][i]) < 0.2).all():

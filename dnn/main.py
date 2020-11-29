@@ -8,33 +8,19 @@ import activationfunction as af
 import analysistool as atool
 import neural_network as nn
 import numpy_files as npfiles
-import logic_circuit as lc
+import dataset
 
-structure = [2 + 1, 10, 2]
-dropout = [0, 0, 0]
+datasize = 4
 batch = 4
-epoch = 300
-logic = "and"
+logic = "original_and"
 # set data
-Data, Label = lc.dset(logic, epoch * batch)
-D_num, D_length = Data.shape
-L_num, L_length = Label.shape
-trainData = np.zeros([epoch, batch, D_length])
-trainLabel = np.zeros([epoch, batch, L_length])
-count = 0
-for i in range(epoch):
-    for j in range(batch):
-        trainData[i][j] = Data[count]
-        trainLabel[i][j] = Label[count]
-        count += 1
-testData, testLabel = lc.dset(logic, batch // 4)
+trainData, trainLabel = dataset.logic(logic,datasize,batch)
+testData, testLabel = dataset.logictest(logic)
 # # ニューラルネットワークの生成
-myNN = nn.Neural_Network(structure, dropout, w_method="he", actfunc="tanh")
+structure = [2 + 1, 4, 2]
+myNN = nn.Neural_Network(structure,w_method="he",actfunc="tanh")
 # # 学習
-
+epoch = 1000
 for i in range(epoch):
-    myNN.train(trainData[i], trainLabel[i], batch)
+    myNN.train(trainData, trainLabel)
     myNN.test(testData, testLabel)
-atool.draw(myNN.cost)
-atool.accurancygraph(myNN.accurancy)
-atool.tdchart(myNN)
