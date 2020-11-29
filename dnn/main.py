@@ -1,7 +1,7 @@
 import sys
 import os
 import datetime
-import time
+import io
 
 import numpy as np
 
@@ -16,30 +16,27 @@ import logic_circuit as lc
 import doc_maker
 import cleaner
 
-file_path = os.path.abspath(__file__)
-timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-with open(file_path) as f:
-    s = f.read()
-    print(type(s))
-    print(s)
-
-te = open('log.txt', 'w')  # File where you need to keep the logs
-
 class Unbuffered:
 
     def __init__(self, stream):
-
         self.stream = stream
 
     def write(self, data):
-
         self.stream.write(data)
         self.stream.flush()
-        te.write(data)  # Write the data of stdout here to a text file as well
+        s2.write(data)
+        #f.write(data)
 
     def flush(self):
         pass
 
+file_path = os.path.abspath(__file__)
+timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+with open(file_path) as f:
+    s = f.read()
+
+global s2
+s2 = io.StringIO()
 sys.stdout = Unbuffered(sys.stdout)
 
 structure = [16 + 1, 5, 4]
@@ -57,12 +54,12 @@ lc.data_shuffle(testData, testLabel)
 # ニューラルネットワークの生成
 orNN = nn.Neural_Network(structure, dropout)
 # 学習
-count = 100
+count = 10
 for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
-    # time.sleep(5)
-doc_maker.docmaker(s, timestamp)
+
+doc_maker.docmaker(s, timestamp, s2.getvalue())
 atool.draw(orNN.cost, timestamp)
 atool.accurancygraph(orNN.accurancy, timestamp)
 atool.tdchart(orNN)

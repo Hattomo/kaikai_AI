@@ -8,14 +8,14 @@ def clean():
     path = os.path.join(os.path.dirname(__file__), '../out/**/*')
     # a = glob.glob(path, recursive=True)
     files = [p for p in glob.glob(path, recursive=True) if (os.path.isfile(p) and re.search("20\d{18}.html", p))]
-    print(files)
-    for file_name in files:
+    for file_path in files:
+        file_name = os.path.splitext(os.path.abspath(file_path))[0]
         # one week passed since created
-        if 604800 < now - os.path.getctime(file_name):
-            #os.remove(file_name)
-            #os.remove(file_name+"_cost.*")
-            #os.remove(file_name+"__accurancy.*")
-            print("delete " + str(file_name))
-    # new_path = "demo_folder"
-    # if not os.path.exists(new_path):
-    #     os.mkdir(new_path)
+        if 3600 < now - os.path.getctime(file_path):
+            try:
+                os.remove(file_name + ".html")
+                os.remove(file_name + "_cost.png")
+                os.remove(file_name + "__accurancy.png")
+                print("delete " + str(file_name))
+            except:
+                print("file delete failed : " + str(file_name))
