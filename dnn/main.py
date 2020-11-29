@@ -14,7 +14,7 @@ structure = [2 + 1, 10, 2]
 dropout = [0, 0, 0]
 batch = 4
 epoch = 300
-logic = "or"
+logic = "and"
 # set data
 Data, Label = lc.dset(logic, epoch * batch)
 D_num, D_length = Data.shape
@@ -29,12 +29,12 @@ for i in range(epoch):
         count += 1
 testData, testLabel = lc.dset(logic, batch // 4)
 # # ニューラルネットワークの生成
-myNN = nn.Neural_Network(structure, batch, dropout, w_method="he", actfunc="tanh")
+myNN = nn.Neural_Network(structure, dropout, w_method="he", actfunc="tanh")
 # # 学習
 
 for i in range(epoch):
-    myNN.train(trainData[i], trainLabel[i])
+    myNN.train(trainData[i], trainLabel[i], batch)
     myNN.test(testData, testLabel)
-# atool.draw(myNN.cost)
-# atool.accurancygraph(myNN.accurancy)
-# atool.tdchart(myNN)
+atool.draw(myNN.cost)
+atool.accurancygraph(myNN.accurancy)
+atool.tdchart(myNN)

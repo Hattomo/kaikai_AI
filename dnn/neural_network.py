@@ -13,7 +13,6 @@ class Neural_Network:
     def __init__(
         self,
         structure,
-        batch,
         dropout=[0, 0, 0],
         w_method="xivier",
         actfunc="sigmoid",
@@ -21,14 +20,14 @@ class Neural_Network:
     ):
         self.structure = structure
         self.dropout = dropout
-        self.z, self.y = dsetting.set_layer(self.structure, batch)
         self.do = dsetting.donet(self.structure)
         self.weight = dsetting.set_weight(self.structure, w_method)
         self.actfunc, self.diffact = af.set_actfunc(actfunc)
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
         self.cost = self.accurancy = list()
 
-    def forwardpropagation(self, train_data):
+    def forwardpropagation(self, train_data,batch):
+        self.z, self.y = dsetting.set_layer(self.structure, batch)
         self.z[0][:, 1:] = train_data
         for i in range(len(self.structure) - 2):
             self.y[i + 1][:, 1:] = self.z[i] @ (self.weight[i] @ self.do[i]).T
@@ -64,12 +63,12 @@ class Neural_Network:
             return 0.05
         return 0.1
 
-    def train(self, train_data, train_label):
+    def train(self, train_data, train_label,batch):
         self.__dropout_shake()
-        self.forwardpropagation(train_data)
+        self.forwardpropagation(train_data,batch)
         self.backpropagation(train_data, train_label)
 
-    def test(self, test_data, test_label, mode="classify"):
+    def test(self, test_data, test_label,mode="classify"):
         self.__dropout_shake(False)
         count = cost = 0
         length = len(test_data)
@@ -77,7 +76,7 @@ class Neural_Network:
         dropout = self.dropout
         self.dropout = np.zeros_like(dropout)
         # test
-        self.forwardpropagation(test_data)
+        self.forwardpropagation(test_data,length)
         for i in range(length):
             if (abs(test_label[i] - self.z[-1][i]) < 0.2).all():
                 # if self.__compare(test_label[i], self.z[-1],mode):
