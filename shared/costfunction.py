@@ -1,5 +1,13 @@
 import numpy as np
 
+def set_costfunc(costfunc):
+    if costfunc == "rss":
+        return (rss, diffrss)
+    elif costfunc == "cross_entropy":
+        return (cross_entropy, diffcross_entropy)
+    sys.stdout.write("Error: The lossfunc is not found\n")
+    sys.exit(1)
+
 def rss(label, ans):
     return np.sum((ans - label)**2)
 

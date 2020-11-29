@@ -41,10 +41,11 @@ class Unbuffered:
         pass
 
 sys.stdout = Unbuffered(sys.stdout)
-structure = [3, 3, 2]
+
+structure = [16 + 1, 5, 4]
 dropout = [0, 0, 0]
 epoch = 30
-logic = "or"
+logic = "dnn_ex"
 # set data
 trainData, trainLabel = lc.dset(logic, epoch)
 testData, testLabel = lc.dset(logic, 10)
@@ -54,9 +55,9 @@ lc.data_shuffle(trainData, trainLabel)
 lc.data_shuffle(testData, testLabel)
 
 # ニューラルネットワークの生成
-orNN = nn.Neural_Network(structure, dropout, "he", "tanh")
+orNN = nn.Neural_Network(structure, dropout)
 # 学習
-count = 30
+count = 100
 for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)

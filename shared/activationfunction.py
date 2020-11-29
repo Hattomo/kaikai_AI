@@ -3,6 +3,32 @@ import math
 
 import numpy as np
 
+def set_actfunc(actfunc):
+    if actfunc == "sigmoid":
+        return (sigmoid, diffsigmoid)
+    elif actfunc == "tanh":
+        return (tanh, difftanh)
+    elif actfunc == "relu":
+        return (relu, diffrelu)
+    elif actfunc == "identity":
+        return (identity, diffidentity)
+    elif actfunc == "bentIdentity":
+        return (bentIdentity, diffbentIdentity)
+    elif actfunc == "hardShrink":
+        return (hardShrink, diffhardShrink)
+    elif actfunc == "log_Sigmoid":
+        return (logSigmoid, difflogSigmoid)
+    elif actfunc == "tanhShrink":
+        return (tanhShrink, difftanhShrink)
+    elif actfunc == "elu":
+        return (elu, diffelu)
+    elif actfunc == "swish":
+        return (swish, diffswish)
+    elif actfunc == "mish":
+        return (mish, diffmish)
+    sys.stdout.write("Error: The actfunc is not found\n")
+    sys.exit(1)
+
 ## 活性化関数
 # sigmoid関数
 def non_universal_sigmoid(x):
