@@ -13,10 +13,10 @@ import numpy_files as npfiles
 import logic_circuit as lc
 
 def test_main_or_with_dropout():
-    structure = [3, 3, 2]
+    structure = [16 + 1, 3, 4]
     dropout = [0, 0.5, 0]
     epoch = 5
-    logic = "or"
+    logic = "dnn_ex"
     # set data
     (trainData, trainLabel) = lc.dset(logic, epoch)
     (testData, testLabel) = lc.dset(logic, 5)
@@ -39,10 +39,10 @@ def test_main_or_with_dropout():
     npfiles.save(orNN)
 
 def test_main_or_without_dropout():
-    structure = [3, 3, 2]
+    structure = [16 + 1, 3, 4]
     dropout = [0, 0, 0]
     epoch = 5
-    logic = "or"
+    logic = "dnn_ex"
     # set data
     (trainData, trainLabel) = lc.dset(logic, epoch)
     (testData, testLabel) = lc.dset(logic, 5)

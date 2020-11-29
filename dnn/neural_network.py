@@ -23,7 +23,7 @@ class Neural_Network:
         costfunc="rss",
         testmode="classify",
         optimize_method="adam",
-        adam_batch_size=2,
+        adam_batch_size=4,
     ):
         self.structure = structure
         self.dropout = dropout
