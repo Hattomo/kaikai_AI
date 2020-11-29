@@ -1,4 +1,5 @@
 import math
+import time
 import sys
 
 import numpy as np
@@ -13,14 +14,17 @@ import vectormath as vmath
 
 class Neural_Network:
 
-    def __init__(self,
-                 structure,
-                 dropout=[0, 0, 0],
-                 w_method="xivier",
-                 actfunc="sigmoid",
-                 costfunc="rss",
-                 testmode="classify",
-                 optimize_method="adam"):
+    def __init__(
+        self,
+        structure,
+        dropout=[0, 0, 0],
+        w_method="xivier",
+        actfunc="sigmoid",
+        costfunc="rss",
+        testmode="classify",
+        optimize_method="adam",
+        adam_batch_size=4,
+    ):
         self.structure = structure
         self.dropout = dropout
         self.testmode = testmode
@@ -34,6 +38,7 @@ class Neural_Network:
         self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
+        self.adam_batch_size = adam_batch_size
 
     def set_optimize_method(self, optimize_method):
         if (optimize_method == "gd"):
@@ -71,6 +76,11 @@ class Neural_Network:
 
     # バックプロパゲーション
     def backpropagation(self, train_data, train_label, cnt, isexternal=False):
+        if self.optimize_method_name == "adam":
+            costfunc = cf.Cost_Adam(self.adam_batch_size, len(train_label))
+            self.costfunc = costfunc.rss_sdg
+            self.diffcost = costfunc.diffrss_sdg
+
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
@@ -102,6 +112,9 @@ class Neural_Network:
             self.backpropagation(train_data[i], train_label[i], i, isexternal)
 
     def test(self, test_data, test_label):
+        if self.optimize_method_name == "adam":
+            self.costfunc = cf.rss
+            self.diffcost = cf.diffrss
         self.__dropout_shake(False)
         count = 0
         cost = 0
