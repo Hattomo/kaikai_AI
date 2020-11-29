@@ -7,8 +7,8 @@ import numpy as np
 # set all weight
 def set_weight(structure, w_method):
     # set how to make weight
-    if w_method == "xivier":
-        w_method = dnn_xivier
+    if w_method == "xavier":
+        w_method = dnn_xavier
     elif w_method == "he":
         w_method = dnn_he
     elif w_method == "unif":
@@ -51,8 +51,8 @@ def dnn_unif(i_node, o_node):
     weight = weight.reshape(o_node, i_node)
     return weight
 
-#正規分布(xivier)
-def dnn_xivier(i_node, o_node):
+#正規分布(xavier)
+def dnn_xavier(i_node, o_node):
     weight = np.random.normal(loc=0.0, scale=1 / math.sqrt(i_node), size=i_node * o_node)
     weight = weight.reshape(o_node, i_node)
     return weight

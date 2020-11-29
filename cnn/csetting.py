@@ -11,8 +11,8 @@ def unif(in_channel, out_channel, ksize):
     kernel = kernel.reshape([out_channel, in_channel, ksize, ksize])
     return kernel
 
-#正規分布(xivier)
-def xivier(in_channel, out_channel, ksize):
+#正規分布(xavier)
+def xavier(in_channel, out_channel, ksize):
     kernel = np.random.normal(loc=0.0, scale=1 / math.sqrt(out_channel), size=in_channel * out_channel * ksize**2)
     return kernel.reshape(out_channel, in_channel, ksize, ksize)
 

@@ -14,7 +14,7 @@ class Neural_Network:
         self,
         structure,
         dropout=[0, 0, 0],
-        w_method="xivier",
+        w_method="xavier",
         actfunc="sigmoid",
         costfunc="rss",
     ):
