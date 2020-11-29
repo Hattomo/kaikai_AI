@@ -1,7 +1,6 @@
 import sys
 
 import numpy as np
-import pytest
 
 sys.path.append('./shared')
 import vectormath as vmath
