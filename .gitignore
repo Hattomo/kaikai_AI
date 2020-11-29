@@ -141,9 +141,10 @@ kaikai_ML_env/*
 *.jpg
 *.png
 
-# numpy binary
+# binary
 *.npy
 *.npz
+*.kaiai
 
 # html
 *html

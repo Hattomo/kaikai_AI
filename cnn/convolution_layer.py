@@ -24,6 +24,7 @@ class Convolution_Layer:
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
         self.kernel = self.__select_w(k_method, in_channel, out_channel, ksize)
         self.train_ratio = train_ratio
+        self.move = [[], [], []]
 
     def __select_w(self, k_method, in_channel, out_channel, ksize):
         if k_method == "xivier":
@@ -67,6 +68,7 @@ class Convolution_Layer:
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # update kernel
         result = np.zeros([out_channel, in_channel, k_height, k_width])
+        kernelmove = 0
         for h in range(batch):
             for i in range(out_channel):
                 for j in range((tr_height-er_height) // self.stride + 1):
@@ -74,6 +76,11 @@ class Convolution_Layer:
                         y = self.train_data[h][:, j:j + er_height, k:k + er_width] * input_error[h][i]
                         result[i][:, j, k] = np.sum(y, axis=(1, 2))
             self.kernel -= self.train_ratio * result
+            kernelmove += np.sum(abs(self.train_ratio * result))
+        self.move[0].append(np.max(self.kernel))
+        self.move[1].append(np.min(self.kernel))
+        self.move[2].append(kernelmove)
+
         # make next error
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         _kernel = np.zeros([in_channel, out_channel, k_height, k_width])
