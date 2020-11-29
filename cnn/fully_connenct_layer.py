@@ -18,7 +18,7 @@ class Fully_Connect_Layer(nn.Neural_Network):
         for i in range(batch):
             train_data[i] = input_data[i].flatten()
         super().forwardpropagation(train_data)
-        up_error = super().backpropagation(train_data, train_label, isexternal=True)
+        up_error = super().backpropagation(train_data, train_label)
         return up_error.reshape(batch, channel, height, width)
 
     def test(self, input_data, train_label):

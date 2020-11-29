@@ -10,11 +10,11 @@ import neural_network as nn
 import numpy_files as npfiles
 import logic_circuit as lc
 
-structure = [2 + 1, 3, 2]
+structure = [2 + 1, 10, 2]
 dropout = [0, 0, 0]
 batch = 4
 epoch = 300
-logic = "and"
+logic = "or"
 # set data
 Data, Label = lc.dset(logic, epoch * batch)
 D_num, D_length = Data.shape
@@ -35,6 +35,6 @@ myNN = nn.Neural_Network(structure, batch, dropout, w_method="he", actfunc="tanh
 for i in range(epoch):
     myNN.train(trainData[i], trainLabel[i])
     myNN.test(testData, testLabel)
-atool.draw(orNN.cost)
-atool.accurancygraph(orNN.accurancy)
-atool.tdchart(orNN)
+# atool.draw(myNN.cost)
+# atool.accurancygraph(myNN.accurancy)
+# atool.tdchart(myNN)
