@@ -132,6 +132,10 @@ def logictest(data_name, testsize=1,data_error=0.0):
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
+    elif data_name == "xor":
+        datasize = labelsize = 2
+        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+        original_label = np.array([[0., 1.], [1., 0.], [1., 0.], [0., 1.]])
     # make data and label
     data = np.zeros([testsize, datasize])
     label = np.zeros([testsize, labelsize])
