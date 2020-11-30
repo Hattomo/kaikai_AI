@@ -45,7 +45,6 @@ class Convolution_Layer:
         return p_result
 
     def forwardpropagation(self, image_data):
-        self.image_data = image_data
         (batch, in_channel, img_height, img_width) = np.shape(image_data)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
         # to prevent error from setting wrong stride
@@ -53,8 +52,9 @@ class Convolution_Layer:
             sys.stdout.write("Error: The stride is not right\n")
             sys.exit(1)
         # <padding>  Be careful,size of train data change!
-        # (padding size is [channel, height+2*pad-k_height/stride, width+2*pad-k_height/stride])
-        self.train_data = self.__padding(self.pad, image_data)
+        # (padding size is [channel, height+2*pad, width+2*pad])
+        self.train_data = np.ones([batch, in_channel + 1, img_height + 2 * self.pad, img_width + 2 * self.pad])
+        self.train_data[:, 1:] = self.__padding(self.pad, image_data)
         # <convolution>
         c_result = self.__convolution(self.train_data, self.kernel)
         c_result = self.actfunc(c_result)
