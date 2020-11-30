@@ -11,7 +11,7 @@ import neural_network as nn
 import numpy_files as npfiles
 
 def test_main_or_with_dropout():
-    datasize = 8
+    datasetsize = 8
     batchsize = 4
     td_num = 2
     tl_num = 2
