@@ -21,7 +21,7 @@ def test_main_or_with_dropout():
     # ニューラルネットワークの生成
     structure = [td_num + 1, 3, tl_num]
     dropout = [0, 0.5, 0]
-    myNN = nn.Neural_Network(structure,dropout)
+    myNN = nn.Neural_Network(structure, dropout)
     # 学習
     epoch = 10
     for i in range(epoch):
