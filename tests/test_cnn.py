@@ -11,7 +11,5 @@ import convolution_layer as cl
 def test_main():
     pass
 
-
-
 def test_concolution_layer_forwardpropagation():
     pass
