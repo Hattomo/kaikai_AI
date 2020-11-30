@@ -2,7 +2,7 @@ import os
 import datetime
 
 def getdata(nn_name):
-    if nn_name == "dnn": 
+    if nn_name == "dnn":
         file_path = os.path.join(os.path.dirname(__file__), f'../dnn/main.py')
     else:
         pass
