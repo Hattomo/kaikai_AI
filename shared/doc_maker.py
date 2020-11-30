@@ -1,6 +1,16 @@
 import os
 import datetime
 
+def getdata(nn_name):
+    if nn_name == "dnn": 
+        file_path = os.path.join(os.path.dirname(__file__), f'../dnn/main.py')
+    else:
+        pass
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+    with open(file_path) as f:
+        s = f.read()
+    return s, timestamp
+
 def docmaker(main_data, timestamp, log):
     tab = "&ensp;&ensp;&ensp;&ensp;"
     #main_data = '<br>\n'.join(main_data.splitlines())
@@ -41,6 +51,5 @@ h1,h3,p {
 """
 
     path = os.path.join(os.path.dirname(__file__), f'../out/{timestamp}.html')
-    #path = os.path.join(os.path.dirname(__file__), '../out/cost.html')
     with open(path, mode='w') as f:
         f.write(result)

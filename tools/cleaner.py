@@ -15,7 +15,7 @@ def clean():
             try:
                 os.remove(file_name + ".html")
                 os.remove(file_name + "_cost.png")
-                os.remove(file_name + "__accurancy.png")
+                os.remove(file_name + "_accurancy.png")
                 print("delete " + str(file_name))
             except:
                 print("file delete failed : " + str(file_name))

@@ -1,6 +1,4 @@
 import sys
-import os
-import datetime
 import io
 
 import numpy as np
@@ -14,30 +12,12 @@ import neural_network as nn
 import numpy_files as npfiles
 import logic_circuit as lc
 import doc_maker
+import unbuffered
 import cleaner
 
-class Unbuffered:
-
-    def __init__(self, stream):
-        self.stream = stream
-
-    def write(self, data):
-        self.stream.write(data)
-        self.stream.flush()
-        s2.write(data)
-        #f.write(data)
-
-    def flush(self):
-        pass
-
-file_path = os.path.abspath(__file__)
-timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-with open(file_path) as f:
-    s = f.read()
-
-global s2
-s2 = io.StringIO()
-sys.stdout = Unbuffered(sys.stdout)
+s, timestamp = doc_maker.getdata("dnn")
+stdout_stream = io.StringIO()
+sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
 structure = [16 + 1, 5, 4]
 dropout = [0, 0, 0]
@@ -59,7 +39,7 @@ for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
 
-doc_maker.docmaker(s, timestamp, s2.getvalue())
+doc_maker.docmaker(s, timestamp, stdout_stream.getvalue())
 atool.draw(orNN.cost, timestamp)
 atool.accurancygraph(orNN.accurancy, timestamp)
 atool.tdchart(orNN)
