@@ -6,7 +6,7 @@ sys.path.append('./dnn')
 sys.path.append('./shared')
 import neural_network as nn
 import activationfunction as af
-import csetting
+import setting
 
 class Convolution_Layer:
 
@@ -14,7 +14,7 @@ class Convolution_Layer:
         self.stride = stride
         self.pad = pad
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
-        self.kernel = csetting.select_kernel(k_method, in_channel, out_channel, ksize)
+        self.kernel = setting.select_kernel(k_method, in_channel, out_channel, ksize)
         self.move = [[], [], []]
 
     def __padding(self, pad, train_data):

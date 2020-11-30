@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append('./shared')
 import activationfunction as af
 import costfunction as cf
-import dsetting
+import setting
 
 class Neural_Network:
 
@@ -20,14 +20,14 @@ class Neural_Network:
     ):
         self.structure = structure
         self.dropout = dropout
-        self.do = dsetting.donet(self.structure)
-        self.weight = dsetting.set_weight(self.structure, w_method)
+        self.do = setting.donet(self.structure)
+        self.weight = setting.set_weight(self.structure, w_method)
         self.actfunc, self.diffact = af.set_actfunc(actfunc)
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
         self.cost, self.accurancy = list(), list()
 
     def forwardpropagation(self, train_data, batch):
-        self.z, self.y = dsetting.set_layer(self.structure, batch)
+        self.z, self.y = setting.set_layer(self.structure, batch)
         self.z[0][:, 1:] = train_data
         for i in range(len(self.structure) - 2):
             self.y[i + 1][:, 1:] = self.z[i] @ (self.weight[i] @ self.do[i]).T

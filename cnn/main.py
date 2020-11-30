@@ -7,7 +7,6 @@ sys.path.append('./dataset')
 import analysistool as atool
 import cnn_analysistool as catool
 import convolution_layer as cl
-import csetting
 import convolution_neural_network as cnn
 import fully_connenct_layer as fc
 import neural_network as nn
