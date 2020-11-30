@@ -86,24 +86,24 @@ def imgtrain(data_name, datasetsize, batchsize=1, data_error=0.0):
     b = data_error * 100 / 2
     if data_name == "cnn_ex":
         channel = 1
-        data_height,data_width = 4,4
+        data_height, data_width = 4, 4
         labelsize = 4
         original_data = np.array([[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]],
-                                    [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
-                                    [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
-                                    [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
-        original_label = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
+                                  [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
+                                  [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
+                                  [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
+        original_label = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
     elif data_name == "cnn_exs":
         channel = 1
-        data_height,data_width = 4,4
+        data_height, data_width = 4, 4
         labelsize = 2
         original_data = np.array([[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]],
-                            [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
-        original_label = np.array([[0, 1],[1, 0]])
+                                  [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
+        original_label = np.array([[0, 1], [1, 0]])
     # elif d_name == "dnn_ex":
     #     datasize = 16
     #     labelsize = 4
-    #     original_data = np.array([[255, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0, 0, 255], 
+    #     original_data = np.array([[255, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0, 0, 255],
     #                               [255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255],
     #                               [0, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 0, 0, 0, 255, 0],
     #                               [0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 255]])
@@ -112,13 +112,13 @@ def imgtrain(data_name, datasetsize, batchsize=1, data_error=0.0):
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
     # make data and label
-    data = np.zeros([datasetsize, data_height,data_width])
+    data = np.zeros([datasetsize, data_height, data_width])
     label = np.zeros([datasetsize, labelsize])
     for i in range(datasetsize):
         data[i] = original_data[i % 4] + random.randint(a, b) / 100
         label[i] = original_label[i % 4]
-    return data.reshape([datasetsize // batchsize, batchsize,channel,
-                         data_height,data_width]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
+    return data.reshape([datasetsize // batchsize, batchsize, channel, data_height,
+                         data_width]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
 
 def data_shuffle(data, label):
     shuffle = np.random.permutation(len(label))
@@ -153,22 +153,22 @@ def imgtest(data_name, testsize=1, data_error=0.0):
     b = data_error * 100 / 2
     if data_name == "cnn_ex":
         channel = 1
-        data_height,data_width = 4,4
+        data_height, data_width = 4, 4
         labelsize = 4
         original_data = np.array([[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]],
-                                    [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
-                                    [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
-                                    [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
-        original_label = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
+                                  [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
+                                  [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
+                                  [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
+        original_label = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
     elif data_name == "cnn_exs":
         channel = 1
-        data_height,data_width = 4,4
+        data_height, data_width = 4, 4
         labelsize = 2
         original_data = np.array([[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]],
-                            [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
-        original_label = np.array([[0, 1],[1, 0]])
+                                  [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
+        original_label = np.array([[0, 1], [1, 0]])
     # make data and label
-    data = np.zeros([testsize, channel,data_height,data_width])
+    data = np.zeros([testsize, channel, data_height, data_width])
     label = np.zeros([testsize, labelsize])
     for i in range(testsize):
         data[i] = original_data[i % 4] + random.randint(a, b) / 100
