@@ -12,7 +12,7 @@ def step(x):
 # データの作成
 # num データの数
 # data 0,1番目が学習データ 2番目が答え
-def logic(d_name, datasetsize, batchsize=1, data_error=0.0):
+def logic(data_name, datasetsize, batchsize=1, data_error=0.0):
     # confirm batchsize
     if datasetsize % batchsize != 0:
         sys.stdout.write("Error : batch size is not good")
@@ -20,15 +20,15 @@ def logic(d_name, datasetsize, batchsize=1, data_error=0.0):
     # set data error
     a = -data_error * 100 / 2
     b = data_error * 100 / 2
-    if d_name == "or":
+    if data_name == "or":
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
-    elif d_name == "and":
+    elif data_name == "and":
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
-    elif d_name == "xor":
+    elif data_name == "xor":
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[0., 1.], [1., 0.], [1., 0.], [0., 1.]])
