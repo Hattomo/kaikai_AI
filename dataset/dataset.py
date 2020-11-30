@@ -32,6 +32,9 @@ def logic(data_name, datasetsize, batchsize=1, data_error=0.0):
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[0., 1.], [1., 0.], [1., 0.], [0., 1.]])
+    else:
+        sys.stdout.write("Error: the data name is not found\n")
+        sys.exit(1)
     # make data and label
     data = np.zeros([datasetsize, datasize])
     label = np.zeros([datasetsize, labelsize])
@@ -73,48 +76,49 @@ def mnist():
         elif d_name == "mnist8_direct_test":
             return test_data[:num], test_label[:num]
 
-def img_data():
-    if d_name == "cnn_ex":
-        data = np.zeros((4 * num, 1, 4, 4))
-        for i in range(num):
-            data[4 * i] = [[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]]]
-            data[4*i + 1] = [[[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]]]
-            data[4*i + 2] = [[[0, 0, 255, 0], [255, 255, 255, 255], [0, 0, 255, 0], [0, 0, 255, 0]]]
-            data[4*i + 3] = [[[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 255]]]
-        label = np.zeros((4 * num, 4))
-        for i in range(num):
-            label[4 * i] = [1, 0, 0, 0]
-            label[4*i + 1] = [0, 1, 0, 0]
-            label[4*i + 2] = [0, 0, 1, 0]
-            label[4*i + 3] = [0, 0, 0, 1]
-        return data, label
+def img_data(data_name, datasetsize, batchsize=1, data_error=0.0):
+    # confirm batchsize
+    if datasetsize % batchsize != 0:
+        sys.stdout.write("Error : batch size is not good")
+        sys.exit(10)
+    # set data error
+    a = -data_error * 100 / 2
+    b = data_error * 100 / 2
+    if data_name == "cnn_ex":
+        channel = 1
+        data_height,data_width = 4,4
+        labelsize = 4
+        original_data = np.array([[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]],
+                                    [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
+                                    [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
+                                    [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
+        original_label = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
     elif d_name == "cnn_exs":
-        data = np.zeros((2 * num, 1, 4, 4))
-        for i in range(num):
-            data[2 * i] = [[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]]]
-            data[2*i + 1] = [[[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]]
-        label = np.zeros((2 * num, 2))
-        for i in range(num):
-            label[2 * i] = [0, 1]
-            label[2*i + 1] = [1, 0]
-        return data, label
-    elif d_name == "dnn_ex":
-        data = np.zeros((4 * num, 16))
-        for i in range(num):
-            data[4 * i] = [255, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0, 0, 255]
-            data[4*i + 1] = [255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255]
-            data[4*i + 2] = [0, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 0, 0, 0, 255, 0]
-            data[4*i + 3] = [0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 255]
-        label = np.zeros((4 * num, 4))
-        for i in range(num):
-            label[4 * i] = [1, 0, 0, 0]
-            label[4*i + 1] = [0, 1, 0, 0]
-            label[4*i + 2] = [0, 0, 1, 0]
-            label[4*i + 3] = [0, 0, 0, 1]
-        return data, label
+        channel = 1
+        data_height,data_width = 4,4
+        labelsize = 2
+        original_data = np.array([[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]],
+                            [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
+        original_label = np.array([[0, 1],[1, 0]])
+    # elif d_name == "dnn_ex":
+    #     datasize = 16
+    #     labelsize = 4
+    #     original_data = np.array([[255, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0, 0, 255], 
+    #                               [255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255],
+    #                               [0, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 0, 0, 0, 255, 0],
+    #                               [0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 255]])
+    #     original_data = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
     else:
         sys.stdout.write("Error: the data name is not found\n")
         sys.exit(1)
+    # make data and label
+    data = np.zeros([datasetsize, data_height,data_width])
+    label = np.zeros([datasetsize, labelsize])
+    for i in range(datasetsize):
+        data[i] = original_data[i % 4] + random.randint(a, b) / 100
+        label[i] = original_label[i % 4]
+    return data.reshape([datasetsize // batchsize, batchsize,channel,
+                         data_height,data_width]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
 
 def data_shuffle(data, label):
     shuffle = np.random.permutation(len(label))
