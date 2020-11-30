@@ -15,7 +15,7 @@ import doc_maker
 import unbuffered
 import cleaner
 
-s, timestamp = doc_maker.getdata("dnn")
+s, timestamp, commitid, branchname = doc_maker.getdata("dnn")
 stdout_stream = io.StringIO()
 sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
@@ -39,7 +39,7 @@ for i in range(count):
     orNN.train(trainData, trainLabel)
     orNN.test(testData, testLabel)
 
-doc_maker.docmaker(s, timestamp, stdout_stream.getvalue())
+doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
 atool.draw(orNN.cost, timestamp)
 atool.accurancygraph(orNN.accurancy, timestamp)
 atool.tdchart(orNN)

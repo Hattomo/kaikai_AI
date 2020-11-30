@@ -1,5 +1,6 @@
 import os
 import datetime
+import subprocess
 
 def getdata(nn_name):
     if nn_name == "dnn":
@@ -9,9 +10,17 @@ def getdata(nn_name):
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
     with open(file_path) as f:
         s = f.read()
-    return s, timestamp
+    commitid, branchname = gethash()
+    return s, timestamp, commitid, branchname
 
-def docmaker(main_data, timestamp, log):
+def gethash():
+    cmd = "git rev-parse --short HEAD"
+    commitid = subprocess.check_output(cmd.split()).strip().decode('utf-8')
+    cmd = "git rev-parse --abbrev-ref HEAD"
+    branch_name = subprocess.check_output(cmd.split()).strip().decode('utf-8')
+    return commitid, branch_name
+
+def docmaker(main_data, timestamp, log, commitid, branch_name):
     tab = "&ensp;&ensp;&ensp;&ensp;"
     #main_data = '<br>\n'.join(main_data.splitlines())
     #main_data = main_data.replace("    ",str(tab))
@@ -32,6 +41,9 @@ h1,h3,p {
 <body>
 
 <h1>{timestamp}</h1>
+<h3>git data</h3>
+<p>branch name : {branch_name}</p>
+<p>base commitid : {commitid}</p>
 <h3>Loss func-ish graph</h3>
 <p><img src="{timestamp}_cost.png" alt="Loss func-ish graph"></p>
 <h3>Accurancy rate graph</h3>
