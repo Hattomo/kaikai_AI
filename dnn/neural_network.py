@@ -63,9 +63,15 @@ class Neural_Network:
             return 0.05
         return 0.1
 
-    def train(self, train_data, train_label):
-        num, batch, data_num = np.shape(train_data)
-        for i in range(num):
+    def train(self, train_data, train_label,dnn=True):
+        if dnn:
+            num, batch, data_num = np.shape(train_data)
+            for i in range(num):
+                self.__dropout_shake()
+                self.forwardpropagation(train_data[i], batch)
+                self.backpropagation(train_data[i], train_label[i])
+        else:
+            batch, data_num = np.shape(train_data)
             self.__dropout_shake()
             self.forwardpropagation(train_data[i], batch)
             self.backpropagation(train_data[i], train_label[i])
