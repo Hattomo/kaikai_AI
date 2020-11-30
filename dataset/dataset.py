@@ -50,16 +50,31 @@ def logic(d_name, datasetsize, batchsize=1):
         if datasetsize % batchsize != 0:
             sys.stdout.write("Error : batch size is not good")
             sys.exit(10)
+        original_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        original_label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
         data = np.zeros([datasetsize, datasize])
         label = np.zeros([datasetsize, labelsize])
         for i in range(datasetsize):
-            data[i] = [step(i % 2), step(i % 3)]
-            if data[i][0] and data[i][1]:
-                label[i] = [0, 1]
-            else:
-                label[i] = [1, 0]
+            data[i] = original_data[i%4]
+            label[i] = original_label[i%4]
         return data.reshape(datasetsize // batchsize, batchsize,
                             datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
+    elif d_name == "and":
+        datasize = labelsize = 2
+        # confirm batchsize
+        if datasetsize % batchsize != 0:
+            sys.stdout.write("Error : batch size is not good")
+            sys.exit(10)
+        # make data and test
+        original_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        original_label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
+        data = np.zeros([datasetsize,datasize])
+        label = np.zeros([datasetsize,labelsize])
+        for i in range(datasetsize):
+            data[i] = original_data[i%4] + random.randint(0,10) / 100
+            label[i] = original_label[i%4]
+        return data.reshape([datasetsize // batchsize,batchsize,datasize]),label.reshape([datasetsize // batchsize,batchsize,labelsize])
+    
     elif d_name == "nand":
         data = np.zeros((4 * num, 2))
         for i in range(num):
@@ -186,3 +201,13 @@ def logictest(data_name, testsize=1):
         data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
         return data, label
+    elif data_name == "and":
+        datasize = labelsize = 2
+        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+        original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
+        data = np.zeros([testsize,datasize])
+        label = np.zeros([testsize,labelsize])
+        for i in range(testsize):
+            data[i] = original_data[i%4] + random.randint(0,10) / 100
+            label[i] = original_label[i%4]
+        return data,label

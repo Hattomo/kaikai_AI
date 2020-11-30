@@ -8,18 +8,17 @@ import activationfunction as af
 import neural_network as nn
 import dataset
 
-datasize = 100
-batch = 10
-logic = "original_or"
+datasize = 20
+batch = 4
+logic = "and"
 # set data
 trainData, trainLabel = dataset.logic(logic,datasize,batch)
 testData, testLabel = dataset.logictest(logic,10)
-
 # ニューラルネットワークの生成
 structure = [2 + 1, 5, 2]
-myNN = nn.Neural_Network(structure)
+myNN = nn.Neural_Network(structure,actfunc="tanh")
 # # 学習
-epoch = 3000
+epoch = 200
 for i in range(epoch):
     myNN.train(trainData, trainLabel)
     myNN.test(testData, testLabel)
