@@ -13,7 +13,7 @@ class Neural_Network:
     def __init__(
         self,
         structure,
-        dropout=[0, 0, 0],
+        dropout=[0., 0., 0.],
         w_method="xavier",
         actfunc="sigmoid",
         costfunc="rss",

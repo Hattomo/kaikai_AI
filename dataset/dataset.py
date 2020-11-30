@@ -76,7 +76,7 @@ def mnist():
         elif d_name == "mnist8_direct_test":
             return test_data[:num], test_label[:num]
 
-def img_data(data_name, datasetsize, batchsize=1, data_error=0.0):
+def imgtrain(data_name, datasetsize, batchsize=1, data_error=0.0):
     # confirm batchsize
     if datasetsize % batchsize != 0:
         sys.stdout.write("Error : batch size is not good")
@@ -93,7 +93,7 @@ def img_data(data_name, datasetsize, batchsize=1, data_error=0.0):
                                     [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
                                     [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
         original_label = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
-    elif d_name == "cnn_exs":
+    elif data_name == "cnn_exs":
         channel = 1
         data_height,data_width = 4,4
         labelsize = 2
@@ -142,6 +142,33 @@ def logictest(data_name, testsize=1, data_error=0.0):
         original_label = np.array([[0., 1.], [1., 0.], [1., 0.], [0., 1.]])
     # make data and label
     data = np.zeros([testsize, datasize])
+    label = np.zeros([testsize, labelsize])
+    for i in range(testsize):
+        data[i] = original_data[i % 4] + random.randint(a, b) / 100
+        label[i] = original_label[i % 4]
+    return data, label
+
+def imgtest(data_name, testsize=1, data_error=0.0):
+    a = -data_error * 100 / 2
+    b = data_error * 100 / 2
+    if data_name == "cnn_ex":
+        channel = 1
+        data_height,data_width = 4,4
+        labelsize = 4
+        original_data = np.array([[[255, 0, 0, 255], [0, 0, 0, 0], [0, 0, 0, 0], [255, 0, 0, 255]],
+                                    [[255, 255, 255, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 255, 255, 255]],
+                                    [[0, 255, 255, 0], [255, 255, 255, 255], [255, 255, 255, 255], [0, 255, 255, 0]],
+                                    [[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]]])
+        original_label = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1]])
+    elif data_name == "cnn_exs":
+        channel = 1
+        data_height,data_width = 4,4
+        labelsize = 2
+        original_data = np.array([[[255, 255, 255, 255], [255, 255, 255, 255], [0, 0, 0, 0], [0, 0, 0, 0]],
+                            [[0, 0, 0, 0], [0, 0, 0, 0], [255, 255, 255, 255], [255, 255, 255, 255]]])
+        original_label = np.array([[0, 1],[1, 0]])
+    # make data and label
+    data = np.zeros([testsize, channel,data_height,data_width])
     label = np.zeros([testsize, labelsize])
     for i in range(testsize):
         data[i] = original_data[i % 4] + random.randint(a, b) / 100

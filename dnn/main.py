@@ -9,7 +9,7 @@ import analysistool as atool
 import neural_network as nn
 import dataset
 
-datasize = 20
+datasize = 4
 batch = 4
 logic = "and"
 # set data
@@ -19,7 +19,7 @@ testData, testLabel = dataset.logictest(logic, 10)
 structure = [2 + 1, 5, 2]
 myNN = nn.Neural_Network(structure)
 # # 学習
-epoch = 200
+epoch = 1
 for i in range(epoch):
     myNN.train(trainData, trainLabel)
     myNN.test(testData, testLabel)

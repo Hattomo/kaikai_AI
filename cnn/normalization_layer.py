@@ -4,11 +4,14 @@ import numpy as np
 
 class Normalization_Layer:
 
-    def normalize(self, data, n_method="batch_normalization"):
+    def forwardpropagation(self, data, n_method="batch_normalization"):
         if n_method == "batch_normalization":
             return self.__batch_normalization(data)
         sys.stdout.write("Error: The normalization method is not found\n")
         sys.exit(1)
+
+    def backpropagation(self,error):
+        return error
 
     def __batch_normalization(self, data):
         # Batch Normalization
