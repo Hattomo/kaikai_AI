@@ -121,32 +121,21 @@ def data_shuffle(data, label):
     data = data[shuffle]
     label = label[shuffle]
 
-def logictest(data_name, testsize=1):
-    if data_name == "original_or":
-        data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        label = np.array([[1, 0], [0, 1], [0, 1], [0, 1]])
-        return data, label
-    elif data_name == "or":
+def logictest(data_name, testsize=1,data_error=0.0):
+    a = -data_error * 100 / 2
+    b = data_error * 100 / 2
+    if data_name == "or":
         datasize = labelsize = 2
-        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
-        original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
-        data = np.zeros([testsize, datasize])
-        label = np.zeros([testsize, labelsize])
-        for i in range(testsize):
-            data[i] = original_data[i % 4] + random.randint(0, 10) / 100
-            label[i] = original_label[i % 4]
-        return data, label
-    elif data_name == "original_and":
-        data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
-        return data, label
+        original_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        original_label = np.array([[1, 0], [0, 1], [0, 1], [0, 1]])
     elif data_name == "and":
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
-        data = np.zeros([testsize, datasize])
-        label = np.zeros([testsize, labelsize])
-        for i in range(testsize):
-            data[i] = original_data[i % 4] + random.randint(0, 10) / 100
-            label[i] = original_label[i % 4]
-        return data, label
+    # make data and label
+    data = np.zeros([testsize, datasize])
+    label = np.zeros([testsize, labelsize])
+    for i in range(testsize):
+        data[i] = original_data[i % 4] + random.randint(a, b) / 100
+        label[i] = original_label[i % 4]
+    return data, label
