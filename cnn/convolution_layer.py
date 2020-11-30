@@ -16,7 +16,7 @@ class Convolution_Layer:
                  ksize,
                  stride=1,
                  pad=0,
-                 k_method="xivier",
+                 k_method="xavier",
                  actfunc="relu",
                  train_ratio=0.001):
         self.stride = stride
@@ -26,8 +26,8 @@ class Convolution_Layer:
         self.train_ratio = train_ratio
 
     def __select_w(self, k_method, in_channel, out_channel, ksize):
-        if k_method == "xivier":
-            return csetting.xivier(in_channel, out_channel, ksize)
+        if k_method == "xavier":
+            return csetting.xavier(in_channel, out_channel, ksize)
         elif k_method == "he":
             return csetting.he(in_channel, out_channel, ksize)
         elif k_method == "test":
