@@ -6,9 +6,7 @@ import pytest
 sys.path.append("./dataset")
 sys.path.append('./dnn')
 sys.path.append("./shared")
-import activationfunction as af
 import neural_network as nn
-import logic_circuit as lc
 
 def test_forwordpropagation():
     pass
@@ -19,8 +17,7 @@ def test_backpropagation():
 def test_dropout_shake():
     structure = [3, 4, 2]
     dropout = [0, 0.9, 0]
-    batch = 0
-    dnn = nn.Neural_Network(structure, batch, dropout, "he", "sigmoid")
+    dnn = nn.Neural_Network(structure, dropout)
     dnn.do[0] = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1]])
     dnn._Neural_Network__dropout_shake(False)
     assert np.all(dnn.do[0] == np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
