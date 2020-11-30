@@ -6,103 +6,41 @@ import numpy as np
 sys.path.append('./data')
 import mnist
 
-
 def step(x):
     return 1.0 * (x > 0.0)
 
 # データの作成
 # num データの数
 # data 0,1番目が学習データ 2番目が答え
-def logic(d_name, datasetsize, batchsize=1):
-    if d_name == "original_or":
+def logic(d_name, datasetsize, batchsize=1, data_error=0.0):
+    # confirm batchsize
+    if datasetsize % batchsize != 0:
+        sys.stdout.write("Error : batch size is not good")
+        sys.exit(10)
+    # set data error
+    a = -data_error * 100 / 2
+    b = data_error * 100 / 2
+    if d_name == "or":
         datasize = labelsize = 2
-        # confirm batchsize
-        if datasetsize % batchsize != 0:
-            sys.stdout.write("Error : batch size is not good")
-            sys.exit(10)
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
-        data = np.zeros([datasetsize, datasize])
-        label = np.zeros([datasetsize, labelsize])
-        for i in range(datasetsize):
-            data[i] = original_data[i%4]
-            label[i] = original_label[i%4]
-        return data.reshape(datasetsize // batchsize, batchsize,
-                            datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
-    elif d_name == "or":
-        datasize = labelsize = 2
-        # confirm batchsize
-        if datasetsize % batchsize != 0:
-            sys.stdout.write("Error : batch size is not good")
-            sys.exit(10)
-        # make data and test
-        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
-        original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
-        data = np.zeros([datasetsize,datasize])
-        label = np.zeros([datasetsize,labelsize])
-        for i in range(datasetsize):
-            data[i] = original_data[i%4] + random.randint(0,10) / 100
-            label[i] = original_label[i%4]
-        return data.reshape([datasetsize // batchsize,batchsize,datasize]),label.reshape([datasetsize // batchsize,batchsize,labelsize])
-    elif d_name == "original_and":
-        datasize = labelsize = 2
-        # confirm batchsize
-        if datasetsize % batchsize != 0:
-            sys.stdout.write("Error : batch size is not good")
-            sys.exit(10)
-        original_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        original_label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
-        data = np.zeros([datasetsize, datasize])
-        label = np.zeros([datasetsize, labelsize])
-        for i in range(datasetsize):
-            data[i] = original_data[i%4]
-            label[i] = original_label[i%4]
-        return data.reshape(datasetsize // batchsize, batchsize,
-                            datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
     elif d_name == "and":
         datasize = labelsize = 2
-        # confirm batchsize
-        if datasetsize % batchsize != 0:
-            sys.stdout.write("Error : batch size is not good")
-            sys.exit(10)
-        # make data and test
-        original_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        original_label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
-        data = np.zeros([datasetsize,datasize])
-        label = np.zeros([datasetsize,labelsize])
-        for i in range(datasetsize):
-            data[i] = original_data[i%4] + random.randint(0,10) / 100
-            label[i] = original_label[i%4]
-        return data.reshape([datasetsize // batchsize,batchsize,datasize]),label.reshape([datasetsize // batchsize,batchsize,labelsize])
-    
-    elif d_name == "nand":
-        data = np.zeros((4 * num, 2))
-        for i in range(num):
-            data[4 * i] = [0, 0]
-            data[4*i + 1] = [0, 1]
-            data[4*i + 2] = [1, 0]
-            data[4*i + 3] = [1, 1]
-        label = np.zeros((4 * num, 2))
-        for i in range(num):
-            label[4 * i] = [0, 1]
-            label[4*i + 1] = [0, 1]
-            label[4*i + 2] = [0, 1]
-            label[4*i + 3] = [1, 0]
-        return data, label
+        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+        original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
     elif d_name == "xor":
-        data = np.zeros((4 * num, 2))
-        for i in range(num):
-            data[4 * i] = [0, 0]
-            data[4*i + 1] = [0, 1]
-            data[4*i + 2] = [1, 0]
-            data[4*i + 3] = [1, 1]
-        label = np.zeros((4 * num, 2))
-        for i in range(num):
-            label[4 * i] = [1, 0]
-            label[4*i + 1] = [0, 1]
-            label[4*i + 2] = [0, 1]
-            label[4*i + 3] = [1, 0]
-        return data, label
+        datasize = labelsize = 2
+        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+        original_label = np.array([[0., 1.], [1., 0.], [1., 0.], [0., 1.]])
+    # make data and label
+    data = np.zeros([datasetsize, datasize])
+    label = np.zeros([datasetsize, labelsize])
+    for i in range(datasetsize):
+        data[i] = original_data[i % 4] + random.randint(a, b) / 100
+        label[i] = original_label[i % 4]
+    return data.reshape([datasetsize // batchsize, batchsize,
+                         datasize]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
+
 def mnist():
     if d_name == "mnist28_train" or d_name == "mnist28_test":
         (train_data, train_label), (test_data, test_label) = mnist.load_data("mnist28")
@@ -134,6 +72,7 @@ def mnist():
             return train_data[:num], train_label[:num]
         elif d_name == "mnist8_direct_test":
             return test_data[:num], test_label[:num]
+
 def img_data():
     if d_name == "cnn_ex":
         data = np.zeros((4 * num, 1, 4, 4))
@@ -191,12 +130,12 @@ def logictest(data_name, testsize=1):
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
-        data = np.zeros([testsize,datasize])
-        label = np.zeros([testsize,labelsize])
+        data = np.zeros([testsize, datasize])
+        label = np.zeros([testsize, labelsize])
         for i in range(testsize):
-            data[i] = original_data[i%4] + random.randint(0,10) / 100
-            label[i] = original_label[i%4]
-        return data,label
+            data[i] = original_data[i % 4] + random.randint(0, 10) / 100
+            label[i] = original_label[i % 4]
+        return data, label
     elif data_name == "original_and":
         data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         label = np.array([[1, 0], [1, 0], [1, 0], [0, 1]])
@@ -205,9 +144,9 @@ def logictest(data_name, testsize=1):
         datasize = labelsize = 2
         original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
         original_label = np.array([[1., 0.], [1., 0.], [1., 0.], [0., 1.]])
-        data = np.zeros([testsize,datasize])
-        label = np.zeros([testsize,labelsize])
+        data = np.zeros([testsize, datasize])
+        label = np.zeros([testsize, labelsize])
         for i in range(testsize):
-            data[i] = original_data[i%4] + random.randint(0,10) / 100
-            label[i] = original_label[i%4]
-        return data,label
+            data[i] = original_data[i % 4] + random.randint(0, 10) / 100
+            label[i] = original_label[i % 4]
+        return data, label
