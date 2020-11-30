@@ -10,7 +10,7 @@ class Normalization_Layer:
         sys.stdout.write("Error: The normalization method is not found\n")
         sys.exit(1)
 
-    def backpropagation(self,error):
+    def backpropagation(self, error):
         return error
 
     def __batch_normalization(self, data):

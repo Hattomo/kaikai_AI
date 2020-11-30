@@ -19,16 +19,16 @@ import dataset
 data_name = "cnn_ex"
 datasetsize = 8
 batch = 4
-trainData, trainLabel = dataset.imgtrain(data_name,datasetsize,batch)
-testData, testLabel= dataset.imgtest(data_name,testsize=4)
+trainData, trainLabel = dataset.imgtrain(data_name, datasetsize, batch)
+testData, testLabel = dataset.imgtest(data_name, testsize=4)
 # 各層の生成
 conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
 norm = nl.Normalization_Layer()
 fullc = fc.Fully_Connect_Layer([32 + 1, 10, 4])
-mycnn = cnn.Convolution_Neural_Network([conv,pool,norm,fullc])
+mycnn = cnn.Convolution_Neural_Network([conv, pool, norm, fullc])
 
 epoch = 1000
 for i in range(epoch):
-    mycnn.train(trainData,trainLabel)
-    mycnn.test(testData,testLabel)
+    mycnn.train(trainData, trainLabel)
+    mycnn.test(testData, testLabel)
