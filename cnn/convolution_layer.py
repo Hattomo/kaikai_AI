@@ -17,24 +17,12 @@ class Convolution_Layer:
                  stride=1,
                  pad=0,
                  k_method="xavier",
-                 actfunc="relu",
-                 train_ratio=0.001):
+                 actfunc="relu"):
         self.stride = stride
         self.pad = pad
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
-        self.kernel = self.__select_w(k_method, in_channel, out_channel, ksize)
-        self.train_ratio = train_ratio
+        self.kernel = csetting.select_kernel(k_method, in_channel, out_channel, ksize)
         self.move = [[], [], []]
-
-    def __select_w(self, k_method, in_channel, out_channel, ksize):
-        if k_method == "xavier":
-            return csetting.xavier(in_channel, out_channel, ksize)
-        elif k_method == "he":
-            return csetting.he(in_channel, out_channel, ksize)
-        elif k_method == "test":
-            return csetting.test(in_channel, out_channel, ksize)
-        sys.stdout.write("Error: The kernel method is not found\n")
-        sys.exit(1)
 
     def __padding(self, pad, train_data):
         (batch, channel, height, width) = np.shape(train_data)
@@ -63,6 +51,7 @@ class Convolution_Layer:
         return c_result
 
     def backpropagation(self, input_error):
+        train_ratio=0.01
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
         (batch, out_channel, er_height, er_width) = np.shape(input_error)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
@@ -75,8 +64,8 @@ class Convolution_Layer:
                     for k in range((tr_width-er_width) // self.stride + 1):
                         y = self.train_data[h][:, j:j + er_height, k:k + er_width] * input_error[h][i]
                         result[i][:, j, k] = np.sum(y, axis=(1, 2))
-            self.kernel -= self.train_ratio * result
-            kernelmove += np.sum(abs(self.train_ratio * result))
+            self.kernel -= train_ratio * result
+            kernelmove += np.sum(abs(train_ratio * result))
         self.move[0].append(np.max(self.kernel))
         self.move[1].append(np.min(self.kernel))
         self.move[2].append(kernelmove)

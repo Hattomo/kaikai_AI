@@ -1,6 +1,4 @@
-# 重みと中間層の作成
 import math
-import random
 import sys
 
 import numpy as np
