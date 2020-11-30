@@ -10,7 +10,7 @@ import dataset
 
 datasize = 100
 batch = 10
-logic = "or"
+logic = "original_or"
 # set data
 trainData, trainLabel = dataset.logic(logic,datasize,batch)
 testData, testLabel = dataset.logictest(logic,10)

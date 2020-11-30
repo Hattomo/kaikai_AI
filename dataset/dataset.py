@@ -14,21 +14,19 @@ def step(x):
 # num データの数
 # data 0,1番目が学習データ 2番目が答え
 def logic(d_name, datasetsize, batchsize=1):
-
     if d_name == "original_or":
         datasize = labelsize = 2
         # confirm batchsize
         if datasetsize % batchsize != 0:
             sys.stdout.write("Error : batch size is not good")
             sys.exit(10)
+        original_data = np.array([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+        original_label = np.array([[1., 0.], [0., 1.], [0., 1.], [0., 1.]])
         data = np.zeros([datasetsize, datasize])
         label = np.zeros([datasetsize, labelsize])
         for i in range(datasetsize):
-            data[i] = [step(i % 2), (step(i % 3))]
-            if data[i][0] or data[i][1]:
-                label[i] = [0, 1]
-            else:
-                label[i] = [1, 0]
+            data[i] = original_data[i%4]
+            label[i] = original_label[i%4]
         return data.reshape(datasetsize // batchsize, batchsize,
                             datasize), label.reshape(datasetsize // batchsize, batchsize, labelsize)
     elif d_name == "or":
