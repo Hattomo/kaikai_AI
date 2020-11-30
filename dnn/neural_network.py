@@ -24,7 +24,7 @@ class Neural_Network:
         self.weight = dsetting.set_weight(self.structure, w_method)
         self.actfunc, self.diffact = af.set_actfunc(actfunc)
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
-        self.cost,self.accurancy = list(),list()
+        self.cost, self.accurancy = list(), list()
 
     def forwardpropagation(self, train_data, batch):
         self.z, self.y = dsetting.set_layer(self.structure, batch)
@@ -72,7 +72,7 @@ class Neural_Network:
 
     def test(self, test_data, test_label, mode="classify"):
         self.__dropout_shake(False)
-        count,cost = 0,0
+        count, cost = 0, 0
         length = len(test_data)
         # reset dropout
         dropout = self.dropout

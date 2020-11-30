@@ -121,7 +121,7 @@ def data_shuffle(data, label):
     data = data[shuffle]
     label = label[shuffle]
 
-def logictest(data_name, testsize=1,data_error=0.0):
+def logictest(data_name, testsize=1, data_error=0.0):
     a = -data_error * 100 / 2
     b = data_error * 100 / 2
     if data_name == "or":

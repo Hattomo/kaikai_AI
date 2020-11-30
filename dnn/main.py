@@ -13,8 +13,8 @@ datasize = 20
 batch = 4
 logic = "and"
 # set data
-trainData, trainLabel = dataset.logic(logic,datasize,batch)
-testData, testLabel = dataset.logictest(logic,10)
+trainData, trainLabel = dataset.logic(logic, datasize, batch)
+testData, testLabel = dataset.logictest(logic, 10)
 # ニューラルネットワークの生成
 structure = [2 + 1, 5, 2]
 myNN = nn.Neural_Network(structure)
