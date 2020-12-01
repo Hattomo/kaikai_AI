@@ -1,42 +1,35 @@
+import os
+
 import matplotlib.pyplot as plt
 
-import mnist
-
-(train_data, train_label), (test_data, test_label) = mnist.load_data()
-
-def show_data_gui(digit, datatype):
-    if (datatype == "train"):
-        data = train_data[digit]
-        label = str(train_label[digit])
-    elif (datatype == "test"):
-        data = test_data[digit]
-        label = str(test_label[digit])
-    else:
-        sys.stdout.write("Error : Please input \"train\" or \"test\" as datatype.\n")
-        sys.exit(3)
-    plt.title(str(datatype) + str(digit) + " : " + label)
-    plt.imshow(data, cmap=plt.cm.binary)
+def show_data_gui(digit, data, data_label):
+    label = str(data_label[digit])
+    plt.title(str(digit) + "th Data / " + "label : " + label)
+    plt.imshow(data[digit][0], cmap=plt.cm.binary)
     plt.show()
 
-def show_data_cli(digit, datatype):
-    for i in range(28):
-        for j in range(28):
-            if (datatype == "train"):
-                print('{:>3}'.format(train_data[digit][i][j]), end=" ")
-                label = str(train_label[digit])
-            elif (datatype == "test"):
-                print('{:>3}'.format(test_data[digit][i][j]), end=" ")
-                label = str(test_label[digit])
-            else:
-                sys.stdout.write("Error : Please input \"train\" or \"test\" as datatype.\n")
-                sys.exit(3)
-        print("\n")
-    print("Label : " + label)
-
-def show_basic_info():
+def show_basic_info(train_data):
     print("Data ndim：" + str(train_data.ndim))
     print("Data shape：" + str(train_data.shape))
     print("Data data type：" + str(train_data.dtype))
     print("Label ndim：" + str(train_label.ndim))
     print("Label shape：" + str(train_label.shape))
     print("Label data type：" + str(train_label.dtype))
+
+def kernelmove(y):
+    x = list()
+    for i in range(len(y[0])):
+        x.append(i)
+    fig = plt.figure(figsize=(8.0, 6.0))
+    ax = fig.add_subplot(111)
+    ax.plot(x, y[0], "cornflowerblue")
+    ax.plot(x, y[1], "hotpink")
+    plt.title("kernel max&min")
+    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/kernelmax&min.png'))
+
+    fig = plt.figure(figsize=(8.0, 6.0))
+    ax = fig.add_subplot(111)
+    ax.plot(x, y[2], "orange")
+    plt.title("kernel move")
+    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/kernelmove.png'))
+    #plt.show()

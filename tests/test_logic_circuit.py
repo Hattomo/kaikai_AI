@@ -1,7 +1,6 @@
 import sys
 
 import numpy as np
-import pytest
 
 sys.path.append("./dataset")
 import logic_circuit as lc

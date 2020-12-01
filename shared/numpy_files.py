@@ -1,16 +1,18 @@
 import os
 import sys
-
-import numpy as np
+import pickle
 
 # save wieght
 def save(nn):
-    np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
-    path = os.path.join(os.path.dirname(__file__), '../out/np_savez')
-    np.savez(path, weight=nn.weight)
-    np.warnings.filterwarnings('default', category=np.VisibleDeprecationWarning)
+    path = os.path.join(os.path.dirname(__file__), '../out/weight.kaiai')
+    f = open(path, 'wb')
+    pickle.dump(nn.weight, f)
+    f.close()
 
 # load weight
 def load(path):
     path = os.path.join(os.path.dirname(__file__), path)
-    return np.load(path, allow_pickle=True)["weight"]
+    f = open(path, "rb")
+    load_data = pickle.load(f)
+    f.close()
+    return load_data
