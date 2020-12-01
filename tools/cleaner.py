@@ -13,9 +13,18 @@ def clean():
         # one week passed since created
         if 3600 < now - os.path.getctime(file_path):
             try:
-                os.remove(file_name + ".html")
-                os.remove(file_name + "_cost.png")
-                os.remove(file_name + "_accurancy.png")
+                remove_log_data(file_name)
                 print("delete " + str(file_name))
             except:
                 print("file delete failed : " + str(file_name))
+
+def remove_log_data(file_name):
+    remove_file(file_name + ".html")
+    remove_file(file_name + "_cost.png")
+    remove_file(file_name + "_accurancy.png")
+    remove_file(file_name + "_kernelmove.png")
+    remove_file(file_name + "_kernelmax&min.png")
+
+def remove_file(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)

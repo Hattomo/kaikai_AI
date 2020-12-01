@@ -5,6 +5,8 @@ import subprocess
 def getdata(nn_name):
     if nn_name == "dnn":
         file_path = os.path.join(os.path.dirname(__file__), f'../dnn/main.py')
+    elif nn_name == "cnn":
+        file_path = os.path.join(os.path.dirname(__file__), f'../cnn/main.py')
     else:
         pass
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
@@ -45,9 +47,13 @@ h1,h3,p {
 <p>branch name : {branch_name}</p>
 <p>base commitid : {commitid}</p>
 <h3>Loss func-ish graph</h3>
-<p><img src="{timestamp}_cost.png" alt="Loss func-ish graph"></p>
+<p><img src="{timestamp}_cost.png"></p>
 <h3>Accurancy rate graph</h3>
-<p><img src="{timestamp}_accurancy.png" alt="Accurancy graph"></p>
+<p><img src="{timestamp}_accurancy.png"></p>
+<h3>kernelmove</h3>
+<p><img src="{timestamp}_kernelmove.png"></p>
+<h3>kernelmax&min</h3>
+<p><img src="{timestamp}_kernelmax&min.png"></p>
 <h3>📝Main Code</h3>
 <pre><code>
 {main_data}
