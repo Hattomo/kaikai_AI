@@ -1,9 +1,11 @@
 import sys
+import io
 
 import numpy as np
 
 sys.path.append('./dnn')
 sys.path.append('./dataset')
+sys.path.append('./tools')
 import analysistool as atool
 import cnn_analysistool as catool
 import convolution_layer as cl
@@ -15,6 +17,13 @@ import normalization_layer as nl
 import pooling_layer as pl
 import mnist
 import logic_circuit as lc
+import doc_maker
+import unbuffered
+import cleaner
+
+s, timestamp, commitid, branchname = doc_maker.getdata("cnn")
+stdout_stream = io.StringIO()
+sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
 (trainData, trainLabel) = lc.dset("cnn_exs", 5)
 (testData, testLabel) = lc.dset("cnn_exs", 1)
@@ -24,7 +33,7 @@ pool = pl.Pooling_Layer(pooling_size=[2, 2])
 fullc = fc.Fully_Connect_Layer([16 + 1, 4, 2])
 normalize = nl.Normalization_Layer()
 
-epoch = 5000
+epoch = 50
 for i in range(epoch):
     # train
     conv_out = conv.forwardpropagation(trainData / 255)
@@ -40,6 +49,8 @@ for i in range(epoch):
     fullc.test(normalized_data, trainLabel)
 
 # draw graph
-atool.draw(fullc.cost)
-atool.accurancygraph(fullc.accurancy)
-catool.kernelmove(conv.move)
+doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
+atool.draw(fullc.cost, timestamp)
+atool.accurancygraph(fullc.accurancy, timestamp)
+catool.kernelmove(conv.move, timestamp)
+cleaner.clean()

@@ -5,7 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 import neural_network as nn
 
-def draw(y):
+def draw(y, timestamp):
     x = list()
     for i in range(len(y)):
         x.append(i)
@@ -16,10 +16,10 @@ def draw(y):
     ax1.plot(x, y, "cornflowerblue")
     ax2.plot(x, y, "hotpink")
     plt.title("loss func-ish")
-    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/cost.png'))
+    plt.savefig(os.path.join(os.path.dirname(__file__), f'../out/{timestamp}_cost.png'))
     #plt.show()
 
-def accurancygraph(y):
+def accurancygraph(y, timestamp):
     x = []
     for i in range(len(y)):
         x.append(i)
@@ -27,7 +27,7 @@ def accurancygraph(y):
     ax1 = fig.add_subplot(111)
     ax1.plot(x, y, "mediumseagreen")
     plt.title("accurancy")
-    plt.savefig(os.path.join(os.path.dirname(__file__), '../out/accurancy.png'))
+    plt.savefig(os.path.join(os.path.dirname(__file__), f'../out/{timestamp}_accurancy.png'))
     #plt.show()
 
 def tdchart(nn):
