@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 def set_costfunc(costfunc):
@@ -5,6 +7,8 @@ def set_costfunc(costfunc):
         return (rss, diffrss)
     elif costfunc == "cross_entropy":
         return (cross_entropy, diffcross_entropy)
+    elif costfunc == "rss_sdg":
+        return (rss_sdg, diffrss_sdg)
     sys.stdout.write("Error: The lossfunc is not found\n")
     sys.exit(1)
 
@@ -23,3 +27,21 @@ def cross_entropy(label, ans):
 
 def diffcross_entropy(label, ans):
     return -label / (ans) + (1-label) / (1-ans)
+
+class Cost_Adam():
+
+    def __init__(self, batchsize, label_size):
+        self.batchsize = batchsize
+        self.choiced_list = random.sample(range(label_size), batchsize)
+
+    def rss_sdg(self, label, ans):
+        error = 0
+        for w in self.choiced_list:
+            error += (ans[w] - label[w])**2
+        return error
+
+    def diffrss_sdg(self, label, ans):
+        error = [0] * 4
+        for w in self.choiced_list:
+            error[w] += (ans[w] - label[w])
+        return error

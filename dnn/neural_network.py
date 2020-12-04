@@ -1,4 +1,5 @@
 import math
+import time
 import sys
 
 import numpy as np
@@ -6,8 +7,9 @@ import numpy as np
 sys.path.append('./shared')
 import activationfunction as af
 import costfunction as cf
-import numpy_files as npfiles
 import dsetting
+import numpy_files as npfiles
+import optimize_method as om
 import vectormath as vmath
 
 class Neural_Network:
@@ -20,6 +22,8 @@ class Neural_Network:
         actfunc="sigmoid",
         costfunc="rss",
         testmode="classify",
+        optimize_method="adam",
+        adam_batch_size=4,
     ):
         self.structure = structure
         self.dropout = dropout
@@ -29,9 +33,31 @@ class Neural_Network:
         self.weight = dsetting.set_weight(self.structure, w_method)
         self.actfunc, self.diffact = af.set_actfunc(actfunc)
         self.costfunc, self.diffcost = cf.set_costfunc(costfunc)
+        self.optimize_method = self.set_optimize_method(optimize_method)
+        self.optimize_method_name = optimize_method
         self.train_ratio = 0.1
         self.cost = list()
         self.accurancy = []
+        self.adam_batch_size = adam_batch_size
+
+    def set_optimize_method(self, optimize_method):
+        if (optimize_method == "gd"):
+            return om.GradientDesend()
+        elif (optimize_method == "adam"):
+            return om.Adam(self.structure)
+        else:
+            sys.stdout.write("Error: The optimize_method is not found\n")
+            sys.exit(1)
+
+    def optimizer(self, error, cnt, layer):
+        if (self.optimize_method_name == "gd"):
+            if (len(self.cost) == 0):
+                cost = 1000
+            else:
+                cost = self.cost[-1]
+            return self.optimize_method.optimize(error, cost)
+        elif (self.optimize_method_name == "adam"):
+            return self.optimize_method.optimize(error, cnt + 1, layer)
 
     def forwardpropagation(self, train_data, istrain=True):
         self.z[0][0] = 1
@@ -49,18 +75,21 @@ class Neural_Network:
             self.z[-1] = self.actfunc(self.y[-1]) * (1 - self.dropout[-1])
 
     # バックプロパゲーション
-    def backpropagation(self, train_data, train_label, isexternal=False):
-        #学習率の変更
-        self.__fit_train_ratio(train_label, self.z[-1])
+    def backpropagation(self, train_data, train_label, cnt, isexternal=False):
+        if self.optimize_method_name == "adam":
+            costfunc = cf.Cost_Adam(self.adam_batch_size, len(train_label))
+            self.costfunc = costfunc.rss_sdg
+            self.diffcost = costfunc.diffrss_sdg
+
         # out layer to middle layer
         tmp = self.diffact(self.y[-1]) * self.diffcost(train_label, self.z[-1])
         diff = vmath.vvmat(self.z[-2], tmp)
-        self.weight[-1] -= self.train_ratio * diff.T @ self.do[-1]
+        self.weight[-1] -= self.optimizer(diff.T, cnt, len(self.structure) - 1 - 1) @ self.do[-1]
         # middle layer to input layer
         for i in range(len(self.structure) - 2):
             tmp = self.diffact(self.z[-i - 2][1:]) * ((self.weight[-i - 1][:, 1:] @ self.do[-i - 1][:-1, :-1]).T @ tmp)
             diff = vmath.vvmat(self.z[-i - 3], tmp)
-            self.weight[-i - 2] -= self.train_ratio * diff.T
+            self.weight[-i - 2] -= self.optimizer(diff.T, cnt, len(self.structure) - 3 - i)
         if isexternal:
             weight = self.weight[0].T[1:]
             return weight @ tmp
@@ -75,22 +104,17 @@ class Neural_Network:
                     shape = np.shape(self.do[i])
                     self.do[i] = np.identity(shape[0])
 
-    def __fit_train_ratio(self, train_label, ans):
-        if self.costfunc(train_label, ans) < 0.01:
-            self.train_ratio = 0.001
-        elif self.costfunc(train_label, ans) < 0.1:
-            self.train_ratio = 0.01
-        elif self.costfunc(train_label, ans) < 0.5:
-            self.train_ratio = 0.1
-
     # 学習
     def train(self, train_data, train_label, isexternal=False):
         self.__dropout_shake()
         for i in range(len(train_data)):
             self.forwardpropagation(train_data[i], False)
-            self.backpropagation(train_data[i], train_label[i], isexternal)
+            self.backpropagation(train_data[i], train_label[i], i, isexternal)
 
     def test(self, test_data, test_label):
+        if self.optimize_method_name == "adam":
+            self.costfunc = cf.rss
+            self.diffcost = cf.diffrss
         self.__dropout_shake(False)
         count = 0
         cost = 0

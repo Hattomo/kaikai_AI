@@ -17,6 +17,8 @@ def set_weight(structure, w_method):
         w_method = dnn_he
     elif w_method == "unif":
         w_method = dnn_unif
+    elif w_method == "zero":
+        w_method = dnn_zero
     else:
         return npfiles.load(w_method)
     # make all weight
@@ -65,4 +67,9 @@ def dnn_xivier(i_node, o_node):
 def dnn_he(i_node, o_node):
     weight = np.random.normal(loc=0.0, scale=math.sqrt(2 / i_node), size=i_node * o_node)
     weight = weight.reshape(o_node, i_node)
+    return weight
+
+# zeros
+def dnn_zero(i_node, o_node):
+    weight = np.zeros((o_node, i_node))
     return weight
