@@ -1,10 +1,9 @@
 import sys
-import subprocess
 
 import numpy as np
 
 sys.path.append("./dataset")
-sys.path.append('./dnn')
+sys.path.append('./cnn')
 sys.path.append("./shared")
 import convolution_layer as cl
 
