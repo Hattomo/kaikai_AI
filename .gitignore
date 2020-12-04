@@ -145,3 +145,6 @@ kaikai_ML_env/*
 *.npy
 *.npz
 *.kaiai
+
+# html
+*html

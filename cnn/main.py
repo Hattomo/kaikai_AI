@@ -1,9 +1,11 @@
 import sys
+import io
 
 import numpy as np
 
 sys.path.append('./dnn')
 sys.path.append('./dataset')
+sys.path.append('./tools')
 import analysistool as atool
 import cnn_analysistool as catool
 import convolution_layer as cl
@@ -14,6 +16,14 @@ import normalization_layer as nl
 import pooling_layer as pl
 import mnist
 import dataset
+import logic_circuit as lc
+import doc_maker
+import unbuffered
+import cleaner
+
+s, timestamp, commitid, branchname = doc_maker.getdata("cnn")
+stdout_stream = io.StringIO()
+sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
 data_name = "cnn_ex"
 datasetsize = 8
@@ -31,3 +41,10 @@ epoch = 1000
 for i in range(epoch):
     mycnn.train(trainData, trainLabel)
     mycnn.test(testData, testLabel)
+
+# draw graph
+doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
+atool.draw(fullc.cost, timestamp)
+atool.accurancygraph(fullc.accurancy, timestamp)
+catool.kernelmove(conv.move, timestamp)
+cleaner.clean()
