@@ -11,7 +11,6 @@ import analysistool as atool
 import neural_network as nn
 import dataset
 import numpy_files as npfiles
-import logic_circuit as lc
 import doc_maker
 import unbuffered
 import cleaner
@@ -20,7 +19,7 @@ s, timestamp, commitid, branchname = doc_maker.getdata("dnn")
 stdout_stream = io.StringIO()
 sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
-datasize = 4
+datasize = 20
 batch = 4
 logic = "and"
 # set data
@@ -30,14 +29,14 @@ testData, testLabel = dataset.logictest(logic, 10)
 structure = [2 + 1, 5, 2]
 myNN = nn.Neural_Network(structure)
 # # 学習
-epoch = 1
+epoch = 1000
 for i in range(epoch):
     myNN.train(trainData, trainLabel)
     myNN.test(testData, testLabel)
 
 doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
-atool.draw(orNN.cost, timestamp)
-atool.accurancygraph(orNN.accurancy, timestamp)
-atool.tdchart(orNN)
-npfiles.save(orNN)
+atool.draw(myNN.cost, timestamp)
+atool.accurancygraph(myNN.accurancy, timestamp)
+#atool.tdchart(myNN)
+npfiles.save(myNN)
 cleaner.clean()

@@ -70,7 +70,7 @@ class Neural_Network:
             self.forwardpropagation(train_data[i], batch)
             self.backpropagation(train_data[i], train_label[i])
 
-    def test(self, test_data, test_label, mode="classify"):
+    def test(self, test_data, test_label, mode="abs"):
         self.__dropout_shake(False)
         count, cost = 0, 0
         length = len(test_data)
@@ -79,8 +79,7 @@ class Neural_Network:
         self.dropout = np.zeros_like(dropout)
         self.forwardpropagation(test_data, length)
         for i in range(length):
-            if (abs(test_label[i] - self.z[-1][i]) < 0.2).all():
-                # if self.__compare(test_label[i], self.z[-1],mode):
+            if self.__compare(test_label[i], self.z[-1][i], mode):
                 count += 1
             cost += self.costfunc(test_label[i], self.z[-1][i])
         # set dropout
@@ -98,6 +97,10 @@ class Neural_Network:
     def __compare(self, label, predict, mode):
         if mode == "classify":
             if np.argmax(predict) == np.argmax(label):
+                return True
+            return False
+        elif mode == "abs":
+            if ((label - predict) < 0.2).all():
                 return True
             return False
         elif mode == "predict":

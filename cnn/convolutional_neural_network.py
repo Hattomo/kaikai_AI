@@ -1,6 +1,6 @@
 import numpy as np
 
-class Convolution_Neural_Network():
+class Convolutional_Neural_Network():
 
     def __init__(self, structure):
         self.structure = structure
@@ -24,7 +24,7 @@ class Convolution_Neural_Network():
             error = self.forwardpropagation(train_img[i], train_label[i])
             self.backpropagation(error)
 
-    def test(self, test_img, test_label):
+    def test(self, test_img, test_label, mode="abs"):
         testsize, channel, ts_height, ts_width = test_img.shape
         test_data = self.forwardpropagation(test_img, test_label, False)
-        self.structure[-1].test(test_data, test_label)
+        self.structure[-1].test(test_data, test_label, mode)
