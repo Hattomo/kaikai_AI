@@ -3,10 +3,10 @@ import sys
 import pickle
 
 # save wieght
-def save(nn):
-    path = os.path.join(os.path.dirname(__file__), '../out/weight.kaiai')
+def save(weight, timestamp):
+    path = os.path.join(os.path.dirname(__file__), f'../out/{timestamp}_weight.kaiai')
     f = open(path, 'wb')
-    pickle.dump(nn.weight, f)
+    pickle.dump(weight, f)
     f.close()
 
 # load weight
