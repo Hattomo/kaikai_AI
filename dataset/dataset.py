@@ -39,8 +39,8 @@ def logic(data_name, datasetsize, batchsize=1, data_error=0.0):
     data = np.zeros([datasetsize, datasize])
     label = np.zeros([datasetsize, labelsize])
     for i in range(datasetsize):
-        data[i] = original_data[i % 4] + random.randint(a, b) / 100
-        label[i] = original_label[i % 4]
+        data[i] = original_data[i % len(original_data)] + random.randint(a, b) / 100
+        label[i] = original_label[i % len(original_label)]
     return data.reshape([datasetsize // batchsize, batchsize,
                          datasize]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
 
@@ -115,8 +115,8 @@ def imgtrain(data_name, datasetsize, batchsize=1, data_error=0.0):
     data = np.zeros([datasetsize, data_height, data_width])
     label = np.zeros([datasetsize, labelsize])
     for i in range(datasetsize):
-        data[i] = original_data[i % 4] + random.randint(a, b) / 100
-        label[i] = original_label[i % 4]
+        data[i] = original_data[i % len(original_data)] + random.randint(a, b) / 100
+        label[i] = original_label[i % len(original_label)]
     return data.reshape([datasetsize // batchsize, batchsize, channel, data_height,
                          data_width]), label.reshape([datasetsize // batchsize, batchsize, labelsize])
 
@@ -144,8 +144,8 @@ def logictest(data_name, testsize=1, data_error=0.0):
     data = np.zeros([testsize, datasize])
     label = np.zeros([testsize, labelsize])
     for i in range(testsize):
-        data[i] = original_data[i % 4] + random.randint(a, b) / 100
-        label[i] = original_label[i % 4]
+        data[i] = original_data[i % len(original_data)] + random.randint(a, b) / 100
+        label[i] = original_label[i % len(original_data)]
     return data, label
 
 def imgtest(data_name, testsize=1, data_error=0.0):
@@ -171,6 +171,6 @@ def imgtest(data_name, testsize=1, data_error=0.0):
     data = np.zeros([testsize, channel, data_height, data_width])
     label = np.zeros([testsize, labelsize])
     for i in range(testsize):
-        data[i] = original_data[i % 4] + random.randint(a, b) / 100
-        label[i] = original_label[i % 4]
+        data[i] = original_data[i % len(original_data)] + random.randint(a, b) / 100
+        label[i] = original_label[i % len(original_label)]
     return data, label
