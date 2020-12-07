@@ -10,7 +10,7 @@ def clean():
     files = [p for p in glob.glob(path, recursive=True) if (os.path.isfile(p) and re.search("20\d{18}.html", p))]
     for file_path in files:
         file_name = os.path.splitext(os.path.abspath(file_path))[0]
-        # one week passed since created
+        # one hour passed since created
         if 3600 < now - os.path.getctime(file_path):
             try:
                 remove_log_data(file_name)
@@ -24,6 +24,7 @@ def remove_log_data(file_name):
     remove_file(file_name + "_accurancy.png")
     remove_file(file_name + "_kernelmove.png")
     remove_file(file_name + "_kernelmax&min.png")
+    remove_file(file_name + "_weight.kaiai")
 
 def remove_file(file_path):
     if os.path.exists(file_path):
