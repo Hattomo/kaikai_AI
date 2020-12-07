@@ -3,22 +3,20 @@ import io
 
 import numpy as np
 
-sys.path.append('./dnn')
 sys.path.append('./dataset')
 sys.path.append('./tools')
+sys.path.append('./shared')
 import analysistool as atool
-import cnn_analysistool as catool
 import convolution_layer as cl
 import convolutional_neural_network as cnn
+import cleaner
+import dataset
+import doc_maker
 import fully_connenct_layer as fc
-import neural_network as nn
 import normalization_layer as nl
 import pooling_layer as pl
 import mnist
-import dataset
-import doc_maker
 import unbuffered
-import cleaner
 
 # output system set
 s, timestamp, commitid, branchname = doc_maker.getdata("cnn")
@@ -49,5 +47,5 @@ for i in range(epoch):
 doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
 atool.draw(fullc.cost, timestamp)
 atool.accurancygraph(fullc.accurancy, timestamp)
-catool.kernelmove(conv.move, timestamp)
+atool.kernelmove(conv.move, timestamp)
 cleaner.clean()
