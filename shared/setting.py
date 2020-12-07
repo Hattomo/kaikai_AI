@@ -74,7 +74,7 @@ def xavier(num, scalesize):
 def he(num, scalesize):
     return np.random.normal(loc=0.0, scale=1 / math.sqrt(2 / scalesize), size=num)
 
-def test(num,scalesize):
+def test(num, scalesize):
     weight = np.zeros(num)
     for i in range(num):
         weight[i] = (i+scalesize) / 100
