@@ -43,6 +43,7 @@ def test_main_or_without_dropout():
 def test_forwordpropagation():
     batchsize = 4
     td_num = 2
+    tl_num = 2
     test = np.array([[0.51301977, 0.52648607], [0.51301977, 0.52648607], [0.51301977, 0.52648607],
                      [0.51301977, 0.52648607]])
     # set data
