@@ -28,6 +28,8 @@ def set_weight(structure, w_method):
         w_method = he
     elif w_method == "unif":
         w_method = unif
+    elif w_method == "test":
+        w_method = test
     else:
         return npfiles.load(w_method)
     # make all weight
@@ -71,3 +73,9 @@ def xavier(num, scalesize):
 #正規分布(he)
 def he(num, scalesize):
     return np.random.normal(loc=0.0, scale=1 / math.sqrt(2 / scalesize), size=num)
+
+def test(num,scalesize):
+    weight = np.zeros(num)
+    for i in range(num):
+        weight[i] = (i+scalesize) / 100
+    return weight
