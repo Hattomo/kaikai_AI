@@ -41,7 +41,18 @@ def test_main_or_without_dropout():
         myNN.train(trainData, trainLabel)
 
 def test_forwordpropagation():
-    pass
+    batchsize = 4
+    td_num = 2
+    test = np.array([[0.51301977, 0.52648607], [0.51301977, 0.52648607], [0.51301977, 0.52648607],
+                     [0.51301977, 0.52648607]])
+    # set data
+    trainData = np.ones([batchsize, td_num])
+    # ニューラルネットワークの生成
+    structure = [td_num + 1, 3, tl_num]
+    myNN = nn.Neural_Network(structure, w_method="test")
+    # test
+    myNN.forwardpropagation(trainData, batchsize)
+    assert np.allclose(myNN.z[-1], test), "dnn/neural_network/forwardpropagaiton is output error"
 
 def test_backpropagation():
     pass
