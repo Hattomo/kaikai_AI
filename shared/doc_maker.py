@@ -10,7 +10,7 @@ def getdata(nn_name):
     else:
         pass
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-    with open(file_path) as f:
+    with open(file_path, encoding="utf-8") as f:
         s = f.read()
     commitid, branchname = gethash()
     return s, timestamp, commitid, branchname
