@@ -27,9 +27,7 @@ sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 data_name = "cnn_ex"
 datasetsize = 20
 batch = 4
-trainData, trainLabel = dataset.imgtrain(data_name, datasetsize, batch)
-testData, testLabel = dataset.imgtest(data_name, testsize=4)
-
+trainData, trainLabel, testData, testLabel = dataset.image(data_name, datasetsize, batch)
 # generate each layer
 conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
 pool = pl.Pooling_Layer(pooling_size=[2, 2])
@@ -38,7 +36,7 @@ fullc = fc.Fully_Connect_Layer([32 + 1, 10, 4])
 mycnn = cnn.Convolutional_Neural_Network([conv, pool, norm, fullc])
 
 # train and test
-epoch = 1000
+epoch = 100
 for i in range(epoch):
     mycnn.train(trainData, trainLabel)
     mycnn.test(testData, testLabel)
