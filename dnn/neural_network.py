@@ -100,7 +100,7 @@ class Neural_Network:
                 return True
             return False
         elif mode == "abs":
-            if ((label - predict) < 0.2).all():
+            if ((label - predict) < 0.3).all():
                 return True
             return False
         elif mode == "predict":
