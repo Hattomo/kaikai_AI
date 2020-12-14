@@ -44,7 +44,7 @@ class Convolution_Layer:
         return c_result
 
     def backpropagation(self, input_error):
-        train_ratio = 0.01
+        train_ratio = 0.05
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
         (batch, out_channel, er_height, er_width) = np.shape(input_error)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
@@ -84,7 +84,7 @@ class Convolution_Layer:
             for i in range(result_channel):
                 for j in range(result_height):
                     for k in range(result_width):
-                        y = mask[h][:, j:j + f_height, k:k + f_width] * _filter[i]
+                        y = mask[h,1:][:, j:j + f_height, k:k + f_width] * _filter[i]
                         z = np.sum(y)
                         c_result[h][i][j][k] = z
         return c_result
