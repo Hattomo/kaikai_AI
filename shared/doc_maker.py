@@ -69,5 +69,5 @@ h1,h3,p {
 """
 
     path = os.path.join(os.path.dirname(__file__), f'../out/{timestamp}.html')
-    with open(path, mode='w') as f:
+    with open(path, mode='w',encoding="utf-8") as f:
         f.write(result)
