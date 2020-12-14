@@ -84,7 +84,7 @@ class Convolution_Layer:
             for i in range(result_channel):
                 for j in range(result_height):
                     for k in range(result_width):
-                        y = mask[h,1:][:, j:j + f_height, k:k + f_width] * _filter[i]
+                        y = mask[h, 1:][:, j:j + f_height, k:k + f_width] * _filter[i]
                         z = np.sum(y)
                         c_result[h][i][j][k] = z
         return c_result
