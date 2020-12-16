@@ -41,8 +41,8 @@ def logic(data_name, datasetsize, batchsize=1, data_error=0.0, testsize=10):
                                                                       ]), data[datasetsize:], label[datasetsize:]
 
 def image_mnist(data_name, datasetsize, batchsize=1, testsize=10, isshuffle=False):
+    # load data
     if data_name == "mnist":
-        # load data
         (train_data, train_label), (test_data, test_label) = mnist.load_data(data_name)
     elif data_name == "mnist16_mean":
         (train_data, train_label), (test_data, test_label) = mnist.load_data(data_name)
@@ -54,12 +54,16 @@ def image_mnist(data_name, datasetsize, batchsize=1, testsize=10, isshuffle=Fals
         (train_data, train_label), (test_data, test_label) = mnist.load_data(data_name)
     channel = 1
     num, height, width = np.shape(train_data)
+    #
+    train_label = num2vec(train_label)
+    test_label = num2vec(test_label)
     # shuffle data
     if isshuffle:
         train_data, train_label = data_shuffle(train_data, train_label)
         test_data, test_label = data_shuffle(test_data, test_label)
-    return train_data[:datasetsize].reshape([datasetsize // batchsize, batchsize, channel, height, width]), num2vec(
-        train_label[:datasetsize]), test_data[:testsize], num2vec(test_label[:testsize])
+    return train_data[:datasetsize].reshape([datasetsize // batchsize, batchsize, channel, height,
+                                             width]), train_label[:datasetsize], test_data[:testsize].reshape(
+                                                 [testsize, channel, height, width]), test_label[:testsize]
 
 def flatten_image(data_name, datasetsize, batchsize=1, data_error=0.0, testsize=10):
     # confirm batchsize
