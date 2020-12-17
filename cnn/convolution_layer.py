@@ -34,10 +34,10 @@ class Convolution_Layer:
             sys.exit(1)
         # <padding>  Be careful,size of train data change!
         # (padding size is [channel, height+2*pad, width+2*pad])
-        self.train_data = np.ones([batch, in_channel + 1, img_height + 2 * self.pad, img_width + 2 * self.pad])
+        self.train_data = np.ones([batch, in_channel, img_height + 2 * self.pad, img_width + 2 * self.pad])
         self.train_data[:, 1:] = self.__padding(self.pad, image_data)
         # <convolution>
-        c_result = self.__convolution(self.train_data, self.kernel)
+        c_result = self.convolution(self.train_data, self.kernel)
         c_result = self.actfunc(c_result)
         # rescaling method
         # function(c_result)
@@ -69,22 +69,40 @@ class Convolution_Layer:
         for i in range(out_channel):
             for j in range(in_channel):
                 _kernel[j][i] = np.flip(self.kernel[i][j])
-        error = self.__convolution(self.__padding(1, input_error), _kernel)
+        error = self.convolution(self.__padding(1, input_error), _kernel)
         #error = self.diffact(error)
         return error
 
-    def __convolution(self, mask, _filter):
-        (batch, m_channel, m_height, m_width) = np.shape(mask)
-        (out_channel, in_channel, f_height, f_width) = np.shape(_filter)
-        # make convolution result
-        result_channel, result_height, result_width = out_channel, (m_height-f_height) // self.stride + 1, (
-            m_width-f_width) // self.stride + 1
-        c_result = np.zeros([batch, result_channel, result_height, result_width])
-        for h in range(batch):
-            for i in range(result_channel):
-                for j in range(result_height):
-                    for k in range(result_width):
-                        y = mask[h, 1:][:, j:j + f_height, k:k + f_width] * _filter[i]
-                        z = np.sum(y)
-                        c_result[h][i][j][k] = z
-        return c_result
+    def convolution(self, image, kernel):
+        (batch, img_channel, img_height, img_width) = np.shape(image)
+        (out_channel, in_channel, k_height, k_width) = np.shape(kernel)
+        # the number of stride
+        stride_height = (img_height-k_height) // self.stride + 1
+        stride_width = (img_height-k_height) // self.stride + 1
+        # make matrix
+        col_size = [batch, img_channel, k_height, k_width, stride_height, stride_width]
+        col = self.im2col(image, col_size)
+        flat_kernel = kernel.flatten().reshape(img_channel * k_height * k_width, -1, order="F")
+        # make output image size
+        channel = out_channel
+        height = (img_height-k_height) // self.stride + 1
+        width = (img_width-k_width) // self.stride + 1
+        out_size = [batch, channel, height, width]
+        # convolution
+        result = col @ flat_kernel
+        return self.col2im(result, out_size)
+
+    def im2col(self, image, size):
+        batch, img_channel, k_height, k_width, stride_height, stride_width = size
+        col = np.zeros(size)
+        for i in range(k_height):
+            i_max = i + self.stride * stride_height
+            for j in range(k_width):
+                j_max = j + self.stride * stride_width
+                col[:, :, i, j, :, :] = image[:, :, i:i_max:self.stride, j:j_max:self.stride]
+        col = col.transpose(0, 4, 5, 1, 2, 3).reshape(batch * stride_height * stride_width, -1)
+        return col
+
+    def col2im(self, col, size):
+        batch, channel, height, width = size
+        return col.T.flatten().reshape(batch, channel, height, width)
