@@ -24,19 +24,21 @@ stdout_stream = io.StringIO()
 sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
 # make data
-data_name = "cnn_ex"
-datasetsize = 20
-batch = 4
-trainData, trainLabel, testData, testLabel = dataset.image(data_name, datasetsize, batch)
+data_name = "mnist"
+datasetsize = 100
+batch = 10
+trainData, trainLabel, testData, testLabel = dataset.image_mnist(data_name, datasetsize, batch, testsize=8)
 # generate each layer
-conv = cl.Convolution_Layer(in_channel=1, out_channel=8, ksize=3, pad=1)
-pool = pl.Pooling_Layer(pooling_size=[2, 2])
-norm = nl.Normalization_Layer()
-fullc = fc.Fully_Connect_Layer([32 + 1, 10, 4])
-mycnn = cnn.Convolutional_Neural_Network([conv, pool, norm, fullc])
-
+conv1 = cl.Convolution_Layer(in_channel=1, out_channel=4, ksize=3, pad=1)
+pool1 = pl.Pooling_Layer(pooling_size=[2, 2])
+conv2 = cl.Convolution_Layer(in_channel=4, out_channel=8, ksize=3)
+pool2 = pl.Pooling_Layer(pooling_size=[3, 3])
+norm1 = nl.Normalization_Layer()
+norm2 = nl.Normalization_Layer()
+fullc = fc.Fully_Connect_Layer([128 + 1, 10, 9])
+mycnn = cnn.Convolutional_Neural_Network([conv1, pool1, norm1, conv2, pool2, norm2, fullc])
 # train and test
-epoch = 100
+epoch = 500
 for i in range(epoch):
     mycnn.train(trainData, trainLabel)
     mycnn.test(testData, testLabel)

@@ -44,7 +44,7 @@ class Convolution_Layer:
         return c_result
 
     def backpropagation(self, input_error):
-        train_ratio = 0.01
+        train_ratio = 0.05
         (batch, in_channel, tr_height, tr_width) = np.shape(self.train_data)
         (batch, out_channel, er_height, er_width) = np.shape(input_error)
         (out_channel, in_channel, k_height, k_width) = np.shape(self.kernel)
