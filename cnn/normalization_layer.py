@@ -12,6 +12,9 @@ class Normalization_Layer:
 
     def backpropagation(self, error):
         return error
+    
+    def reset(self):
+        pass
 
     def __batch_normalization(self, data):
         # Batch Normalization

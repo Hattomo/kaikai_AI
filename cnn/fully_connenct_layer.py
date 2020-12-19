@@ -3,12 +3,18 @@ import sys
 import numpy as np
 
 sys.path.append('./dnn')
+sys.path.append('./shared')
 import neural_network as nn
+import setting
 
 class Fully_Connect_Layer(nn.Neural_Network):
 
     def __init__(self, structure):
         super().__init__(structure)
+
+    def reset(self,w_method="xavier"):
+        self.weight = setting.set_weight(self.structure, w_method)
+        self.cost, self.accurancy = list(), list()
 
     # train in dnn and get error
     def train(self, input_data, train_label):

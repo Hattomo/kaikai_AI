@@ -14,6 +14,10 @@ class Convolutional_Neural_Network():
             return error
         return train_data
 
+    def reset_all(self):
+        for i in range(len(self.structure)):
+            self.structure[i].reset()
+
     def backpropagation(self, error):
         for i in range(len(self.structure) - 1, 0):
             error = self.structure[i].backpropagation(error)
