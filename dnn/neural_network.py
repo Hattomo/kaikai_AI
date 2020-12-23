@@ -90,9 +90,11 @@ class Neural_Network:
         if math.isnan(cost):
             sys.stdout.write("Error: Due to cost became [nan], Calcuration Stopped\n")
             sys.exit(2)
-        print(
-            str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost / length) + " : " +
-            str(len(self.cost)))
+        # print(
+        #     str(count) + "/" + str(length) + " = " + str(count / length) + " : " + str(cost / length) + " : " +
+        #     str(len(self.cost)))
+        print(cost / length)
+        self.count = count
 
     def __compare(self, label, predict, mode):
         if mode == "classify":

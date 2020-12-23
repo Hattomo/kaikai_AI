@@ -25,27 +25,32 @@ sys.stdout = unbuffered.Unbuffered(sys.stdout, stdout_stream)
 
 # make data
 data_name = "mnist"
-datasetsize = 100
-batch = 10
-trainData, trainLabel, testData, testLabel = dataset.image_mnist(data_name, datasetsize, batch, testsize=8)
+datasetsize = 20
+batch = 1
+trainData, trainLabel, testData, testLabel = dataset.image_mnist(data_name, datasetsize, batch,testsize=20)
 # generate each layer
-conv1 = cl.Convolution_Layer(in_channel=1, out_channel=4, ksize=3, pad=1)
+conv1 = cl.Convolution_Layer(in_channel=1+1, out_channel=32, ksize=3, pad=1)
 pool1 = pl.Pooling_Layer(pooling_size=[2, 2])
-conv2 = cl.Convolution_Layer(in_channel=4, out_channel=8, ksize=3)
+conv2 = cl.Convolution_Layer(in_channel=32+1, out_channel=64, ksize=3)
 pool2 = pl.Pooling_Layer(pooling_size=[3, 3])
 norm1 = nl.Normalization_Layer()
 norm2 = nl.Normalization_Layer()
-fullc = fc.Fully_Connect_Layer([128 + 1, 10, 9])
+fullc = fc.Fully_Connect_Layer([1024 + 1, 32, 9])
 mycnn = cnn.Convolutional_Neural_Network([conv1, pool1, norm1, conv2, pool2, norm2, fullc])
 # train and test
-epoch = 500
-for i in range(epoch):
-    mycnn.train(trainData, trainLabel)
-    mycnn.test(testData, testLabel)
+epoch = 200
+for j in range(10):
+    print(str(j+1)+" times")
+    mycnn.reset_all()
+    for i in range(epoch):
+        mycnn.train(trainData, trainLabel)
+        mycnn.test(testData, testLabel)
+    print(mycnn.structure[-1].count/len(testLabel))
+    print("\n")
 
 # draw graph
 doc_maker.docmaker(s, timestamp, stdout_stream.getvalue(), commitid, branchname)
-atool.draw(fullc.cost, timestamp)
-atool.accurancygraph(fullc.accurancy, timestamp)
-atool.kernelmove(conv.move, timestamp)
-cleaner.clean()
+# atool.draw(fullc.cost, timestamp)
+# atool.accurancygraph(fullc.accurancy, timestamp)
+# atool.kernelmove(conv1.move, timestamp)
+# cleaner.clean()

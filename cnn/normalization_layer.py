@@ -12,7 +12,7 @@ class Normalization_Layer:
 
     def backpropagation(self, error):
         return error
-    
+
     def reset(self):
         pass
 

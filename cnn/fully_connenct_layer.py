@@ -12,7 +12,7 @@ class Fully_Connect_Layer(nn.Neural_Network):
     def __init__(self, structure):
         super().__init__(structure)
 
-    def reset(self,w_method="xavier"):
+    def reset(self, w_method="xavier"):
         self.weight = setting.set_weight(self.structure, w_method)
         self.cost, self.accurancy = list(), list()
 

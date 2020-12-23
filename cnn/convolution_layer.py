@@ -19,7 +19,7 @@ class Convolution_Layer:
         self.move = [[], [], []]
 
     def reset(self):
-        out_channel,in_channel,k_height,k_width = np.shape(self.kernel)
+        out_channel, in_channel, k_height, k_width = np.shape(self.kernel)
         self.kernel = setting.select_kernel(self.k_method, in_channel, out_channel, k_height)
 
     def __padding(self, pad, train_data):
