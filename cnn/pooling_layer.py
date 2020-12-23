@@ -9,6 +9,9 @@ class Pooling_Layer:
         self.p_size = pooling_size
         self.index = []
 
+    def reset(self):
+        pass
+
     def __get_index(self, partical_data):
         max_ = np.argmax(partical_data)
         return (max_ // self.p_size[0], max_ % self.p_size[1])

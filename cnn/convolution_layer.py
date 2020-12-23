@@ -13,9 +13,14 @@ class Convolution_Layer:
     def __init__(self, in_channel, out_channel, ksize, stride=1, pad=0, k_method="xavier", actfunc="relu"):
         self.stride = stride
         self.pad = pad
+        self.k_method = k_method
         (self.actfunc, self.diffact) = (af.relu, af.diffrelu)
         self.kernel = setting.select_kernel(k_method, in_channel, out_channel, ksize)
         self.move = [[], [], []]
+
+    def reset(self):
+        out_channel, in_channel, k_height, k_width = np.shape(self.kernel)
+        self.kernel = setting.select_kernel(self.k_method, in_channel, out_channel, k_height)
 
     def __padding(self, pad, train_data):
         (batch, channel, height, width) = np.shape(train_data)
